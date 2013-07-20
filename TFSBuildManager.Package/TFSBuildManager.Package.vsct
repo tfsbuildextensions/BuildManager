@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h" />
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h" />
+
+  <!--<Extern href="msobtnid.h" xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" />-->
+
+  <Commands package="guidTFSBuildManager_PackagePkg">
+
+    <Groups>
+      <!-- Attach menu group to Team Explorer 'Builds' node -->
+      <Group guid="guidTFSBuildManager_PackageCmdSet" id="BuildManagerMenuGroup" priority="0x0600">
+        <Parent guid="guidBuilds" id="menuBuilds" />
+      </Group>
+
+      <!-- Attach menu group to Tools menu -->
+      <Group guid="guidTFSBuildManager_PackageCmdSet" id="BuildManagerMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+      </Group>
+    </Groups>
+    
+    <!--Buttons section. -->
+    <Buttons>
+      <Button guid="guidTFSBuildManager_PackageCmdSet" id="cmdidBuildManagerCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTFSBuildManager_PackageCmdSet" id="BuildManagerMenuGroup" />
+        <Icon guid="guidCmdIcon" id="bmpCmdIcon" />
+        <Strings>
+          <CommandName>cmdidBuildManagerCommand</CommandName>
+          <ButtonText>Community TFS Build Manager</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+   
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <Bitmap guid="guidCmdIcon" href="AppIcon.ico" usedList="bmpCmdIcon" />
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidTFSBuildManager_PackagePkg" value="{6fadf005-94b3-46d1-b509-fd8ba6d1ec00}" />
+    
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidTFSBuildManager_PackageCmdSet" value="{b3516385-098d-4066-89e5-439bea58700d}">
+      <IDSymbol name="BuildManagerMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidBuildManagerCommand" value="0x0100" />
+    </GuidSymbol>
+        
+    <GuidSymbol name="guidCmdIcon" value="{e4cc0e42-a09d-4602-a965-d2b3f7e1f496}">
+      <IDSymbol name="bmpCmdIcon" value="1" />
+    </GuidSymbol>
+
+    <!-- This is the Build Explorer Menu. -->
+    <GuidSymbol name="guidBuilds" value="{34586048-8400-472e-BBBF-3AE30AF8046E}">
+      <IDSymbol name="menuBuilds" value="0x100" />
+    </GuidSymbol>
+
+  </Symbols>
+
+</CommandTable>

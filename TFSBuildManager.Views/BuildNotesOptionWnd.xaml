@@ -1,0 +1,47 @@
+﻿<Window x:Class="TfsBuildManager.Views.BuildNotesOptionWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen"
+        Title="Build Notes - Options" Height="400" Width="559" Background="#FFF6F6F6" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="425" SizeToContent="Height" Icon="Graphics/AppIcon.ico" ResizeMode="NoResize">
+    <Grid>
+        <Grid Margin="12,12,0,0" Name="grid1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="197*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Choose what to include in Build Notes for all builds of the selected Build Definitions" Margin="10" />
+            <CheckBox Grid.Row="3" Name="cbBuildConfiguration" FontWeight="Bold" IsChecked="True">Build Configuration Summary</CheckBox>
+            <TextBlock Grid.Row="4" Margin="18,0,0,0" TextWrapping="Wrap" Text="Configuration summary of the selected build"  />
+
+            <CheckBox Grid.Row="5" Name="cbWorkItems" FontWeight="Bold" IsChecked="True" Margin="0,10">Work Items</CheckBox>
+            <TextBlock Grid.Row="6" Margin="18,0,0,0" TextWrapping="Wrap" Text="Summary of Work Items included as part of the selected build"/>
+            
+            <CheckBox Grid.Row="7" Name="cbChangesets" FontWeight="Bold" IsChecked="True" Margin="0,10">Changesets</CheckBox>
+            <TextBlock Grid.Row="8" Margin="18,0,0,0" TextWrapping="Wrap" Text="Summary of checkins included in the Build."/>
+            
+            <CheckBox Grid.Row="9" Name="cbTestResults" FontWeight="Bold"  IsChecked="True" Margin="0,10">Test Results</CheckBox>
+            <TextBlock Grid.Row="10" Margin="18,0,0,0" TextWrapping="Wrap" Text="Summary of tests run as part of the selected build." />
+            
+            <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                <Button IsDefault="True" Name="btnGenerate" Margin="5" Padding="15,3,15,3" Click="OnGenerate" Content="Generate"></Button>
+                <Button IsDefault="False" IsCancel="True" Name="btnCancel" Margin="5" Padding="15,3,15,3">Cancel</Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

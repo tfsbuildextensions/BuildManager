@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{35402F32-13CF-4DD1-B38C-A3FBE59FB1BC}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TfsBuildManager.Views</RootNamespace>
+    <AssemblyName>TFSBuildManager.Views</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\BuildBinaries\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\BuildBinaries\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\Common\TFSBuildExtensions.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Common\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AssemblyReferences\Microsoft.TeamFoundation.Build.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Build.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AssemblyReferences\Microsoft.TeamFoundation.Build.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.VersionControl.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AssemblyReferences\Microsoft.TeamFoundation.VersionControl.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.VersionControl.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AssemblyReferences\Microsoft.TeamFoundation.VersionControl.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="BuildControllerWindow.xaml.cs">
+      <DependentUpon>BuildControllerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BuildsGrid.xaml.cs">
+      <DependentUpon>BuildsGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BuildNotesOptionWnd.xaml.cs">
+      <DependentUpon>BuildNotesOptionWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BuildResourcesGrid.xaml.cs">
+      <DependentUpon>BuildResourcesGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TriggerWindow.xaml.cs">
+      <DependentUpon>TriggerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DropLocationWindow.xaml.cs">
+      <DependentUpon>DropLocationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectBuildQuality.xaml.cs">
+      <DependentUpon>SelectBuildQuality.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProcessTemplatesGrid.xaml.cs">
+      <DependentUpon>ProcessTemplatesGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteOptionsWnd.xaml.cs">
+      <DependentUpon>DeleteOptionsWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EnumMatchToBooleanConverter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="RetentionPolicyWnd.xaml.cs">
+      <DependentUpon>RetentionPolicyWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectBuildProcessTemplateWnd.xaml.cs">
+      <DependentUpon>SelectBuildProcessTemplateWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectTargetBranchWnd.xaml.cs">
+      <DependentUpon>SelectTargetBranchWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectTeamProject.xaml.cs">
+      <DependentUpon>SelectTeamProject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\BuildAgentViewModel.cs" />
+    <Compile Include="ViewModels\BuildControllerViewModel.cs" />
+    <Compile Include="ViewModels\BuildDateFilter.cs" />
+    <Compile Include="ViewModels\BuildFilterEnum.cs" />
+    <Compile Include="ViewModels\BuildManagerViewModel.cs" />
+    <Compile Include="ViewModels\BuildDefinitionViewModel.cs" />
+    <Compile Include="ViewModels\BuildTemplateViewModel.cs" />
+    <Compile Include="ViewModels\BuildViewEnum.cs" />
+    <Compile Include="ViewModels\BuildViewItem.cs" />
+    <Compile Include="ViewModels\BuildViewModel.cs" />
+    <Compile Include="ViewModels\BuildResourceViewModel.cs" />
+    <Compile Include="ViewModels\DateFilterCollection.cs" />
+    <Compile Include="ViewModels\DelegateCommand.cs" />
+    <Compile Include="IMainView.xaml.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ViewModels\TargetBranchViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="WaitCursor.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="BuildControllerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BuildsGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BuildNotesOptionWnd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BuildResourcesGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TriggerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DropLocationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SelectBuildQuality.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProcessTemplatesGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeleteOptionsWnd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RetentionPolicyWnd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SelectBuildProcessTemplateWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectTargetBranchWnd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectTeamProject.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TFSBuildManager.Controls\TFSBuildManager.Controls.csproj">
+      <Project>{F45DF837-315A-4E73-A0DC-ABA548788CA2}</Project>
+      <Name>TFSBuildManager.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TfsBuildManager.Repository\TfsBuildManager.Repository.csproj">
+      <Project>{723CB6BD-A9CF-4BF9-A48A-9B4E28739AC1}</Project>
+      <Name>TfsBuildManager.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\NotStarted.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Menu_Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Menu_ChangeTemplate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Manu_Disable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Menu_Enable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\Common\CodeAnalysis.Dictionary.xml">
+      <Link>Properties\CodeAnalysis.Dictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\buildresources.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\retention.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Clone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\dgml.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\PartiallySucceeded.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\BuildNotes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\SetDefault.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\controller.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Drop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Stopped.png" />
+    <Resource Include="Graphics\Succeeded.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\lock_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Failed.png" />
+    <Resource Include="Graphics\InProgress.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Postponed.png" />
+    <Resource Include="Graphics\Queued.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\PartiallySucceeded.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
