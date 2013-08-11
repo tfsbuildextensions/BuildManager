@@ -221,6 +221,7 @@
                         <Views:BuildsGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding ShowDetailsCommand}" Header="Open"/>
+                                <MenuItem Command="{Binding ViewBuildLogsCommand}" Header="View Build Log"/>
                                 <MenuItem Command="{Binding DeleteBuildCommand}" Header="Delete">
                                     <MenuItem.Icon>
                                         <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />

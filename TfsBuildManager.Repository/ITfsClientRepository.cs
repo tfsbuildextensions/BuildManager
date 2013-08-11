@@ -50,6 +50,8 @@ namespace TfsBuildManager.Repository
 
         bool OpenDropFolder(IEnumerable<string> folders);
 
+        string GetBuildLogLocation(IBuildDetail build);
+
         void DeleteBuilds(IEnumerable<IBuildDetail> builds);
 
         void StopBuilds(IEnumerable<IQueuedBuild> builds);

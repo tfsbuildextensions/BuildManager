@@ -46,6 +46,7 @@ namespace TfsBuildManager.Views
             this.BuildNotesCommand = new DelegateCommand(this.OnBuildNotes);
             this.DeleteBuildCommand = new DelegateCommand(this.OnDeleteBuild);
             this.ShowDetailsCommand = new DelegateCommand(this.OnShowDetails);
+            this.ViewBuildLogsCommand = new DelegateCommand(this.OnViewBuildLogs);
             this.ShowQueuedDetailsCommand = new DelegateCommand(this.OnShowQueuedDetails);
             this.StopBuildCommand = new DelegateCommand(this.OnStopBuild);
             this.ResumeBuildCommand = new DelegateCommand(this.OnResumeBuild);
@@ -111,6 +112,8 @@ namespace TfsBuildManager.Views
         public ICommand DeleteBuildCommand { get; private set; }
 
         public ICommand ShowDetailsCommand { get; private set; }
+
+        public ICommand ViewBuildLogsCommand { get; private set; }
 
         public ICommand ShowQueuedDetailsCommand { get; private set; }
         
@@ -479,6 +482,13 @@ namespace TfsBuildManager.Views
             {
                 this.context.ShowBuild(selectedBuild.Uri);
             }
+        }
+
+        public void OnViewBuildLogs()
+        {
+            var selectedBuild = this.view.SelectedBuilds.First();
+            string logUrl = this.repository.GetBuildLogLocation(selectedBuild.FullBuildDetail);
+            Process.Start(logUrl);
         }
 
         public void OnShowQueuedDetails()

@@ -9,6 +9,7 @@ namespace TfsBuildManager.Repository
     using System.IO;
     using System.Linq;
 
+    using Microsoft.TeamFoundation;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
@@ -199,6 +200,13 @@ namespace TfsBuildManager.Repository
             }
 
             return dropFolderFound;
+        }
+
+        public string GetBuildLogLocation(IBuildDetail build)
+        {
+            var linkService = (TswaClientHyperlinkService)this.collection.GetService(typeof(TswaClientHyperlinkService));
+            var url = linkService.GetViewBuildDetailsUrl(build.Uri);
+            return url.ToString();
         }
 
         public void DeleteBuilds(IEnumerable<IBuildDetail> builds)
