@@ -34,7 +34,7 @@ namespace TfsBuildManager.Repository
         private readonly IBuildServer buildServer;
         private readonly VersionControlServer versionControl;
         private TfsTeamProjectCollection collection;
-        private WorkItemStore workItemStore;   
+        private WorkItemStore workItemStore;
 
         public TfsClientRepository(TfsTeamProjectCollection collection)
         {
@@ -319,9 +319,14 @@ namespace TfsBuildManager.Repository
         {
             foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
             {
-                bd.Process = this.buildServer.QueryProcessTemplates(bd.TeamProject).FirstOrDefault(pt => pt.ServerPath == serverPath) ?? 
+                var newProcessTemplate = this.buildServer.QueryProcessTemplates(bd.TeamProject).FirstOrDefault(pt => pt.ServerPath == serverPath) ??
                     this.buildServer.CreateProcessTemplate(bd.TeamProject, serverPath);
-                bd.Save();
+
+                if (String.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, true) != 0)
+                {
+                    bd.Process = newProcessTemplate;
+                    bd.Save();
+                }
             }
         }
 
@@ -535,7 +540,7 @@ namespace TfsBuildManager.Repository
                     defaultTemplate.Save();
                 }
 
-                template.TemplateType = ProcessTemplateType.Default; 
+                template.TemplateType = ProcessTemplateType.Default;
                 template.Save();
             }
         }
@@ -716,7 +721,7 @@ namespace TfsBuildManager.Repository
 
                     var metadataFileSpec = spec as TestMetadataFileSpec;
                     if (metadataFileSpec != null)
-                    {                        
+                    {
                         var modifiedTestLists = new StringList();
                         foreach (var list in metadataFileSpec.TestLists)
                         {
@@ -819,7 +824,7 @@ namespace TfsBuildManager.Repository
                 }
 
                 start = org.ToUpper().IndexOf(search, System.StringComparison.Ordinal);
-            } 
+            }
             while (start >= 0);
 
             return org;
