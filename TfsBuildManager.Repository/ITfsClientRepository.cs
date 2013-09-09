@@ -74,6 +74,10 @@ namespace TfsBuildManager.Repository
 
         void QueueBuilds(IEnumerable<Uri> buildDefinitions);
 
+        void QueueHighBuilds(IEnumerable<Uri> buildDefinitions);
+
+        string CloneBuildToProject(Uri buildDefinition, string newName, string targetProjectName);
+
         string CloneBuild(Uri buildDefinition, string newName, Branch source, Branch target);
 
         IEnumerable<Branch> GetChildBranchObjectsForItem(string item);

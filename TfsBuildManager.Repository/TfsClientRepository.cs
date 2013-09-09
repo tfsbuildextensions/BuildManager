@@ -1,15 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="TfsClientRepository.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Repository
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
-    using Microsoft.TeamFoundation;
+    using System.Text.RegularExpressions;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
@@ -345,7 +343,7 @@ namespace TfsBuildManager.Repository
         {
             foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
             {
-                bd.DefaultDropLocation = CaseInsesitivReplace(bd.DefaultDropLocation, searchPath, replacePath);
+                bd.DefaultDropLocation = CaseInsensitiveReplace(bd.DefaultDropLocation, searchPath, replacePath);
                 bd.Save();
 
                 if (replaceInExistingBuilds)
@@ -401,6 +399,17 @@ namespace TfsBuildManager.Repository
             foreach (var bd in definitions.Where(d => d.Process != null))
             {
                 this.buildServer.QueueBuild(bd);
+            }
+        }
+
+        public void QueueHighBuilds(IEnumerable<Uri> buildDefinitions)
+        {
+            var definitions = this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray());
+            foreach (var bd in definitions.Where(d => d.Process != null))
+            {
+                IBuildRequest buildRequest = bd.CreateBuildRequest();
+                buildRequest.Priority = QueuePriority.High;
+                this.buildServer.QueueBuild(buildRequest);
             }
         }
 
@@ -504,6 +513,35 @@ namespace TfsBuildManager.Repository
             CloneBuildSettings(rootBranch, targetBranch, parameters);
             CloneConfigurationFolderPath(rootBranch, targetBranch, bd, parameters);
             CloneTestSpecs(rootBranch, targetBranch, parameters);
+            newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
+
+            newBuildDefinition.Save();
+            return newBuildDefinition.ToString();
+        }
+
+        public string CloneBuildToProject(Uri buildDefinition, string newName, string targetProjectName)
+        {
+            var bd = this.buildServer.GetBuildDefinition(buildDefinition);
+            string sourceProjectName = bd.TeamProject;
+
+            var newBuildDefinition = this.buildServer.CreateBuildDefinition(targetProjectName);
+            newBuildDefinition.Name = newName;
+            newBuildDefinition.Description = bd.Description;
+            newBuildDefinition.ContinuousIntegrationType = bd.ContinuousIntegrationType;
+            newBuildDefinition.QueueStatus = bd.QueueStatus;
+            CloneWorkspaceMappings(string.Concat("$/", sourceProjectName), string.Concat("$/", targetProjectName), bd, newBuildDefinition);
+            newBuildDefinition.BuildController = bd.BuildController;
+            newBuildDefinition.ProcessParameters = bd.ProcessParameters;
+            CloneDropLocation(sourceProjectName, targetProjectName, bd, newBuildDefinition, false);
+            CloneBuildSchedule(bd, newBuildDefinition);
+            newBuildDefinition.ContinuousIntegrationQuietPeriod = bd.ContinuousIntegrationQuietPeriod;
+            newBuildDefinition.Process = this.EnsureProjectHasBuildProcessTemplate(targetProjectName, bd.Process.ServerPath);
+            CloneRetentionPolicies(bd, newBuildDefinition);
+
+            var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
+            CloneBuildSettings(sourceProjectName, targetProjectName, parameters);
+            CloneConfigurationFolderPath(sourceProjectName, targetProjectName, bd, parameters);
+            CloneTestSpecs(sourceProjectName, targetProjectName, parameters);
             newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
 
             newBuildDefinition.Save();
@@ -755,21 +793,45 @@ namespace TfsBuildManager.Repository
             }
         }
 
-        private static void CloneBuildSettings(string rootBranch, string targetBranch, IDictionary<string, object> parameters)
+        private static void CloneBuildSettings(string sourceName, string targetName, IDictionary<string, object> parameters)
         {
+            List<string> keys = parameters.Keys.ToList();
+            for (int idx = 0; idx < parameters.Count(); idx++)
+            {
+                if (parameters[keys[idx]] is string)
+                {
+                    if ((parameters[keys[idx]] as string).Contains(sourceName))
+        {
+                        parameters[keys[idx]] = (parameters[keys[idx]] as string).Replace(sourceName, targetName);
+                    }
+                }
+            }
+
             if (parameters.ContainsKey(BuildSettings))
             {
                 var buildSettings = parameters[BuildSettings] as BuildSettings;
-                if (buildSettings == null)
+                if (buildSettings == null || !buildSettings.HasProjectsToBuild)
                 {
                     return;
                 }
 
+                string chkBranch = sourceName;
+                string setBranch = targetName;
+                if (!sourceName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
+                {
+                    chkBranch = string.Concat("$/", sourceName);
+                }
+
+                if (!targetName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
+                {
+                    setBranch = string.Concat("$/", targetName);
+                }
+
                 for (int i = 0; i < buildSettings.ProjectsToBuild.Count(); i++)
                 {
-                    if (buildSettings.ProjectsToBuild[i].StartsWith(rootBranch, StringComparison.OrdinalIgnoreCase))
+                    if (buildSettings.ProjectsToBuild[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
                     {
-                        buildSettings.ProjectsToBuild[i] = buildSettings.ProjectsToBuild[i].Replace(rootBranch, targetBranch);
+                        buildSettings.ProjectsToBuild[i] = buildSettings.ProjectsToBuild[i].Replace(chkBranch, setBranch);
                     }
                 }
             }
@@ -789,9 +851,9 @@ namespace TfsBuildManager.Repository
             }
         }
 
-        private static void CloneDropLocation(string rootBranchName, string targetBranchName, IBuildDefinition bd, IBuildDefinition newBuildDefinition)
+        private static void CloneDropLocation(string rootBranchName, string targetBranchName, IBuildDefinition bd, IBuildDefinition newBuildDefinition, bool autoIncludeBranchName = true)
         {
-            if (string.IsNullOrEmpty(bd.DefaultDropLocation))
+            if (bd.DefaultDropLocation == null)
             {
                 return;
             }
@@ -799,20 +861,25 @@ namespace TfsBuildManager.Repository
             string dropLocation = bd.DefaultDropLocation.ToLower();
             if (dropLocation.Contains(rootBranchName.ToLower()))
             {
-                newBuildDefinition.DefaultDropLocation = dropLocation.Replace(rootBranchName.ToLower(), targetBranchName.ToLower());
+                newBuildDefinition.DefaultDropLocation = dropLocation.Replace(
+                    rootBranchName.ToLower(), targetBranchName.ToLower());
+            }
+            else if (autoIncludeBranchName)
+            {
+                newBuildDefinition.DefaultDropLocation = Path.Combine(dropLocation, targetBranchName.ToLower());
             }
             else
             {
-                newBuildDefinition.DefaultDropLocation = Path.Combine(dropLocation, targetBranchName.ToLower());
+                newBuildDefinition.DefaultDropLocation = dropLocation;
             }
         }
 
         private static string ExpandMacros(string p, Dictionary<string, string> macros)
         {
-            return macros.Keys.Aggregate(p, (current, macroName) => CaseInsesitivReplace(current, macroName, macros[macroName]));
+            return macros.Keys.Aggregate(p, (current, macroName) => CaseInsensitiveReplace(current, macroName, macros[macroName]));
         }
 
-        private static string CaseInsesitivReplace(string org, string search, string replace)
+        private static string CaseInsensitiveReplace(string org, string search, string replace)
         {
             search = search.ToUpper();
             int start = org.ToUpper().IndexOf(search, System.StringComparison.Ordinal);
@@ -830,13 +897,25 @@ namespace TfsBuildManager.Repository
             return org;
         }
 
+        private IProcessTemplate EnsureProjectHasBuildProcessTemplate(string teamProject, string templateServerPath)
+        {
+            IProcessTemplate template = this.buildServer.QueryProcessTemplates(teamProject).FirstOrDefault(pt => pt.ServerPath == templateServerPath);
+            if (template == null)
+            {
+                template = this.buildServer.CreateProcessTemplate(teamProject, templateServerPath);
+                template.Save();
+            }
+
+            return template;
+        }
+
         private void ChangeDropLocationForExistingBuilds(string replacePath, string searchPath, IBuildDefinition bd)
         {
             foreach (var buildDetail in this.buildServer.QueryBuilds(bd))
             {
                 if (buildDetail.DropLocation != null)
                 {
-                    buildDetail.DropLocation = buildDetail.DropLocation.Replace(searchPath, replacePath);
+                    buildDetail.DropLocation = Regex.Replace(buildDetail.DropLocation, Regex.Escape(searchPath), replacePath, RegexOptions.IgnoreCase);
                     buildDetail.Save();
                 }
             }

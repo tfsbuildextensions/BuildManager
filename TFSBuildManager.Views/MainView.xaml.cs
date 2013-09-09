@@ -170,6 +170,12 @@ namespace TfsBuildManager.Views
                         }
 
                         builds = this.viewmodel.IncludeDisabledBuildDefinitions ? builds : builds.Where(b => b.QueueStatus == DefinitionQueueStatus.Enabled);
+                        if (!string.IsNullOrWhiteSpace(this.viewmodel.BuildDefinitionFilter))
+                        {
+                            var filter = this.viewmodel.BuildDefinitionFilter.ToUpperInvariant();
+                            builds = builds.Where(b => b.Name.ToUpperInvariant().Contains(filter)).ToArray();
+                        }
+
                         this.viewmodel.AssignBuildDefinitions(builds);
                     }
                     else if (this.viewmodel.SelectedBuildView == BuildView.Builds)
@@ -264,6 +270,11 @@ namespace TfsBuildManager.Views
                     {
                         this.UpdateBuilds();
                     }
+                }
+
+                if (e.PropertyName == "BuildDefinitionFilter")
+                {
+                    this.UpdateBuildDefinitions();
                 }
 
                 if (e.PropertyName == "SelectedBuildView")

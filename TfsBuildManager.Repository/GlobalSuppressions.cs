@@ -12,3 +12,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "TfsBuildManager.Repository.BuildRetentionPolicy.#FailedKeep")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1014:MarkAssembliesWithClsCompliant")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "TfsBuildManager.Repository.TfsClientRepository.#CloneBuild(System.Uri,System.String,Microsoft.TeamFoundation.VersionControl.Client.BranchObject,Microsoft.TeamFoundation.VersionControl.Client.BranchObject)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "type", Target = "TfsBuildManager.Repository.TfsClientRepository")]

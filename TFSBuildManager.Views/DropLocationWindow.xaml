@@ -29,7 +29,7 @@
         <TextBox Height="23" HorizontalAlignment="Left" Margin="161,69,0,0" Name="txtReplace" VerticalAlignment="Top" Width="290" Text="{Binding ReplaceTxt}" IsEnabled="{Binding ElementName=rdoSearchAndReplace, Path=IsChecked}"/>
         
         <RadioButton Content="Set drop location to:" Height="16" HorizontalAlignment="Left" Margin="16,114,0,0" Name="rdoSet" VerticalAlignment="Top" />
-        <Label Content="Dop location" Height="28" HorizontalAlignment="Left" Margin="46,136,0,0" Name="label3" VerticalAlignment="Top"  IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}"/>
+        <Label Content="Drop location" Height="28" HorizontalAlignment="Left" Margin="46,136,0,0" Name="label3" VerticalAlignment="Top"  IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}"/>
         <TextBox Height="23" HorizontalAlignment="Left" Margin="161,138,0,0" Name="txtSetDropLocation" VerticalAlignment="Top" Width="290" Text="{Binding SetDropLocation}" IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}"/>
         <CheckBox Content="Update drop location for existing builds " Height="16" IsChecked="{Binding UpdateExistingBuilds}" HorizontalAlignment="Left" Margin="12,256,0,0" Name="chkUpdateExistingBuilds" VerticalAlignment="Top" />
         <Label Content="Available macros" Height="28" HorizontalAlignment="Left" Margin="46,170,0,0" Name="label4" VerticalAlignment="Top"  IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}" />

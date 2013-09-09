@@ -65,7 +65,11 @@
                 <Grid Grid.Row="0" Name="BuildDefinitionFilter" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,0,0,0" VerticalAlignment="Center" Background="#FFE8E8EC">
                     <StackPanel Orientation="Horizontal" Margin="10,0,5,0" VerticalAlignment="Center">
                         <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"></CheckBox>
-                        <TextBlock Text="Include Disabled Builds" Margin="5,0,0,0" ></TextBlock>
+                        <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0" ></TextBlock>
+                        <Label VerticalAlignment="Center" Margin="10,0,0,0">Filter:</Label>
+                        <TextBox VerticalAlignment="Center" 
+                                  Width="200" 
+                                  Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}"></TextBox>
                     </StackPanel>
                 </Grid>
                 <Controls:SortableListView Grid.Row="1" Padding="0" BorderThickness="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}" IsManipulationEnabled="False" BorderBrush="LightGray" VerticalAlignment="Stretch">
@@ -130,21 +134,24 @@
                     </ListView.Resources>
                     <Controls:SortableListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding QueueBuildsCommand}" Header="Queue"/>
+                            <MenuItem Header="Queue">
+                                <MenuItem Command="{Binding QueueBuildsCommand}" Header="Normal"/>
+                                <MenuItem Command="{Binding QueueHighBuildsCommand}" Header="High Priority"/>
+                            </MenuItem>
                             <Separator/>
                             <MenuItem Command="{Binding DisableCommand}" Header="Disable">
                                 <MenuItem.Icon>
                                     <Image Source="Graphics/manu_disable.png" Width="16" Height="16" />
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Command="{Binding DeleteCommand}" Header="Delete">
-                                <MenuItem.Icon>
-                                    <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
-                                </MenuItem.Icon>
-                            </MenuItem>
                             <MenuItem Command="{Binding EnableCommand}" Header="Enable">
                                 <MenuItem.Icon>
                                     <Image Source="Graphics/menu_enable.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding DeleteCommand}" Header="Delete">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
                                 </MenuItem.Icon>
                             </MenuItem>
                             <Separator/>
@@ -171,12 +178,13 @@
                             </MenuItem>
                             <MenuItem Command="{Binding ChangeTriggerCommand}" Header="Trigger"/>
                             </MenuItem>
-                            <MenuItem Command="{Binding CloneBuildsCommand}" Header="Clone to Branch">
-                                <MenuItem.Icon>
-                                    <Image Source="Graphics/clone.png" Width="16" Height="16" />
-                                </MenuItem.Icon>
+                            <MenuItem Header="Clone">
+                                <MenuItem Command="{Binding CloneBuildsCommand}" Header="Clone to Branch">
                             </MenuItem>
-                            <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition"/>
+                            <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="Clone to Project">
+                            </MenuItem>
+                            </MenuItem>
+                            <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
                         </ContextMenu>
                     </Controls:SortableListView.ContextMenu>
                     

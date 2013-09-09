@@ -8,7 +8,6 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
         <Grid.Resources>
-
         </Grid.Resources>
 
         <Controls:SortableListView BorderThickness="0,0,0,0" x:Name="BuildList" ItemsSource="{Binding Builds}" Margin="0,-1,0,1"
@@ -39,14 +38,9 @@
                         <TextBlock Text="{Binding TeamProject}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </DataTemplate>
-                <DataTemplate x:Key="RequestedByTemplate">
+                <DataTemplate x:Key="QueuedTimeTemplate">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding RequestedBy}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>                
-                <DataTemplate x:Key="BuildControllerTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding BuildController}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                        <TextBlock Text="{Binding QueuedTime}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="StartTimeTemplate">
@@ -59,22 +53,36 @@
                         <TextBlock Text="{Binding FinishTime}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </DataTemplate>
+                <DataTemplate x:Key="DurationTemplate">                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding Duration}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </DataTemplate>              
                 <DataTemplate x:Key="DropLocationTemplate">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBlock Text="{Binding DropLocation}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                     </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="UriTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding Uri}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>
+                </DataTemplate>                
                 <DataTemplate x:Key="QualityTemplate">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBlock Text="{Binding Quality}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </DataTemplate>
-
+                <DataTemplate x:Key="RequestedByTemplate">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding RequestedBy}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="BuildAgentTemplate">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding BuildAgent}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="BuildControllerTemplate">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding BuildController}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </DataTemplate>
                 <DataTemplate x:Key="KeepForeverTemplate">
                     <Image Source="{Binding KeepForever}" Width="16" Height="16"/>                
                 </DataTemplate>                
@@ -91,13 +99,15 @@
                     <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="False" CellTemplate="{StaticResource NameTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Build Definition" SortPropertyName="BuildDefinition" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildDefinitionTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Team Project" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Build Quality" SortPropertyName="Quality" IsDefaultSortColumn="False" CellTemplate="{StaticResource QualityTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Requested By" SortPropertyName="RequestedBy" IsDefaultSortColumn="False" CellTemplate="{StaticResource RequestedByTemplate}"/>
+                    <Controls:SortableGridViewColumn Header="Queued Time" SortPropertyName="SortableQueuedTime" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueuedTimeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Start Time" SortPropertyName="SortableStartTime" IsDefaultSortColumn="False" CellTemplate="{StaticResource StartTimeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Finish Time" SortPropertyName="SortableFinishTime" IsDefaultSortColumn="True" CellTemplate="{StaticResource FinishTimeTemplate}" DefaultSortDirection="Descending"/>
+                    <Controls:SortableGridViewColumn Header="Duration" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource DurationTemplate}"/>
+                    <Controls:SortableGridViewColumn Header="Requested By" SortPropertyName="RequestedBy" IsDefaultSortColumn="False" CellTemplate="{StaticResource RequestedByTemplate}"/>
+                    <Controls:SortableGridViewColumn Header="Build Quality" SortPropertyName="Quality" IsDefaultSortColumn="False" CellTemplate="{StaticResource QualityTemplate}"/>                    
+                    <Controls:SortableGridViewColumn Header="Agent" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildAgentTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Uri" SortPropertyName="SortableUri" IsDefaultSortColumn="False" CellTemplate="{StaticResource UriTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Drop Location" SortPropertyName="DropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DropLocationTemplate}"/>
+                    <Controls:SortableGridViewColumn Header="Drop Location" SortPropertyName="DropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DropLocationTemplate}" />
                 </GridView>
             </ListView.View>
         </Controls:SortableListView>

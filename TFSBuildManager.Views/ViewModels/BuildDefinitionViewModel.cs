@@ -16,7 +16,7 @@ namespace TfsBuildManager.Views
             this.Name = build.Name;
             this.Uri = build.Uri;
             this.TeamProject = build.TeamProject;
-            this.ContinuousIntegrationType = build.ContinuousIntegrationType.ToString();    
+            this.ContinuousIntegrationType = GetFriendlyTriggerName(build.ContinuousIntegrationType);
             this.BuildController = build.BuildController != null ? build.BuildController.Name : NotAvailable;
             this.Process = build.Process != null ? Path.GetFileNameWithoutExtension(build.Process.ServerPath) : NotAvailable;
             this.Description = build.Description;
@@ -48,6 +48,34 @@ namespace TfsBuildManager.Views
             {
                 return string.Compare(this.Process, NotAvailable, StringComparison.Ordinal) == 0;
             }
+        }     
+        
+        private static string GetFriendlyTriggerName(ContinuousIntegrationType trigger)
+        {
+            string friendlyName = string.Empty;
+            switch (trigger)
+            {
+                case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Batch:
+                    friendlyName = "Rolling";
+                    break;
+                case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Gated:
+                    friendlyName = "Gated";
+                    break;
+                case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Individual:
+                    friendlyName = "CI";
+                    break;
+                case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.None:
+                    friendlyName = "Manual (None)";
+                    break;
+                case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Schedule:
+                    friendlyName = "Schedule";
+                    break;
+                case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.ScheduleForced:
+                    friendlyName = "Forced Schedule";
+                    break;
+            }
+
+            return friendlyName;
         }
     }
 }

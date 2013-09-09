@@ -26,6 +26,7 @@ namespace TfsBuildManager.Views
         private readonly ITfsClientRepository repository;
         private readonly IMainView view;
         private bool includeDisabledBuildDefinitions;
+        private string buildDefinitionFilter;
         private DateFilter selectedBuildDateFilter;
         private BuildFilter selectedBuildFilter;
         private BuildView selectedBuildView;
@@ -66,7 +67,10 @@ namespace TfsBuildManager.Views
             this.ChangeTriggerCommand = new DelegateCommand(this.OnChangeTrigger);
             
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
+            this.CloneBuildToProjectCommand = new DelegateCommand(this.OnCloneBuildToProject, this.OnCanCloneBuilds);
+
             this.QueueBuildsCommand = new DelegateCommand(this.OnQueueBuilds, this.OnCanQueueBuilds);
+            this.QueueHighBuildsCommand = new DelegateCommand(this.OnQueueHighBuilds, this.OnCanQueueBuilds);
             this.EditBuildDefinitionCommand = new DelegateCommand(this.OnEditBuildDefinition, this.OnCanEditBuildDefinition);
             this.GenerateBuildResourcesCommand = new DelegateCommand(this.OnGenerateBuildResources);
             this.Controllers = new ObservableCollection<string>(controllers.Select(c => c.Name));
@@ -137,9 +141,13 @@ namespace TfsBuildManager.Views
 
         public ICommand QueueBuildsCommand { get; private set; }
 
+        public ICommand QueueHighBuildsCommand { get; private set; }
+
         public ICommand EditBuildDefinitionCommand { get; private set; }
 
         public ICommand CloneBuildsCommand { get; private set; }
+
+        public ICommand CloneBuildToProjectCommand { get; private set; }
 
         public ICommand GenerateBuildResourcesCommand { get; private set; }
 
@@ -175,6 +183,24 @@ namespace TfsBuildManager.Views
                 if (value != old)
                 {
                     this.NotifyPropertyChanged("SelectedBuildFilter");
+                }
+            }
+        }
+        
+        public string BuildDefinitionFilter
+        {
+            get
+            {
+                return this.buildDefinitionFilter;
+            }
+
+            set
+            {
+                var old = this.buildDefinitionFilter;
+                this.buildDefinitionFilter = value;
+                if (value != old)
+                {
+                    this.NotifyPropertyChanged("BuildDefinitionFilter");
                 }
             }
         }
@@ -886,6 +912,60 @@ namespace TfsBuildManager.Views
                     }
 
                     this.OnRefresh(new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private void OnCloneBuildToProject()
+        {
+            try
+            {
+                var items = this.view.SelectedItems.ToList();
+                if (items.Count() != 1)
+                {
+                    return;
+                }
+
+                var item = items.First();
+                using (new WaitCursor())
+                {
+                    var projects = this.repository.AllTeamProjects.Select(tp => tp.Name).ToList();
+                    var viewModel = new TeamProjectListViewModel(projects);
+
+                    var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject);
+                    wnd.cbSetAsDefault.Visibility = Visibility.Collapsed;
+                    bool? res = wnd.ShowDialog();
+                    if (res.HasValue && res.Value)
+                    {
+                        using (new WaitCursor())
+                        {
+                            this.repository.CloneBuildToProject(item.Uri, item.Name, wnd.SelectedTeamProjects.Select(tp => tp.Name).First());
+                        }
+
+                        this.OnRefresh(new EventArgs());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private void OnQueueHighBuilds()
+        {
+            try
+            {
+                var items = this.view.SelectedItems;
+                using (new WaitCursor())
+                {
+                    this.repository.QueueHighBuilds(items.Select(b => b.Uri));
+                    this.SelectedBuildView = BuildView.Builds;
+                    this.SelectedBuildFilter = BuildFilter.Queued;
                 }
             }
             catch (Exception ex)

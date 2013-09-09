@@ -6,6 +6,7 @@ namespace TfsBuildManager.Views
 {
     using System;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Common;
 
     public class BuildViewModel : ViewModelBase
     {
@@ -13,6 +14,9 @@ namespace TfsBuildManager.Views
 
         public BuildViewModel(IBuildDetail build)
         {
+            string[] refreshAllDetails = { "*" };
+            build.Refresh(refreshAllDetails, QueryOptions.Agents | QueryOptions.BatchedRequests);
+
             this.FullBuildDetail = build;
             this.Name = build.BuildNumber;
             this.BuildDefinition = build.BuildDefinition.Name;
@@ -21,19 +25,23 @@ namespace TfsBuildManager.Views
             this.BuildStatus = build.Status.ToString();
             this.BuildController = build.BuildController != null ? build.BuildController.Name : "n/a";
             this.RequestedBy = build.RequestedFor;
+            this.QueuedTime = build.Requests.Count > 0 ? build.Requests[0].QueueTime.ToString("g") : build.StartTime.ToString("g");             
             this.StartTime = build.StartTime.ToString("g");
             this.SortableStartTime = build.StartTime.ToString("s");
+            this.SortableQueuedTime = build.Requests.Count > 0 ? build.Requests[0].QueueTime.ToString("s") : build.StartTime.ToString("s");             
             this.DropLocation = build.DropLocation;
             if (build.BuildFinished)
             {
                 this.FinishTime = build.FinishTime.ToString("g");
                 this.SortableFinishTime = build.FinishTime.ToString("s");
+                this.Duration = string.Format("{0:hh\\:mm\\:ss}", build.FinishTime - build.StartTime);
             }
-
+            
             this.Uri = build.Uri;
             this.SortableUri = build.Uri.ToString();
             this.keep = build.KeepForever;
             this.Quality = build.Quality;
+            this.BuildAgent = GetBuildAgentName(build);
         }
 
         public BuildViewModel(IQueuedBuild build)
@@ -41,6 +49,8 @@ namespace TfsBuildManager.Views
             this.QueuedBuildDetail = build;
             if (build.Build != null)
             {
+                string[] refreshAllDetails = { "*" };
+                build.Build.Refresh(refreshAllDetails, QueryOptions.Agents | QueryOptions.BatchedRequests);
                 this.Name = build.Build.BuildNumber;
             }
             else
@@ -59,11 +69,17 @@ namespace TfsBuildManager.Views
             if (build.Build != null)
             {
                 this.StartTime = build.Build.StartTime.ToString("g");
+                this.SortableStartTime = build.Build.StartTime.ToString("s");
                 if (build.Build.BuildFinished)
                 {
                     this.FinishTime = build.Build.FinishTime.ToString("g");
+                    this.SortableFinishTime = build.Build.FinishTime.ToString("s");
+                    this.Duration = string.Format("{0:hh\\:mm\\:ss}", build.Build.FinishTime - build.Build.StartTime);
                 }
 
+                this.QueuedTime = build.Build.Requests.Count > 0 ? build.Build.Requests[0].QueueTime.ToString("g") : build.Build.StartTime.ToString("g");
+                this.SortableQueuedTime = build.Build.Requests.Count > 0 ? build.Build.Requests[0].QueueTime.ToString("s") : build.Build.StartTime.ToString("s");
+                this.BuildAgent = GetBuildAgentName(build.Build);
                 this.Uri = build.Build.Uri;
             }
         }
@@ -88,6 +104,10 @@ namespace TfsBuildManager.Views
 
         public string BuildAgent { get; set; }
 
+        public string QueuedTime { get; set; }
+
+        public string SortableQueuedTime { get; set; }
+
         public string StartTime { get; set; }
 
         public string SortableStartTime { get; set; }
@@ -96,6 +116,8 @@ namespace TfsBuildManager.Views
 
         public string SortableFinishTime { get; set; }
 
+        public string Duration { get; set; }
+        
         public Uri Uri { get; set; }
 
         public string SortableUri { get; set; }
@@ -114,6 +136,18 @@ namespace TfsBuildManager.Views
         public string KeepForever
         {
             get { return this.keep ? "Graphics\\lock_16.png" : string.Empty; }
+        }
+
+        private static string GetBuildAgentName(IBuildDetail build)
+        {
+            var buildInformationNodes = build.Information.GetNodesByType("AgentScopeActivityTracking", true);
+            if (buildInformationNodes != null)
+            {
+                var node = buildInformationNodes.Find(s => s.Fields.ContainsKey(InformationFields.ReservedAgentName));
+                return node != null ? node.Fields[InformationFields.ReservedAgentName] : string.Empty;
+            }
+
+            return string.Empty;
         }
     }
 }
