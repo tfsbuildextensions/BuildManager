@@ -68,7 +68,8 @@ namespace TfsBuildManager.Views
             
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
             this.CloneBuildToProjectCommand = new DelegateCommand(this.OnCloneBuildToProject, this.OnCanCloneBuilds);
-
+                        
+            this.RemapWorkspacesCommand = new DelegateCommand(this.OnRemapWorkspaces, this.OnCanRemapWorkspaces);
             this.QueueBuildsCommand = new DelegateCommand(this.OnQueueBuilds, this.OnCanQueueBuilds);
             this.QueueHighBuildsCommand = new DelegateCommand(this.OnQueueHighBuilds, this.OnCanQueueBuilds);
             this.EditBuildDefinitionCommand = new DelegateCommand(this.OnEditBuildDefinition, this.OnCanEditBuildDefinition);
@@ -150,6 +151,8 @@ namespace TfsBuildManager.Views
         public ICommand CloneBuildToProjectCommand { get; private set; }
 
         public ICommand GenerateBuildResourcesCommand { get; private set; }
+
+        public ICommand RemapWorkspacesCommand { get; private set; }
 
         public ICommand RefreshCurrentView { get; private set; }
 
@@ -954,6 +957,41 @@ namespace TfsBuildManager.Views
             {
                 this.view.DisplayError(ex);
             }
+        }
+
+        private void OnRemapWorkspaces()
+        {
+            try
+            {   
+                if (this.selectedBuildView == BuildView.BuildDefinitions)
+                {
+                    var buildDefinition = this.view.SelectedItems.First().BuildDefinition;
+                    this.context.RemapWorkspaces(buildDefinition);
+                }
+                else if (this.selectedBuildFilter == BuildFilter.Completed)
+                {
+                    var buildDefinition = this.view.SelectedBuilds.First().FullBuildDefinition;
+                    this.context.RemapWorkspaces(buildDefinition);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private bool OnCanRemapWorkspaces()
+        {
+            try
+            {
+                return this.view.SelectedItems.Count() == 1 || this.view.SelectedBuilds.Count() == 1;
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+
+            return false;
         }
 
         private void OnQueueHighBuilds()

@@ -4,9 +4,12 @@
 namespace TfsBuildManager
 {
     using System;
+    using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.VisualStudio.TeamFoundation;
     using Microsoft.VisualStudio.TeamFoundation.Build;
     using TfsBuildManager.Repository;
+    using TfsBuildManager.Views;
+    using TfsBuildManager.Views.ViewModels;
 
     public class VSExtensionContext : ITfsContext
     {
@@ -59,6 +62,13 @@ namespace TfsBuildManager
         public void ShowControllerManager()
         {
             this.buildExt.ControllerManager.Show();
+        }
+
+        public void RemapWorkspaces(IBuildDefinition buildDefinition)
+        {
+            var viewModel = new RemapWorkspacesViewModel(buildDefinition);
+            var remapWorkSpacesWindow = new RemapWorkspaces(viewModel);
+            remapWorkSpacesWindow.ShowDialog();
         }
     }
 }

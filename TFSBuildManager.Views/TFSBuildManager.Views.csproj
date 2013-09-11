@@ -94,6 +94,10 @@
     <Compile Include="BuildResourcesGrid.xaml.cs">
       <DependentUpon>BuildResourcesGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HighlightTextBlock.cs" />
+    <Compile Include="RemapWorkspaces.xaml.cs">
+      <DependentUpon>RemapWorkspaces.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TriggerWindow.xaml.cs">
       <DependentUpon>TriggerWindow.xaml</DependentUpon>
     </Compile>
@@ -153,8 +157,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\RemapWorkspacesViewModel.cs" />
     <Compile Include="ViewModels\TargetBranchViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\WorkspaceItemViewModel.cs" />
     <Compile Include="WaitCursor.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -180,6 +186,10 @@
     <Page Include="BuildResourcesGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RemapWorkspaces.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TriggerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

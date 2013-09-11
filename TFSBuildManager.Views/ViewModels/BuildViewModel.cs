@@ -18,6 +18,7 @@ namespace TfsBuildManager.Views
             build.Refresh(refreshAllDetails, QueryOptions.Agents | QueryOptions.BatchedRequests);
 
             this.FullBuildDetail = build;
+            this.FullBuildDefinition = build.BuildDefinition;
             this.Name = build.BuildNumber;
             this.BuildDefinition = build.BuildDefinition.Name;
             this.BuildDefinitionUri = build.BuildDefinitionUri;
@@ -57,7 +58,8 @@ namespace TfsBuildManager.Views
             {
                 this.Name = build.Id.ToString();
             }
-
+            
+            this.FullBuildDefinition = build.BuildDefinition;
             this.BuildDefinition = build.BuildDefinition != null ? build.BuildDefinition.Name : "n/a";
             this.BuildDefinitionUri = build.BuildDefinition != null ? build.BuildDefinitionUri : null;
             this.TeamProject = build.TeamProject;
@@ -83,6 +85,8 @@ namespace TfsBuildManager.Views
                 this.Uri = build.Build.Uri;
             }
         }
+
+        public IBuildDefinition FullBuildDefinition { get; set; }
 
         public IBuildDetail FullBuildDetail { get; set; }
 

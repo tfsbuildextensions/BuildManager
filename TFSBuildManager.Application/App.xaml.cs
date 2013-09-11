@@ -5,6 +5,7 @@ namespace TfsBuildManager.Application
 {
     using System;
     using System.Windows;
+    using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Client;
     using Microsoft.TeamFoundation.Server;
     using TfsBuildManager.Repository;
@@ -58,6 +59,11 @@ namespace TfsBuildManager.Application
         public void ShowControllerManager()
         {            
            ShowNotSupportedMessage();
+        }
+
+        public void RemapWorkspaces(IBuildDefinition buildDefinition)
+        {
+            ShowNotSupportedMessage();
         }
 
         private static void ShowNotSupportedMessage()

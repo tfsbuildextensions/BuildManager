@@ -14,6 +14,7 @@ namespace TfsBuildManager.Views
         public BuildDefinitionViewModel(IBuildDefinition build)
         {
             this.Name = build.Name;
+            this.BuildDefinition = build;
             this.Uri = build.Uri;
             this.TeamProject = build.TeamProject;
             this.ContinuousIntegrationType = GetFriendlyTriggerName(build.ContinuousIntegrationType);
@@ -23,6 +24,8 @@ namespace TfsBuildManager.Views
             this.DefaultDropLocation = build.DefaultDropLocation;
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
         }
+
+        public IBuildDefinition BuildDefinition { get; set; }
 
         public string Name { get; set; }
 

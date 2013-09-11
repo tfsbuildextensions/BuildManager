@@ -184,6 +184,7 @@
                             <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="Clone to Project">
                             </MenuItem>
                             </MenuItem>
+                            <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
                             <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
                         </ContextMenu>
                     </Controls:SortableListView.ContextMenu>

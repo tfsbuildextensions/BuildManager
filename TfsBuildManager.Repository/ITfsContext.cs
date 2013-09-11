@@ -5,6 +5,7 @@
 namespace TfsBuildManager.Repository
 {
     using System;
+    using Microsoft.TeamFoundation.Build.Client;
 
     public interface ITfsContext
     {
@@ -19,5 +20,7 @@ namespace TfsBuildManager.Repository
         void EditBuildDefinition(Uri buildDefinition);
 
         void ShowControllerManager();
+
+        void RemapWorkspaces(IBuildDefinition buildDefinition);
     }
 }
