@@ -18,8 +18,7 @@ namespace TfsBuildManager.Views.ViewModels
 
         public RemapWorkspacesViewModel(IBuildDefinition buildDefinition)
         {
-            string[] refreshAllDetails = { "*" };
-            buildDefinition.Refresh(refreshAllDetails, QueryOptions.Definitions);
+            buildDefinition.Refresh();
             this.buildDefinition = buildDefinition;
             this.workspaceItems = InitializeWorkSpaceItems(buildDefinition);
         }
