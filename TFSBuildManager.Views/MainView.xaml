@@ -72,7 +72,7 @@
                                   Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}"></TextBox>
                     </StackPanel>
                 </Grid>
-                <Controls:SortableListView Grid.Row="1" Padding="0" BorderThickness="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}" IsManipulationEnabled="False" BorderBrush="LightGray" VerticalAlignment="Stretch">
+                <Controls:SortableListView Grid.Row="1" Padding="0" BorderThickness="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}" IsManipulationEnabled="False" BorderBrush="LightGray" VerticalAlignment="Stretch" KeyUp="BuildDefinitionList_KeyUp">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Setter Property="ToolTip" Value="{Binding Path=Description}" />
