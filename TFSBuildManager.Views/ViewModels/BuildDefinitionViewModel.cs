@@ -22,12 +22,15 @@ namespace TfsBuildManager.Views
             this.Process = build.Process != null ? Path.GetFileNameWithoutExtension(build.Process.ServerPath) : NotAvailable;
             this.Description = build.Description;
             this.DefaultDropLocation = build.DefaultDropLocation;
+            this.Id = build.Id;
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
         }
 
         public IBuildDefinition BuildDefinition { get; set; }
 
         public string Name { get; set; }
+
+        public string Id { get; set; }
 
         public Uri Uri { get; set; }
 

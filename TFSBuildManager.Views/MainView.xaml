@@ -102,6 +102,11 @@
                                 <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                             </StackPanel>
                         </DataTemplate>
+                        <DataTemplate x:Key="IdTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Id}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
                         <DataTemplate x:Key="TeamProjectTemplate">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                 <TextBlock Text="{Binding TeamProject}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
@@ -192,6 +197,7 @@
                     <ListView.View>
                         <GridView>
                             <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="True" CellTemplate="{StaticResource NameTemplate}"/>
+                            <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="True" CellTemplate="{StaticResource IdTemplate}"/>
                             <Controls:SortableGridViewColumn Header="TeamProject" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}"/>
                             <Controls:SortableGridViewColumn Header="Trigger" SortPropertyName="ContinuousIntegrationType" IsDefaultSortColumn="False" CellTemplate="{StaticResource ContinuousIntegrationTypeTemplate}"/>
                             <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}"/>
