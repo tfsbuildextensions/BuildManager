@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="BuildTree.Views.BuildTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:Microsoft.TeamFoundation.Controls.WPF.Converters;assembly=Microsoft.TeamFoundation.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+                          DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Microsoft.TeamFoundation.Controls;component/WPF/SharedResources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Microsoft.TeamFoundation.Build.Controls;component/BuildsPage/BuildIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converters:TrueToVisibleConverter x:Key="trueToVisibleConverter" />
+            <Style x:Key="DefinitionOverlayRectangleStyle" TargetType="{x:Type Rectangle}">
+                <Setter Property="FrameworkElement.Width" Value="12"/>
+                <Setter Property="FrameworkElement.Height" Value="12"/>
+                <Setter Property="FrameworkElement.Margin" Value="8,8,0,0"/>
+                <Setter Property="Shape.Fill" Value="#00FFFFFF"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=Definition.QueueStatus}" Value="Disabled">
+                        <Setter Property="Shape.Fill" Value="{StaticResource DefinitionDisabledIconBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Definition.QueueStatus}" Value="Paused">
+                        <Setter Property="Shape.Fill" Value="{StaticResource DefinitionPausedIconBrush}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="TriggerTypeRectangleStyle" TargetType="{x:Type Rectangle}">
+                <Setter Property="Shape.Fill" Value="{StaticResource ManualIconBrush}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=Definition.TriggerType}" Value="ContinuousIntegration">
+                        <Setter Property="Shape.Fill" Value="{StaticResource ContinuousIntegrationIconBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Definition.TriggerType}" Value="BatchedContinuousIntegration">
+                        <Setter Property="Shape.Fill" Value="{StaticResource RollingIconBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Definition.TriggerType}" Value="Schedule">
+                        <Setter Property="Shape.Fill" Value="{StaticResource ScheduledIconBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Definition.TriggerType}" Value="ScheduleForced">
+                        <Setter Property="Shape.Fill" Value="{StaticResource ScheduledIconBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Definition.TriggerType}" Value="GatedCheckIn">
+                        <Setter Property="Shape.Fill" Value="{StaticResource GatedIconBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Definition.TriggerType}" Value="BatchedGatedCheckIn">
+                        <Setter Property="Shape.Fill" Value="{StaticResource GatedIconBrush}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid Margin="6,6,6,6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TreeView Grid.Row="0" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Stretch" ItemsSource="{Binding ParentSection.Builds}">
+            <TreeView.Resources>
+                <ContextMenu x:Key="BuildContextMenu" StaysOpen="True">
+                    <MenuItem Header="View Builds" Click="ViewBuilds_Click" />
+                    <MenuItem Header="Queue New Build..." Click="QueueNewBuild_Click" />
+                    <MenuItem Header="Edit Build Definition..." Click="EditBuildDefinition_Click" />
+                </ContextMenu>
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemStyle}">
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
+                    <HierarchicalDataTemplate.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemStyle}">
+                            <Setter Property="ContextMenu" Value="{StaticResource BuildContextMenu}"></Setter>
+                            <EventSetter Event="MouseRightButtonUp" Handler="TreeViewItem_MouseRightButtonUp"></EventSetter>
+                        </Style>
+                    </HierarchicalDataTemplate.ItemContainerStyle>
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Width="30" Grid.Column="0" Visibility="{Binding Path=IsBuildNode,Converter={StaticResource trueToVisibleConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Style="{StaticResource TriggerTypeRectangleStyle}"
+                                   Grid.Column="0"
+                                   Height="16"
+                                   Width="16"
+                                   VerticalAlignment="Center" />
+                            <Rectangle Style="{StaticResource DefinitionOverlayRectangleStyle}"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center" />
+                        </Grid>
+                        
+                        <TextBlock Grid.Column="1"
+                                   TextTrimming="CharacterEllipsis"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource WorkItemDefaultControlForeground}"
+                                   Text="{Binding Path=Name}" />
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>
