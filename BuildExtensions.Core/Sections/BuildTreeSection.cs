@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BuildTree.Models;
 using BuildTree.Views;
+using EnvDTE;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Build.Controls;
 using Microsoft.TeamFoundation.Client;
@@ -16,7 +17,7 @@ namespace BuildTree.Sections
     {
         public const string SectionId = "0C1852A7-0C9B-4D95-8893-02C60BEE271E";
 
-        private VsTeamFoundationBuild _buildService;
+        private IVsTeamFoundationBuild _buildService;
 
         private ObservableCollection<BuildDefinitionViewModel> _builds = new ObservableCollection<BuildDefinitionViewModel>();
         public ObservableCollection<BuildDefinitionViewModel> Builds
@@ -46,10 +47,20 @@ namespace BuildTree.Sections
             this.View.ParentSection = this;
         }
 
+        private DTE _dte = null;
+        private Events _dteEvents = null;
+        private DocumentEvents _dteDocumentEvents = null;
         public async override void Initialize(object sender, SectionInitializeEventArgs e)
         {
             base.Initialize(sender, e);
-            _buildService = new VsTeamFoundationBuild();
+            
+            _buildService = GetService<IVsTeamFoundationBuild>();
+
+            _dte = GetService<DTE>();            
+            _dteEvents = _dte.Events;
+            _dteDocumentEvents = _dte.Events.DocumentEvents;
+
+            _dteDocumentEvents.DocumentSaved += _dteDocumentEvents_DocumentSaved;
 
             var sectionContext = e.Context as BuildsSectionContext;
             if (sectionContext != null)
@@ -60,6 +71,14 @@ namespace BuildTree.Sections
             {
                 await this.RefreshAsync();
             }
+        }
+
+        void _dteDocumentEvents_DocumentSaved(Document Document)
+        {
+            string documentTitle = Document.FullName;
+
+            if (documentTitle.Contains("/Build/Definition"))
+                Refresh();
         }
 
         public async override void Refresh()
@@ -100,7 +119,7 @@ namespace BuildTree.Sections
                     ITeamFoundationContext context = this.CurrentContext;
                     if (context != null && context.HasCollection && context.HasTeamProject)
                     {
-                        IBuildServer buildServer = context.TeamProjectCollection.GetService<IBuildServer>();
+                        var buildServer = context.TeamProjectCollection.GetService<IBuildServer>();
                         if (buildServer != null)
                         {
                             var buildDefinitions = buildServer.QueryBuildDefinitions(context.TeamProjectName);
@@ -131,7 +150,7 @@ namespace BuildTree.Sections
 
             if (_buildService != null)
             {
-                _buildService.OpenDefinition(SelectedBuildDefinition.Definition.Uri);
+                _buildService.DefinitionManager.OpenDefinition(SelectedBuildDefinition.Definition.Uri);
             }
         }
 

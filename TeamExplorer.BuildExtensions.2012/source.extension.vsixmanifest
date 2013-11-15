@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="39a6852f-99c4-4e4f-b572-4ad377b3638b" Version="1.0" Language="en-US" Publisher="Josh Rack" />
+    <DisplayName>TeamExplorer.BuildTree</DisplayName>
+    <Description xml:space="preserve">Visual Studio Build Definition Tree View Extension for Team Explorer</Description>
+    <License>license.txt</License>
+    <Tags>Team Explorer, Builds</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
+    <Dependency d:Source="Installed" Id="Microsoft.VisualStudio.MPF" DisplayName="Visual Studio MPF" Version="[11.0,12.0)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>
