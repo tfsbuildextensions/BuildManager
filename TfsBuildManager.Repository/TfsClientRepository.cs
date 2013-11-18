@@ -1,6 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="TfsClientRepository.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using Microsoft.TeamFoundation.Server;
+
 namespace TfsBuildManager.Repository
 {
     using System;
@@ -30,7 +33,7 @@ namespace TfsBuildManager.Repository
         private const string TestSpecs = "TestSpecs";
 
         private readonly IBuildServer buildServer;
-        private readonly VersionControlServer versionControl;
+        //private readonly VersionControlServer versionControl;
         private TfsTeamProjectCollection collection;
         private WorkItemStore workItemStore;
 
@@ -38,7 +41,6 @@ namespace TfsBuildManager.Repository
         {
             this.collection = collection;
             this.buildServer = (IBuildServer)this.collection.GetService(typeof(IBuildServer));
-            this.versionControl = (VersionControlServer)this.collection.GetService(typeof(VersionControlServer));
         }
 
         public TeamFoundationIdentity AuthenticatedIdentity
@@ -54,7 +56,7 @@ namespace TfsBuildManager.Repository
                 var teamProjects = this.AllTeamProjects;
                 foreach (var tp in teamProjects)
                 {
-                    buildDefinitions.AddRange(this.GetBuildDefinitionsForTeamProject(tp.Name));
+                    buildDefinitions.AddRange(this.GetBuildDefinitionsForTeamProject(tp));
                 }
 
                 return buildDefinitions;
@@ -66,9 +68,15 @@ namespace TfsBuildManager.Repository
             get { return this.buildServer.QueryBuildControllers(); }
         }
 
-        public IEnumerable<TeamProject> AllTeamProjects
+        public IEnumerable<string> AllTeamProjects
         {
-            get { return this.versionControl.GetAllTeamProjects(false); }
+            get
+            {
+                var structService = collection.GetService<ICommonStructureService>();
+
+                foreach (var p in structService.ListAllProjects())
+                    yield return p.Name;
+            }
         }
 
         public void Dispose()
@@ -103,7 +111,7 @@ namespace TfsBuildManager.Repository
 
             foreach (var project in this.AllTeamProjects)
             {
-                allBuildProcessTemplates.AddRange(this.buildServer.QueryProcessTemplates(project.Name).AsEnumerable());
+                allBuildProcessTemplates.AddRange(this.buildServer.QueryProcessTemplates(project).AsEnumerable());
             }
 
             return allBuildProcessTemplates;

@@ -13,7 +13,6 @@ namespace TfsBuildManager.Views
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.TeamFoundation.Build.Client;
-    using Microsoft.TeamFoundation.VersionControl.Client;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
 
@@ -31,7 +30,7 @@ namespace TfsBuildManager.Views
         private BuildFilter selectedBuildFilter;
         private BuildView selectedBuildView;
 
-        public BuildManagerViewModel(Window owner, ITfsClientRepository repository, IMainView view, IEnumerable<IBuildController> controllers, IEnumerable<TeamProject> teamProjects, ITfsContext context)
+        public BuildManagerViewModel(Window owner, ITfsClientRepository repository, IMainView view, IEnumerable<IBuildController> controllers, IEnumerable<string> teamProjects, ITfsContext context)
         {
             this.owner = owner;
             this.repository = repository;
@@ -77,7 +76,7 @@ namespace TfsBuildManager.Views
             this.Controllers = new ObservableCollection<string>(controllers.Select(c => c.Name));
             this.RefreshCurrentView = new DelegateCommand(this.OnRefreshCurrentView);
             this.Controllers.Insert(0, AllItem);
-            this.TeamProjects = new ObservableCollection<string>(teamProjects.Select(tp => tp.Name));
+            this.TeamProjects = new ObservableCollection<string>(teamProjects.Select(tp => tp));
             this.TeamProjects.Insert(0, AllItem);
             this.SelectedBuildFilter = BuildFilter.Queued;
             this.includeDisabledBuildDefinitions = false;
@@ -336,7 +335,7 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedBuildProcessTemplates;
-                var projects = this.repository.AllTeamProjects.Select(tp => tp.Name).ToList();
+                var projects = this.repository.AllTeamProjects.Select(tp => tp).ToList();
                 var viewModel = new TeamProjectListViewModel(projects);
 
                 var wnd = new SelectTeamProject(viewModel, null);
@@ -363,7 +362,7 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedBuildProcessTemplates.ToList();
-                var projects = this.repository.AllTeamProjects.Select(tp => tp.Name).ToList();
+                var projects = this.repository.AllTeamProjects.Select(tp => tp).ToList();
                 var viewModel = new TeamProjectListViewModel(projects);
 
                 var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject) { cbSetAsDefault = { Visibility = Visibility.Collapsed } };
@@ -936,7 +935,7 @@ namespace TfsBuildManager.Views
                 var item = items.First();
                 using (new WaitCursor())
                 {
-                    var projects = this.repository.AllTeamProjects.Select(tp => tp.Name).ToList();
+                    var projects = this.repository.AllTeamProjects.Select(tp => tp).ToList();
                     var viewModel = new TeamProjectListViewModel(projects);
 
                     var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject);

@@ -16,7 +16,7 @@ namespace TfsBuildManager.Repository
 
         IEnumerable<IBuildDefinition> AllBuildDefinitions { get; }
 
-        IEnumerable<TeamProject> AllTeamProjects { get; }
+        IEnumerable<string> AllTeamProjects { get; }
 
         IEnumerable<IBuildDefinition> GetBuildDefinitions(IBuildController controller);
 
