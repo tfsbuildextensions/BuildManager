@@ -1,0 +1,39 @@
+﻿<Window x:Class="TfsBuildManager.Views.DropLocationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls" 
+        xmlns:Views="clr-namespace:TfsBuildManager.Views" 
+        WindowStartupLocation="CenterScreen"
+        Title="Update drop location" 
+        Height="366" Width="485" MinHeight="18" MinWidth="100" ResizeMode="NoResize" Background="#FFF6F6F6" Icon="Graphics/AppIcon.ico">
+    <Grid Name="Grid1" Height="330">
+        <Grid.Resources>
+            <Style TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Margin" Value="5,0,0,0"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,5">
+            <Button IsDefault="True" Name="btnOK" Margin="5" Padding="20,3,20,3" Click="OnOK">OK</Button>
+            <Button IsDefault="False" IsCancel="True" Name="btnCancel" Margin="5" Padding="15,3,15,3" Click="OnCancel">Cancel</Button>
+        </StackPanel>
+        <RadioButton Content="Update drop location using Search &amp; Replace" Height="16" HorizontalAlignment="Left" Margin="16,16,0,0" Name="rdoSearchAndReplace" VerticalAlignment="Top" IsChecked="{Binding ModeReplace}" />
+
+        <Label Content="Search:" Height="28" HorizontalAlignment="Left" Margin="46,35,0,0" Name="label1" VerticalAlignment="Top" IsEnabled="{Binding ElementName=rdoSearchAndReplace, Path=IsChecked}"/>
+        <Label Content="Replace:" Height="28" HorizontalAlignment="Left" Margin="46,64,0,0" Name="label2" VerticalAlignment="Top" IsEnabled="{Binding ElementName=rdoSearchAndReplace, Path=IsChecked}"/>
+        <TextBox Height="23" Margin="161,40,0,0" Name="txtSearch" VerticalAlignment="Top" HorizontalAlignment="Left" Width="290" Text="{Binding SearchTxt}" IsEnabled="{Binding ElementName=rdoSearchAndReplace, Path=IsChecked}" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="161,69,0,0" Name="txtReplace" VerticalAlignment="Top" Width="290" Text="{Binding ReplaceTxt}" IsEnabled="{Binding ElementName=rdoSearchAndReplace, Path=IsChecked}"/>
+        
+        <RadioButton Content="Set drop location to:" Height="16" HorizontalAlignment="Left" Margin="16,114,0,0" Name="rdoSet" VerticalAlignment="Top" />
+        <Label Content="Drop location" Height="28" HorizontalAlignment="Left" Margin="46,136,0,0" Name="label3" VerticalAlignment="Top"  IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}"/>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="161,138,0,0" Name="txtSetDropLocation" VerticalAlignment="Top" Width="290" Text="{Binding SetDropLocation}" IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}"/>
+        <CheckBox Content="Update drop location for existing builds " Height="16" IsChecked="{Binding UpdateExistingBuilds}" HorizontalAlignment="Left" Margin="12,256,0,0" Name="chkUpdateExistingBuilds" VerticalAlignment="Top" />
+        <Label Content="Available macros" Height="28" HorizontalAlignment="Left" Margin="46,170,0,0" Name="label4" VerticalAlignment="Top"  IsEnabled="{Binding ElementName=rdoSet, Path=IsChecked}" />
+        <ListBox Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right"  ItemsSource="{Binding Macros}" Margin="0,170,49,0" MaxHeight="100" Name="lstMacros" SelectionMode="Single" VerticalAlignment="Top" DisplayMemberPath="Key"   MinWidth="100" MinHeight="28" Opacity="1" Width="253" MouseDoubleClick="lstMacros_MouseDoubleClick" />
+    </Grid>
+
+</Window>

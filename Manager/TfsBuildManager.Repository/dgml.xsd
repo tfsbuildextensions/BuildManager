@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://schemas.microsoft.com/vs/2009/dgml" elementFormDefault="qualified" xmlns="http://schemas.microsoft.com/vs/2009/dgml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+  <!-- Attributes that apply to all graph objects -->
+  <xs:attributeGroup name="CommonAttributes">
+    <xs:attribute name="Label" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>The human readable label on the node</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Visibility" type="VisibilityEnum" >
+      <xs:annotation>
+        <xs:documentation>The visibility of the node.  A node can be visible, hidden or collapsed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Background" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>Background color of the object</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FontSize" type="xs:double" >
+      <xs:annotation>
+        <xs:documentation>Controls size of the label</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FontFamily" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>Controls the type of font</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FontStyle" type="FontStyleEnum" >
+      <xs:annotation>
+        <xs:documentation>Controls the style of font</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FontWeight" type="FontWeightEnum" >
+      <xs:annotation>
+        <xs:documentation>Controls the weight of font</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Stroke" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>The color of the outline pen</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StrokeThickness" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>The thickness of the outline pen</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StrokeDashArray" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>The dash style of the outline pen, for example the value '2,2' gives a link that has evenly sized dashes</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <!-- Attributes that apply to Nodes -->
+  <xs:attributeGroup name="CategorizableNodeProperties">
+    <xs:attribute name="Icon" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>Path to an icon for the node</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Shape" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>Shape of the node</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Style" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>Style for the node</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="HorizontalAlignment" type="HorizontalAlignmentEnum" >
+      <xs:annotation>
+        <xs:documentation>Controls how the icon and label are aligned</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="VerticalAlignment" type="VerticalAlignmentEnum" >
+      <xs:annotation>
+        <xs:documentation>Controls how the icon and label are aligned</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MinWidth" type="xs:double" >
+      <xs:annotation>
+        <xs:documentation>The minimum width of the node, default is 50</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MaxWidth" type="xs:double" >
+      <xs:annotation>
+        <xs:documentation>The maximum width of the node, this makes it possible to create multiline text labels</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="NodeRadius" type="xs:double" >
+      <xs:annotation>
+        <xs:documentation>The corner radius on the nodes, default is 15</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <!-- Attributes that apply to links -->
+  <xs:attributeGroup name="CategorizableLinkProperties">
+  </xs:attributeGroup>
+
+  <xs:element name="DirectedGraph">
+    <xs:annotation>
+      <xs:documentation>
+        A DirectedGraph document contains nodes and links, where each link has a source and target node.
+        Nodes and links can also contain categories and properties that provide more information about them.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Nodes" minOccurs="0" maxOccurs="1" >
+          <xs:annotation>
+            <xs:documentation>The collection of nodes in the graph</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Node" minOccurs="0" maxOccurs="unbounded" >
+                <xs:annotation>
+                  <xs:documentation>A node in the graph</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Category" minOccurs="0" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:documentation>If you have more than one category on a node the second and subsequent categories are written as child elements.</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:attribute name="Ref" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="Id" type="xs:string" use="required" >
+                    <xs:annotation>
+                      <xs:documentation>The unique identifier of the node</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Category" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>The category that further describes the object.  You can have multiple categories defined as child elements.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attributeGroup ref="CategorizableNodeProperties" />
+                  <xs:attribute name="Description" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>A description of the node which will show in the tooltip</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Group" type="GroupEnum" >
+                    <xs:annotation>
+                      <xs:documentation>This attribute indicates that the node is to be displayed as a group with all children.  The group can be expanded or collapsed.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="IsVertical" type="ClrBoolean">
+                    <xs:annotation>
+                      <xs:documentation>A flag indicating whether to layout the icon and label vertically</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Reference" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>A link to an external DGML document</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attributeGroup ref="CommonAttributes" />
+                  <xs:attributeGroup ref="CodeSchemaAttributes" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Links" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Link" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Category" minOccurs="0" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:documentation>If you have more than one category on a link the second and subsequent categories are written as child elements.</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:attribute name="Ref" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attributeGroup ref="CommonAttributes" />
+                  <xs:attribute name="Source" type="xs:string" use="required" >
+                    <xs:annotation>
+                      <xs:documentation>The source node of the directed link.  If this node is not defined then one will be created on the fly.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Target" type="xs:string" use="required" >
+                    <xs:annotation>
+                      <xs:documentation>The target node of the directed link.  If this node is not defined then one will be created on the fly.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Category" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>The category that further describes the object.  You can have multiple categories defined as child elements.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attributeGroup ref="CategorizableLinkProperties" />
+                  <xs:attributeGroup ref="GroupingAttributes" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Categories" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Category" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence></xs:sequence>
+                  <xs:attribute name="Id" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>The unique identifier of the category</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="BasedOn" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>Categories support inheritance so that graph objects can share properties of inherited categories</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attributeGroup ref="CommonAttributes" />
+                  <xs:attributeGroup ref="CategorizableNodeProperties" />
+                  <xs:attributeGroup ref="CategorizableLinkProperties" />
+                  <xs:attribute name="CanLinkedNodesBeDataDriven" type="xs:string" />
+                  <xs:attribute name="CanBeDataDriven" type="xs:string" />
+                  <xs:attribute name="DefaultAction" type="xs:string" />
+                  <xs:attribute name="IncomingActionLabel" type="xs:string" />
+                  <xs:attribute name="IsProviderRoot" type="ClrBoolean" />
+                  <xs:attribute name="IsContainment" type="ClrBoolean" />
+                  <xs:attribute name="IsTag" type="ClrBoolean" />
+                  <xs:attribute name="NavigationActionLabel" type="xs:string" />
+                  <xs:attribute name="OutgoingActionLabel" type="xs:string" />
+                  <xs:attribute name="SourceCategory" type="xs:string" />
+                  <xs:attribute name="TargetCategory" type="xs:string" />
+                  <xs:attribute name="Details" type="xs:string" />
+                  <xs:attribute name="InboundName" type="xs:string" />
+                  <xs:attribute name="OutboundName" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Properties" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Property" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence></xs:sequence>
+                  <xs:attribute name="Id" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>The unique identifier of the property</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="IsReference" type="ClrBoolean" >
+                    <xs:annotation>
+                      <xs:documentation>The property is a reference property</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Label" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>The human readable label for the property</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="DataType" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>The CLR data type of the property</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Description" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>A human readable description of the property</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Group" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>The group label for properties when grouped in the property window</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="ReferenceTemplate" type="xs:string" >
+                    <xs:annotation>
+                      <xs:documentation>The string format for resolving the full path of a reference property</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="QualifiedNames" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Name">
+                <xs:complexType>
+                  <xs:attribute name="Id" type="xs:string" use="required" />
+                  <xs:attribute name="Label" type="xs:string" use="required" />
+                  <xs:attribute name="ValueType" type="xs:string" use="required" />
+                  <xs:attribute name="Formatter" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="IdentifierAliases" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Alias">
+                <xs:complexType>
+                  <xs:attribute name="n" type="xs:unsignedByte" use="required" />
+                  <xs:attribute name="Uri" type="xs:string" use="optional" />
+                  <xs:attribute name="Id" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Styles" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>The conditional styles </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Style" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation>A conditional style can apply UI settings to a matching set of nodes or links based on a conditional expression</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Condition" minOccurs="0" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>The condition element contains the conditoinal expression </xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:attribute name="Expression" >
+                          <xs:annotation>
+                            <xs:documentation>
+                              The conditional expression will be executed against the target type of the style if must return a boolean.
+                              If it returns true then the setters will apply to the matching graph objects.
+                              The expression can access properties on the graph objects and static methods of the .NET Math, String and Color classes.
+                              For example, the expression 'LinesOfCode > 10' will match all nodes that have a LinesOfCode property with a value greater than 10.
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Setter" minOccurs="0" maxOccurs="unbounded" vs:snippet="yes">
+                      <xs:annotation>
+                        <xs:documentation>A setter can set a UI property of the matching graph objects</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:attribute name="Property" type="PropertyType" use="required" >
+                          <xs:annotation>
+                            <xs:documentation>The UI property being set</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Value" use="optional" vs:snippet="yes" >
+                          <xs:annotation>
+                            <xs:documentation>The value of the property being set.  This property is mutually exclusive to the Expression attribute</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Expression" use="optional" >
+                          <xs:annotation>
+                            <xs:documentation>
+                              The setter Expression attribute is mutually exclusive to the Value attribute and allows a simple expression
+                              to be calulated for the property being set.  For example the expression 'Math.Max(9,Math.Sqrt(LinesOfCode))'
+                              calculates a number based on the LinesOfCode property equal to the square root of that property, and returns
+                              no less than 9.  This result could then be assigned to the FontSize property to achieve node sizing based on code size.
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="TargetType" type="TargetTypeEnum" use="required" >
+                    <xs:annotation>
+                      <xs:documentation>The target type of the conditional style, this controls what type of objects the conditional expressions will be applied to</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="IsEnabled" type="ClrBoolean">
+                    <xs:annotation>
+                      <xs:documentation>Whether the style is currently enabled (checked in the Graph Legend)</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="GroupLabel" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation>Label to show on the Legend</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="ValueLabel" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation>Label to use in the style picker dialogs</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="ToolTip" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>A tooltip to explain what this style represents</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Paths" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>The set of special paths used in the DGML document</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Path" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation>
+                    A special path defines a common location that many graph objects can refer to.
+                    For example you might see something like $(SolutionDir) in the DGML document which will be defined
+                    as the location of the solution from which the DGML data was derrived.
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="Id" type="xs:string" use="required" >
+                    <xs:annotation>
+                      <xs:documentation>The unique id of the common path</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="Value" type="xs:string" use="required"  >
+                    <xs:annotation>
+                      <xs:documentation>
+                        The default value of the common path if it is not already defined in the hosting process.
+                        Normally the hosting process will define these common paths, then re-wire the data when it is loaded.
+                        For example, $(SolutionDir) will be re-written to the path of the currently loaded solution in Visual Studio.
+                        These common paths help make DGML documents more portable.
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Title" type="xs:string" >
+        <xs:annotation>
+          <xs:documentation>The title of the graph</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Background" type="xs:string" >
+        <xs:annotation>
+          <xs:documentation>The background color for the entire graph</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="BackgroundImage" type="xs:string" >
+        <xs:annotation>
+          <xs:documentation>A background image for the graph</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="GraphDirection" type="GraphDirectionEnum">
+        <xs:annotation>
+          <xs:documentation>The direction for the graph layout</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Layout" type="LayoutEnum">
+        <xs:annotation>
+          <xs:documentation>The type of graph layout</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ButterflyMode" type="ClrBoolean">
+        <xs:annotation>
+          <xs:documentation>Whether graph is in butterfly mode or not</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="NeighborhoodDistance" type="xs:integer">
+        <xs:annotation>
+          <xs:documentation>The neighborhood distance</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ZoomLevel" type="ZoomLevel">
+        <xs:annotation>
+          <xs:documentation>The zoom level to show graph initially as a floating point number where 1 means 100%, or the word "Fit" to fit the graph to the current window size</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="ClrBoolean">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="True" />
+      <xs:enumeration value="False" />
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TargetTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Node" />
+      <xs:enumeration value="Link" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PropertyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ArrowHeadSize" />
+      <xs:enumeration value="ArrowHeadWidth" />
+      <xs:enumeration value="Background" />
+      <xs:enumeration value="FontFamily" />
+      <xs:enumeration value="FontSize" />
+      <xs:enumeration value="FontStyle" />
+      <xs:enumeration value="FontWeight" />
+      <xs:enumeration value="Foreground" />
+      <xs:enumeration value="HorizontalAlignment" />
+      <xs:enumeration value="Icon" />
+      <xs:enumeration value="Image" />
+      <xs:enumeration value="MinWidth" />
+      <xs:enumeration value="MaxWidth" />
+      <xs:enumeration value="NodeRadius" />      
+      <xs:enumeration value="SelectedStroke" />
+      <xs:enumeration value="ShadowDepth" />
+      <xs:enumeration value="Shape" />
+      <xs:enumeration value="Stroke" />
+      <xs:enumeration value="StrokeDashArray" />
+      <xs:enumeration value="StrokeThickness" />
+      <xs:enumeration value="Style" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Code Schema attributes -->
+  <xs:attributeGroup name="CodeSchemaAttributes">
+    <xs:attribute name="Access" type="xs:string" />
+    <xs:attribute name="Assembly" type="xs:string" />
+    <xs:attribute name="FilePath" type="xs:string" />
+    <xs:attribute name="FunctionTypeFlags" type="xs:string" />
+    <xs:attribute name="IsAbstract" type="ClrBoolean" />
+    <xs:attribute name="IsCodeType" type="ClrBoolean" />
+    <xs:attribute name="IsHub" type="ClrBoolean" />
+    <xs:attribute name="IsOverloaded" type="ClrBoolean" />
+    <xs:attribute name="IsOverridable" type="ClrBoolean" />
+    <xs:attribute name="Language" type="xs:string" />
+    <xs:attribute name="Location" type="xs:string" />
+    <xs:attribute name="LinesOfCode" type="xs:int" />
+    <xs:attribute name="Namespace" type="xs:string" />
+    <xs:attribute name="MustImplement" type="xs:string" />
+    <xs:attribute name="TypeName" type="xs:string" />
+
+    <xs:attribute name="IsDocumentation" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>This category or property is only used for documentation</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeGenSourceName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Depth in the call stack (distance from the originating node)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeGenTargetName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Depth in the call stack (distance from the originating node)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeGenIncoming" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Generate reverse link code</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_CallSequenceNumber" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Execution sequence of the call from the beginning of the originating node</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_DisableEnabledErrorHandler" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag which disables enabled error handler in the current procedure and resets it to Nothing.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_DisableEnabledException" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag which disables enabled exception in the current procedure and resets it to Nothing.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_EndColumn" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Last column number on the last line for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_EndLine" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Last line for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_FrameDepth" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>depth in the call stack (distance from the originating node)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_FrameKind" type="FrameKindEnum">
+      <xs:annotation>
+        <xs:documentation>Represents a single frame in the system. This can be a method call or just a control flow frame such as an if statement or loop that is part of the method</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_Icon" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Icon for the category.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_InstanceTrackingInformation" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Instance tracking information</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsAbstract" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate member is 'Abstract' does not provide a full implementation</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsAnonymous" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating if this delegate or type is anonymous</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsArray" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating that a type node represents an array of some other type</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsByReference" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating if the parameter takes a reference to the argument</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsCallToThis" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the that the method call is going to another method in this object</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsConstructor" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the method is a constructor</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsDo" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating the statement is a Do loop (which is also either a while or until loop)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsFinal" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the member is 'Final' and cannot be derived from</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsFor" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating the statement is a For loop</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsForEach" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating the statement is a For Each statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsGeneric" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the member is 'Generic'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsGenericInstance" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the member is an instantiation of a 'Generic'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsInternal" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the method is 'Internal'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsHideBySignature" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the method hides another method of the same signature</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsOperator" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating if this method defines a new operator</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsOut" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating the parameter is an 'out' parameter</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsParameterArray" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating if the parameter is a 'params' or 'paramarray' definition</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsPrivate" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the scope is Private</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsProtected" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the scope is Protected</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsProtectedOrInternal" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the scope is Protected or Internal</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsPropertyGet" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the frame is a Property Get</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsPropertySet" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the frame is a Property Set</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsPrototype" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the member is a prototype</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsPublic" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the scope is Public</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsSpecialName" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the member has a compiler generated name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsStatic" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the method is a static member</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsUntilLoop" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating the GuardExpression needs to evaluate to True to break out of the loop</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsVirtual" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag to indicate the method can be overridden</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_IsWhile" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag indicating the statement is a While loop</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_PreserveData" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>Flag used to preserve the data in the existing array when you change the size of only the last dimension.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_SingleInstanceSourceLink" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>The link contains only one instance, ever</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_SingleInstanceTargetLink" type="ClrBoolean">
+      <xs:annotation>
+        <xs:documentation>The link contains only one instance, ever</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_SourceText" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The source text associated with the graph node</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_StartColumn" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Starting column number for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_StartLine" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Starting line number for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_StatementKind" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Starting line number for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_StatementNumber" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Starting line number for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CodeSchemaProperty_StatementType" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Starting line number for the statement</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
+  </xs:attributeGroup>
+  <!-- Code Schema attributes -->
+  <xs:attributeGroup name="GroupingAttributes">
+    <xs:attribute name="Seeder" type="ClrBoolean" >
+      <xs:annotation>
+        <xs:documentation>Flag used by group by patterns</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AttractConsumers" type="ClrBoolean" >
+      <xs:annotation>
+        <xs:documentation>Flag used by group by patterns</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+
+  <xs:simpleType name="VisibilityEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Visible" />
+      <xs:enumeration value="Hidden" />
+      <xs:enumeration value="Collapsed" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="GroupEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Expanded" />
+      <xs:enumeration value="Collapsed" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FontStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="Italic" />
+      <xs:enumeration value="Oblique" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FontWeightEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Black" />
+      <xs:enumeration value="Bold" />
+      <xs:enumeration value="DemiBold" />
+      <xs:enumeration value="ExtraBlack" />
+      <xs:enumeration value="ExtraBold" />
+      <xs:enumeration value="ExtraLight" />
+      <xs:enumeration value="Heavy" />
+      <xs:enumeration value="Light" />
+      <xs:enumeration value="Medium" />
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="Regular" />
+      <xs:enumeration value="Semibold" />
+      <xs:enumeration value="Thin" />
+      <xs:enumeration value="UltraBlack" />
+      <xs:enumeration value="UltraBold" />
+      <xs:enumeration value="UltraLight" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FrameKindEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Conditional" />
+      <xs:enumeration value="Clause" />
+      <xs:enumeration value="Loop" />
+      <xs:enumeration value="Call" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="GraphDirectionEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TopToBottom" />
+      <xs:enumeration value="BottomToTop" />
+      <xs:enumeration value="LeftToRight" />
+      <xs:enumeration value="RightToLeft" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LayoutEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Sugiyama" />
+      <xs:enumeration value="ForceDirected" />
+      <xs:enumeration value="DependencyMatrix" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="HorizontalAlignmentEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Left" />
+      <xs:enumeration value="Center" />
+      <xs:enumeration value="Right" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="VerticalAlignmentEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Top" />
+      <xs:enumeration value="Center" />
+      <xs:enumeration value="Bottom" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ZoomLevel">
+    <xs:union memberTypes="xs:double ZoomLevelEnum">
+    </xs:union>
+  </xs:simpleType>
+
+  <xs:simpleType name="ZoomLevelEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Fit" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,39 @@
+﻿<Window x:Class="TfsBuildManager.Views.SelectBuildQuality"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls"
+        WindowStartupLocation="CenterScreen"
+        Title="Select Build Quality" Height="400" Width="400" Icon="Graphics/AppIcon.ico" ResizeMode="NoResize">
+    <Grid Name="Grid1" Margin="5">
+        <Grid.Resources>
+            <Style TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="Padding" Value="5,0" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Controls:SortableListView Margin="0"  BorderThickness="0,0,0,0" x:Name="BuildQualityList" ItemsSource="{Binding BuildQualities}" IsManipulationEnabled="False" SelectionMode="Single"  Height="Auto" MouseDoubleClick="OnDoubleClick">
+            <ListView.Resources>
+                <DataTemplate x:Key="BuildQualityTemplate">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </DataTemplate>
+
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <Controls:SortableGridViewColumn Width="{Binding ActualWidth, ElementName=BuildQualityList}" Header="Build Quality" SortPropertyName="Name" IsDefaultSortColumn="True" CellTemplate="{StaticResource BuildQualityTemplate}" />
+                </GridView>
+            </ListView.View>
+        </Controls:SortableListView>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,5">
+            <Button IsDefault="True" Name="btnOK" Margin="5" Padding="20,3,20,3" Click="OnOK" MouseDoubleClick="OnDoubleClick" >OK</Button>
+            <Button IsDefault="False" IsCancel="True" Name="btnCancel" Margin="5" Padding="15,3,15,3" Click="OnCancel">Cancel</Button>
+        </StackPanel>
+    </Grid>
+
+</Window>
