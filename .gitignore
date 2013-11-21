@@ -80,7 +80,12 @@ publish
 *.Publish.xml
 
 # NuGet Packages Directory
-packages
+packages/
+Nuget.exe
+
+# References folders
+AssemblyReferences/
+ExternalReferences/
 
 # Windows Azure Build Output
 csx
