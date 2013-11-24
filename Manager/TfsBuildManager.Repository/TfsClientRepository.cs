@@ -2,8 +2,6 @@
 // <copyright file="TfsClientRepository.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
 
-using Microsoft.TeamFoundation.Server;
-
 namespace TfsBuildManager.Repository
 {
     using System;
@@ -16,6 +14,7 @@ namespace TfsBuildManager.Repository
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
     using Microsoft.TeamFoundation.Client;
     using Microsoft.TeamFoundation.Framework.Client;
+    using Microsoft.TeamFoundation.Server;
     using Microsoft.TeamFoundation.TestManagement.Client;
     using Microsoft.TeamFoundation.VersionControl.Client;
     using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -33,7 +32,6 @@ namespace TfsBuildManager.Repository
         private const string TestSpecs = "TestSpecs";
 
         private readonly IBuildServer buildServer;
-        //private readonly VersionControlServer versionControl;
         private TfsTeamProjectCollection collection;
         private WorkItemStore workItemStore;
 
@@ -72,10 +70,12 @@ namespace TfsBuildManager.Repository
         {
             get
             {
-                var structService = collection.GetService<ICommonStructureService>();
+                var structService = this.collection.GetService<ICommonStructureService>();
 
                 foreach (var p in structService.ListAllProjects())
+                {
                     yield return p.Name;
+                }
             }
         }
 
@@ -328,7 +328,7 @@ namespace TfsBuildManager.Repository
                 var newProcessTemplate = this.buildServer.QueryProcessTemplates(bd.TeamProject).FirstOrDefault(pt => pt.ServerPath == serverPath) ??
                     this.buildServer.CreateProcessTemplate(bd.TeamProject, serverPath);
 
-                if (String.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, StringComparison.OrdinalIgnoreCase) != 0)
+                if (string.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     bd.Process = newProcessTemplate;
                     bd.Save();
