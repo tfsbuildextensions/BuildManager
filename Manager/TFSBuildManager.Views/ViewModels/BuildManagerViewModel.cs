@@ -452,7 +452,7 @@ namespace TfsBuildManager.Views
                     return;
                 }
 
-                if (MessageBox.Show("Are you sure you want to delete the selecct item(s)?", "Community TFS Build Manager", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Are you sure you want to delete the selected item(s)?", "Community TFS Build Manager", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     foreach (var res in selectedBuildResources)
                     {
