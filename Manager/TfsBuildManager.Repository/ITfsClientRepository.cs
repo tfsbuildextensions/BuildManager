@@ -40,6 +40,8 @@ namespace TfsBuildManager.Repository
 
         IEnumerable<IBuildDetail> GetCompletedBuilds(BuildResourceFilter filter, DateTime minFinishTime);
 
+        void CleanDropsFolders(IEnumerable<Uri> buildDefinitions);
+
         void DeleteBuildDefinitions(IEnumerable<Uri> buildDefinitions, DeleteOptions deleteOptions);
 
         void GenerateBuildNotes(IEnumerable<IBuildDetail> buildDefinitions, IEnumerable<string> noteOptions);

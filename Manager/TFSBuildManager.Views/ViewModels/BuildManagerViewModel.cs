@@ -39,6 +39,7 @@ namespace TfsBuildManager.Views
             this.BuildDefinitions = new ObservableCollection<BuildDefinitionViewModel>();
             this.Builds = new ObservableCollection<BuildViewModel>();
             this.BuildResources = new ObservableCollection<BuildResourceViewModel>();
+            this.CleanDropsCommands = new DelegateCommand(this.OnCleanDrops);
             this.DeleteCommand = new DelegateCommand(this.OnDelete);
             this.OpenDropFolderCommand = new DelegateCommand(this.OnOpenDropfolder);
             this.RetainIndefinitelyCommand = new DelegateCommand(this.OnRetainIndefinitely);
@@ -88,6 +89,8 @@ namespace TfsBuildManager.Views
         }
 
         public event EventHandler Refresh;
+
+        public ICommand CleanDropsCommands { get; private set; }
 
         public ICommand DeleteCommand { get; private set; }
 
@@ -283,6 +286,26 @@ namespace TfsBuildManager.Views
         public Visibility BuildResourcesViewVisible
         {
             get { return this.SelectedBuildView == BuildView.BuildResources ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public void OnCleanDrops()
+        {
+            try
+            {
+                var items = this.view.SelectedItems;
+                if (MessageBox.Show("Are you sure you want to delete drop folder of all deleted builds?", "Clean Drop Folders", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    using (new WaitCursor())
+                    {
+                        this.repository.CleanDropsFolders(items.Select(b => b.Uri));
+                        this.OnRefresh(new EventArgs());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
         }
 
         public void OnDelete()

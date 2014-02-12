@@ -6,9 +6,11 @@ namespace TfsBuildManager.Repository
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
@@ -266,6 +268,34 @@ namespace TfsBuildManager.Repository
                 var bd = this.buildServer.GetBuildDefinition(buildUri);
                 bd.QueueStatus = DefinitionQueueStatus.Enabled;
                 bd.Save();
+            }
+        }
+
+        public void CleanDropsFolders(IEnumerable<Uri> buildDefinitions)
+        {
+            var buildDefinitionUris = buildDefinitions.ToArray();
+            foreach (var buildDefinition in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitionUris))
+            {
+                IBuildDetailSpec spec = this.buildServer.CreateBuildDetailSpec(buildDefinition);
+                spec.QueryDeletedOption = QueryDeletedOption.OnlyDeleted;
+                var builds = this.buildServer.QueryBuilds(spec).Builds;
+                var taskArray = new Collection<Task>();
+                foreach (var build in builds)
+                {   
+                    var buildLocation = build.DropLocation;
+                    if (!string.IsNullOrWhiteSpace(buildLocation))
+                    {
+                        taskArray.Add(Task.Factory.StartNew(() => 
+                                    { 
+                                        if (Directory.Exists(buildLocation))
+                                        {
+                                            Directory.Delete(buildLocation, true);
+                                        }
+                                    }));
+                    }
+                }
+
+                Task.WaitAll(taskArray.ToArray());
             }
         }
 

@@ -159,6 +159,11 @@
                                     <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
                                 </MenuItem.Icon>
                             </MenuItem>
+                            <MenuItem Command="{Binding CleanDropsCommands}" Header="Clean Drop Folders">
+                              <MenuItem.Icon>
+                                <Image Source="Graphics/menu_clean.png" Width="16" Height="16" />
+                              </MenuItem.Icon>
+                            </MenuItem>
                             <Separator/>
                             <MenuItem Header="Change">
                             <MenuItem Command="{Binding ChangeBuildControllerCommand}" Header="Build Controller">
