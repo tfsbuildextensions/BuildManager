@@ -68,7 +68,7 @@ namespace TfsBuildManager.Application
 
         private static void ShowNotSupportedMessage()
         {
-            MessageBox.Show("This feature is not supported when running stand alone application");
+            MessageBox.Show("This feature is not supported when running the stand alone application.", "Visual Studio Extension Required", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

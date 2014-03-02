@@ -50,6 +50,8 @@ namespace TfsBuildManager.Views
             this.ViewBuildLogsCommand = new DelegateCommand(this.OnViewBuildLogs);
             this.ShowQueuedDetailsCommand = new DelegateCommand(this.OnShowQueuedDetails);
             this.StopBuildCommand = new DelegateCommand(this.OnStopBuild);
+            this.DisabledQueuedDefinitionCommand = new DelegateCommand(this.OnDisabledQueuedDefinition);
+            this.PauseQueuedDefinitionCommand = new DelegateCommand(this.OnPauseQueuedDefinition);
             this.ResumeBuildCommand = new DelegateCommand(this.OnResumeBuild);
             this.ChangeBuildTemplateCommand = new DelegateCommand(this.OnChangeBuildTemplate);
             this.SetDefaultBuildTemplateCommand = new DelegateCommand(this.OnSetDefaultBuildTemplate, this.OnCanSetDefaultBuildTemplate);
@@ -61,6 +63,7 @@ namespace TfsBuildManager.Views
             this.RemoveCommand = new DelegateCommand(this.OnRemove);
             this.EnableCommand = new DelegateCommand(this.OnEnable);
             this.DisableCommand = new DelegateCommand(this.OnDisable);
+            this.PauseCommand = new DelegateCommand(this.OnPause);
             this.SetRetentionPoliciesCommand = new DelegateCommand(this.OnSetRetentionsPolicies);
             this.ChangeBuildControllerCommand = new DelegateCommand(this.OnChangeBuildController);
             this.ChangeDefaultDropLocationCommand = new DelegateCommand(this.OnChangeDefaultDropLocation);
@@ -95,6 +98,8 @@ namespace TfsBuildManager.Views
         public ICommand DeleteCommand { get; private set; }
 
         public ICommand DisableCommand { get; private set; }
+        
+        public ICommand PauseCommand { get; private set; }
 
         public ICommand EnableCommand { get; private set; }
 
@@ -127,6 +132,10 @@ namespace TfsBuildManager.Views
         public ICommand ResumeBuildCommand { get; private set; }
 
         public ICommand StopBuildCommand { get; private set; }
+
+        public ICommand DisabledQueuedDefinitionCommand { get; private set; }
+
+        public ICommand PauseQueuedDefinitionCommand { get; private set; }
         
         public ICommand RetainIndefinitelyCommand { get; private set; }
 
@@ -508,6 +517,23 @@ namespace TfsBuildManager.Views
             }
         }
 
+        public void OnPause()
+        {
+            try
+            {
+                var items = this.view.SelectedItems;
+                using (new WaitCursor())
+                {
+                    this.repository.PauseBuildDefinitions(items.Select(b => b.Uri));
+                    this.OnRefresh(new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
         public void OnOpenDropfolder()
         {
             try
@@ -547,6 +573,40 @@ namespace TfsBuildManager.Views
             foreach (var selectedBuild in this.view.SelectedActiveBuilds)
             {
                 this.context.ShowBuild(selectedBuild.Uri);
+            }
+        }
+
+        public void OnDisabledQueuedDefinition()
+        {
+            try
+            {
+                var items = this.view.SelectedActiveBuilds;
+                using (new WaitCursor())
+                {
+                    this.repository.DisableBuildDefinitions(items.Select(b => b.BuildDefinitionUri));
+                    this.OnRefresh(new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        public void OnPauseQueuedDefinition()
+        {
+            try
+            {
+                var items = this.view.SelectedActiveBuilds;
+                using (new WaitCursor())
+                {
+                    this.repository.PauseBuildDefinitions(items.Select(b => b.BuildDefinitionUri));
+                    this.OnRefresh(new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
             }
         }
 

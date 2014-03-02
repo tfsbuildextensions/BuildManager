@@ -122,6 +122,11 @@
                                 <TextBlock Text="{Binding BuildController}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
                             </StackPanel>
                         </DataTemplate>
+                        <DataTemplate x:Key="QueueStatusTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding QueueStatus}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
                         <DataTemplate x:Key="ProcessTemplate">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                 <TextBlock Text="{Binding Process}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
@@ -146,7 +151,7 @@
                             <Separator/>
                             <MenuItem Command="{Binding DisableCommand}" Header="Disable">
                                 <MenuItem.Icon>
-                                    <Image Source="Graphics/manu_disable.png" Width="16" Height="16" />
+                                    <Image Source="Graphics/menu_disable.png" Width="16" Height="16" />
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Command="{Binding EnableCommand}" Header="Enable">
@@ -154,6 +159,12 @@
                                     <Image Source="Graphics/menu_enable.png" Width="16" Height="16" />
                                 </MenuItem.Icon>
                             </MenuItem>
+                            <MenuItem Command="{Binding PauseCommand}" Header="Pause">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_pause.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
                             <MenuItem Command="{Binding DeleteCommand}" Header="Delete">
                                 <MenuItem.Icon>
                                     <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
@@ -205,6 +216,7 @@
                             <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="True" CellTemplate="{StaticResource IdTemplate}"/>
                             <Controls:SortableGridViewColumn Header="TeamProject" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}"/>
                             <Controls:SortableGridViewColumn Header="Trigger" SortPropertyName="ContinuousIntegrationType" IsDefaultSortColumn="False" CellTemplate="{StaticResource ContinuousIntegrationTypeTemplate}"/>
+                            <Controls:SortableGridViewColumn Header="QueueStatus" SortPropertyName="QueueStatus" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueStatusTemplate}"/>
                             <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}"/>
                             <Controls:SortableGridViewColumn Header="Process" SortPropertyName="Process" IsDefaultSortColumn="False" CellTemplate="{StaticResource ProcessTemplate}"/>
                             <Controls:SortableGridViewColumn Header="DefaultDropLocation" SortPropertyName="DefaultDropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DefaultDropLocation}"/>
@@ -226,6 +238,19 @@
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Command="{Binding ResumeBuildCommand}" Header="Resume"/>
+                            <Separator/>
+                            <MenuItem Header="Definition">
+                                <MenuItem Command="{Binding DisabledQueuedDefinitionCommand}" Header="Disable">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/menu_disable.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding PauseQueuedDefinitionCommand}" Header="Pause">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/menu_pause.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </MenuItem>
                         </ContextMenu>
                     </Views:BuildsGrid.ContextMenu>
                 </Views:BuildsGrid>
@@ -262,7 +287,7 @@
                                         <Image Source="Graphics/lock_16.png" Width="16" Height="16" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition"/>
+                                <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
                                 <Separator/>
                                 <MenuItem Command="{Binding BuildNotesCommand}" Header="Experimental: Build Notes">
                                     <MenuItem.Icon>

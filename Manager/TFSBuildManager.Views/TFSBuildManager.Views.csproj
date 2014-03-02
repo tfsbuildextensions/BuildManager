@@ -295,7 +295,7 @@
     <Resource Include="Graphics\Menu_ChangeTemplate.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Graphics\Manu_Disable.png" />
+    <Resource Include="Graphics\Menu_Disable.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Graphics\Menu_Enable.png" />
@@ -364,6 +364,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Graphics\Menu_Clean.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Menu_Pause.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

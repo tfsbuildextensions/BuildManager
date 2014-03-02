@@ -169,7 +169,7 @@ namespace TfsBuildManager.Views
                             builds = this.SelectedTeamProject == BuildManagerViewModel.AllItem ? this.repository.GetBuildDefinitions(controller) : this.repository.GetBuildDefinitions(controller, this.SelectedTeamProject);
                         }
 
-                        builds = this.viewmodel.IncludeDisabledBuildDefinitions ? builds : builds.Where(b => b.QueueStatus == DefinitionQueueStatus.Enabled);
+                        builds = this.viewmodel.IncludeDisabledBuildDefinitions ? builds : builds.Where(b => b.QueueStatus != DefinitionQueueStatus.Disabled);
                         if (!string.IsNullOrWhiteSpace(this.viewmodel.BuildDefinitionFilter))
                         {
                             var filter = this.viewmodel.BuildDefinitionFilter.ToUpperInvariant();

@@ -48,8 +48,10 @@ namespace TfsBuildManager.Repository
 
         void DisableBuildDefinitions(IEnumerable<Uri> buildDefinitions);
 
-        void EnableBuildDefinitions(IEnumerable<Uri> buildDefinitions);
+        void PauseBuildDefinitions(IEnumerable<Uri> buildDefinitions);
 
+        void EnableBuildDefinitions(IEnumerable<Uri> buildDefinitions);
+        
         bool OpenDropFolder(IEnumerable<string> folders);
 
         string GetBuildLogLocation(IBuildDetail build);

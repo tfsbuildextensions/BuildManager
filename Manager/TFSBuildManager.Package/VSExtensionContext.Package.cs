@@ -54,6 +54,16 @@ namespace TfsBuildManager
             this.buildExt.DetailsManager.OpenBuild(buildUri);
         }
 
+        public void DisabledQueuedDefinition(Uri buildUri)
+        {
+            this.buildExt.DetailsManager.OpenBuild(buildUri);
+        }
+
+        public void PauseQueuedDefinition(Uri buildUri)
+        {
+            this.buildExt.DetailsManager.OpenBuild(buildUri);
+        }
+
         public void EditBuildDefinition(Uri buildDefinition)
         {
             this.buildExt.DefinitionManager.OpenDefinition(buildDefinition);

@@ -23,6 +23,7 @@ namespace TfsBuildManager.Views
             this.Description = build.Description;
             this.DefaultDropLocation = build.DefaultDropLocation;
             this.Id = build.Id;
+            this.QueueStatus = build.QueueStatus.ToString();
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
         }
 
@@ -40,6 +41,8 @@ namespace TfsBuildManager.Views
 
         public string BuildController { get; set; }
 
+        public string QueueStatus { get; set; }
+        
         public string Process { get; set; }
 
         public string Description { get; set; }

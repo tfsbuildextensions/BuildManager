@@ -198,6 +198,16 @@ namespace TfsBuildManager.Repository
             }
         }
 
+        public void PauseBuildDefinitions(IEnumerable<Uri> buildDefinitions)
+        {
+            foreach (var buildUri in buildDefinitions)
+            {
+                var bd = this.buildServer.GetBuildDefinition(buildUri);
+                bd.QueueStatus = DefinitionQueueStatus.Paused;
+                bd.Save();
+            }
+        }
+
         public bool OpenDropFolder(IEnumerable<string> folders)
         {
             bool dropFolderFound = false;
