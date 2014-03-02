@@ -176,7 +176,9 @@ namespace TfsBuildManager.Views
                             builds = builds.Where(b => b.Name.ToUpperInvariant().Contains(filter)).ToArray();
                         }
 
-                        this.viewmodel.AssignBuildDefinitions(builds);
+                        var buildDefinitions = builds as IBuildDefinition[] ?? builds.ToArray();
+                        this.viewmodel.AssignBuildDefinitions(buildDefinitions);
+                        this.lblCount.Content = buildDefinitions.Count();
                     }
                     else if (this.viewmodel.SelectedBuildView == BuildView.Builds)
                     {

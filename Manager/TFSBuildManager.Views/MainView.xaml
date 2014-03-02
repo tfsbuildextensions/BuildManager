@@ -71,6 +71,9 @@
                                   Width="200" 
                                   Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}"></TextBox>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                        <Label HorizontalAlignment="Right" Name="lblCount" Foreground="#FF171819">O</Label>
+                    </StackPanel>
                 </Grid>
                 <Controls:SortableListView Grid.Row="1" Padding="0" BorderThickness="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}" IsManipulationEnabled="False" BorderBrush="LightGray" VerticalAlignment="Stretch" KeyUp="BuildDefinitionList_KeyUp">
                     <ListView.ItemContainerStyle>
