@@ -266,15 +266,17 @@
                         <Views:BuildsGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding ShowDetailsCommand}" Header="Open"/>
-                                <MenuItem Command="{Binding ViewBuildLogsCommand}" Header="View Build Log"/>
-                                <MenuItem Command="{Binding DeleteBuildCommand}" Header="Delete">
-                                    <MenuItem.Icon>
-                                        <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
-                                    </MenuItem.Icon>
-                                </MenuItem>
+                                <MenuItem Command="{Binding ViewBuildLogsCommand}" Header="Open in Browser"/>
+                                <MenuItem Command="{Binding RetryCommand}" Header="Retry"/>
+                                <Separator/>
                                 <MenuItem Command="{Binding OpenDropFolderCommand}" Header="Open Drop Folder">
                                     <MenuItem.Icon>
                                         <Image Source="Graphics/Drop.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding DeleteBuildCommand}" Header="Delete">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Command="{Binding SetBuildQualityCommand}" Header="Set Build Quality">
@@ -289,7 +291,7 @@
                                 </MenuItem>
                                 <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
                                 <Separator/>
-                                <MenuItem Command="{Binding BuildNotesCommand}" Header="Experimental: Build Notes">
+                                <MenuItem Command="{Binding BuildNotesCommand}" Header="Generate Build Notes">
                                     <MenuItem.Icon>
                                         <Image Source="Graphics/BuildNotes.png" Width="16" Height="16" />
                                     </MenuItem.Icon>
@@ -336,7 +338,7 @@
                     </MenuItem>
                     <MenuItem Command="{Binding DisableBuildResourceCommand}" Header="Disable">
                         <MenuItem.Icon>
-                            <Image Source="Graphics/Manu_Disable.png" Width="16" Height="16" />
+                            <Image Source="Graphics/Menu_Disable.png" Width="16" Height="16" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Command="{Binding RemoveCommand}" Header="Remove">

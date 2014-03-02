@@ -54,6 +54,8 @@ namespace TfsBuildManager.Repository
         
         bool OpenDropFolder(IEnumerable<string> folders);
 
+        void RetryBuilds(IEnumerable<Uri> builds);
+        
         string GetBuildLogLocation(IBuildDetail build);
 
         void DeleteBuilds(IEnumerable<IBuildDetail> builds);

@@ -220,6 +220,15 @@ namespace TfsBuildManager.Repository
             return dropFolderFound;
         }
 
+        public void RetryBuilds(IEnumerable<Uri> builds)
+        {
+            var definitions = this.buildServer.QueryBuildDefinitionsByUri(builds.ToArray());
+            foreach (var bd in definitions.Where(d => d.Process != null))
+            {
+                this.buildServer.QueueBuild(bd);
+            }
+        }
+
         public string GetBuildLogLocation(IBuildDetail build)
         {
             var linkService = (TswaClientHyperlinkService)this.collection.GetService(typeof(TswaClientHyperlinkService));

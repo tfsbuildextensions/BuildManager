@@ -47,6 +47,7 @@ namespace TfsBuildManager.Views
             this.BuildNotesCommand = new DelegateCommand(this.OnBuildNotes);
             this.DeleteBuildCommand = new DelegateCommand(this.OnDeleteBuild);
             this.ShowDetailsCommand = new DelegateCommand(this.OnShowDetails);
+            this.RetryCommand = new DelegateCommand(this.OnRetry);
             this.ViewBuildLogsCommand = new DelegateCommand(this.OnViewBuildLogs);
             this.ShowQueuedDetailsCommand = new DelegateCommand(this.OnShowQueuedDetails);
             this.StopBuildCommand = new DelegateCommand(this.OnStopBuild);
@@ -124,6 +125,8 @@ namespace TfsBuildManager.Views
         public ICommand DeleteBuildCommand { get; private set; }
 
         public ICommand ShowDetailsCommand { get; private set; }
+
+        public ICommand RetryCommand { get; private set; }
 
         public ICommand ViewBuildLogsCommand { get; private set; }
 
@@ -545,6 +548,22 @@ namespace TfsBuildManager.Views
                     {
                         MessageBox.Show("No valid drop folders were found for the selected builds", "Open Drop Folder", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        public void OnRetry()
+        {
+            try
+            {
+                var items = this.view.SelectedBuilds;
+                using (new WaitCursor())
+                {
+                    this.repository.RetryBuilds(items.Select(b => b.BuildDefinitionUri));
                 }
             }
             catch (Exception ex)
