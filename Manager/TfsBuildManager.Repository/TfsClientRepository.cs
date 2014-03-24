@@ -487,6 +487,7 @@ namespace TfsBuildManager.Repository
         {
             var bd = this.buildServer.GetBuildDefinition(buildDefinition);
             var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
+
             if (parameters.ContainsKey(BuildSettings))
             {
                 var buildSettings = parameters[BuildSettings] as BuildSettings;
@@ -499,6 +500,11 @@ namespace TfsBuildManager.Repository
                 {
                     return buildSettings.ProjectsToBuild;
                 }
+            }
+
+            else if (parameters.ContainsKey("ProjectsToBuild"))
+            {
+                return parameters["ProjectsToBuild"] as string[];
             }
 
             return new List<string>();
@@ -567,7 +573,8 @@ namespace TfsBuildManager.Repository
             CloneRetentionPolicies(bd, newBuildDefinition);
 
             var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
-            CloneBuildSettings(rootBranch, targetBranch, parameters);
+            CloneStringParameters(rootBranch, targetBranch, parameters);
+            CloneItemsToBuild(rootBranch, targetBranch, parameters);
             CloneConfigurationFolderPath(rootBranch, targetBranch, bd, parameters);
             CloneTestSpecs(rootBranch, targetBranch, parameters);
             newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
@@ -596,7 +603,8 @@ namespace TfsBuildManager.Repository
             CloneRetentionPolicies(bd, newBuildDefinition);
 
             var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
-            CloneBuildSettings(sourceProjectName, targetProjectName, parameters);
+            CloneStringParameters(sourceProjectName, targetProjectName, parameters);
+            CloneItemsToBuild(sourceProjectName, targetProjectName, parameters);
             CloneConfigurationFolderPath(sourceProjectName, targetProjectName, bd, parameters);
             CloneTestSpecs(sourceProjectName, targetProjectName, parameters);
             newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
@@ -850,7 +858,73 @@ namespace TfsBuildManager.Repository
             }
         }
 
+        private static void CloneItemsToBuild(string sourceName, string targetName, IDictionary<string, object> parameters)
+        {
+            if (parameters.ContainsKey(BuildSettings))
+            {
+                CloneBuildSettings(sourceName, targetName, parameters);
+            }
+            else if (parameters.ContainsKey("ProjectsToBuild"))
+            {
+                CloneProjectsToBuild(sourceName, targetName, parameters);
+            }
+        }
+
+        private static void CloneProjectsToBuild(string sourceName, string targetName, IDictionary<string, object> parameters)
+        {
+            string chkBranch = sourceName;
+            string setBranch = targetName;
+            if (!sourceName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
+            {
+                chkBranch = string.Concat("$/", sourceName);
+            }
+
+            if (!targetName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
+            {
+                setBranch = string.Concat("$/", targetName);
+            }
+
+            var projects = parameters["ProjectsToBuild"] as string[];
+
+            for (int i = 0; i < projects.Count(); i++)
+            {
+                if (projects[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
+                {
+                    projects[i] = projects[i].Replace(chkBranch, setBranch);
+                }
+            }
+        }
+
         private static void CloneBuildSettings(string sourceName, string targetName, IDictionary<string, object> parameters)
+        {
+            var buildSettings = parameters[BuildSettings] as BuildSettings;
+            if (buildSettings == null || !buildSettings.HasProjectsToBuild)
+            {
+                return;
+            }
+
+            string chkBranch = sourceName;
+            string setBranch = targetName;
+            if (!sourceName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
+            {
+                chkBranch = string.Concat("$/", sourceName);
+            }
+
+            if (!targetName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
+            {
+                setBranch = string.Concat("$/", targetName);
+            }
+
+            for (int i = 0; i < buildSettings.ProjectsToBuild.Count(); i++)
+            {
+                if (buildSettings.ProjectsToBuild[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
+                {
+                    buildSettings.ProjectsToBuild[i] = buildSettings.ProjectsToBuild[i].Replace(chkBranch, setBranch);
+                }
+            }
+        }
+
+        private static void CloneStringParameters(string sourceName, string targetName, IDictionary<string, object> parameters)
         {
             List<string> keys = parameters.Keys.ToList();
             for (int idx = 0; idx < parameters.Count(); idx++)
@@ -858,37 +932,8 @@ namespace TfsBuildManager.Repository
                 if (parameters[keys[idx]] is string)
                 {
                     if ((parameters[keys[idx]] as string).Contains(sourceName))
-        {
-                        parameters[keys[idx]] = (parameters[keys[idx]] as string).Replace(sourceName, targetName);
-                    }
-                }
-            }
-
-            if (parameters.ContainsKey(BuildSettings))
-            {
-                var buildSettings = parameters[BuildSettings] as BuildSettings;
-                if (buildSettings == null || !buildSettings.HasProjectsToBuild)
-                {
-                    return;
-                }
-
-                string chkBranch = sourceName;
-                string setBranch = targetName;
-                if (!sourceName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
-                {
-                    chkBranch = string.Concat("$/", sourceName);
-                }
-
-                if (!targetName.StartsWith("$/", StringComparison.OrdinalIgnoreCase))
-                {
-                    setBranch = string.Concat("$/", targetName);
-                }
-
-                for (int i = 0; i < buildSettings.ProjectsToBuild.Count(); i++)
-                {
-                    if (buildSettings.ProjectsToBuild[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
                     {
-                        buildSettings.ProjectsToBuild[i] = buildSettings.ProjectsToBuild[i].Replace(chkBranch, setBranch);
+                        parameters[keys[idx]] = (parameters[keys[idx]] as string).Replace(sourceName, targetName);
                     }
                 }
             }
