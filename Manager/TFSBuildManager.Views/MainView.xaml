@@ -66,14 +66,10 @@
                     <StackPanel Orientation="Horizontal" Margin="10,0,5,0" VerticalAlignment="Center">
                         <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"></CheckBox>
                         <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0" ></TextBlock>
-                        <Label VerticalAlignment="Center" Margin="10,0,0,0">Name Filter:</Label>
-                        <TextBox VerticalAlignment="Center" 
-                                  Width="200" 
-                                  Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}"></TextBox>
-            <Label VerticalAlignment="Center" Margin="10,0,0,0">Workspace Mapping Filter:</Label>
+                        <Label VerticalAlignment="Center" Margin="10,0,0,0">Filter:</Label>
             <TextBox VerticalAlignment="Center" 
-                                  Width="350" 
-                                  Text="{Binding BuildDefinitionFilterWsMap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=700}" ToolTip="Show any definition with a Server Mapping STARTING WITH this text"></TextBox>
+                                  Width="450" 
+                                  Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}" ToolTip="Filter on Name or use $/ to filter on Server Mappings"/>
           </StackPanel>
                     <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
                         <Label HorizontalAlignment="Right" Name="lblCount" Foreground="#FF171819">O</Label>

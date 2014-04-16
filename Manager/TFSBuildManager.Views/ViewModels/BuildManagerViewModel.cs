@@ -26,7 +26,6 @@ namespace TfsBuildManager.Views
         private readonly IMainView view;
         private bool includeDisabledBuildDefinitions;
         private string buildDefinitionFilter;
-        private string buildDefinitionFilterWsMap;
         private DateFilter selectedBuildDateFilter;
         private BuildFilter selectedBuildFilter;
         private BuildView selectedBuildView;
@@ -201,24 +200,6 @@ namespace TfsBuildManager.Views
                 if (value != old)
                 {
                     this.NotifyPropertyChanged("SelectedBuildFilter");
-                }
-            }
-        }
-
-        public string BuildDefinitionFilterWsMap
-        {
-            get
-            {
-                return this.buildDefinitionFilterWsMap;
-            }
-
-            set
-            {
-                var old = this.buildDefinitionFilterWsMap;
-                this.buildDefinitionFilterWsMap = value;
-                if (value != old)
-                {
-                    this.NotifyPropertyChanged("BuildDefinitionFilterWsMap");
                 }
             }
         }
