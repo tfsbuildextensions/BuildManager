@@ -145,6 +145,53 @@ namespace TfsBuildManager.Views
             }
         }
 
+        private void UpdateBuildDefinitionsWsMap()
+        {
+            if (this.SelectedTeamProject == null)
+            {
+                return;
+            }
+
+            try
+            {
+                using (new WaitCursor())
+                {
+                    IEnumerable<IBuildDefinition> builds;
+                    List<IBuildDefinition> builds2 = new List<IBuildDefinition>();
+
+                    if (this.SelectedController == BuildManagerViewModel.AllItem)
+                    {
+                        builds = this.SelectedTeamProject == BuildManagerViewModel.AllItem ? this.repository.AllBuildDefinitions : this.repository.GetBuildDefinitionsForTeamProject(this.SelectedTeamProject);
+                    }
+                    else
+                    {
+                        IBuildController controller = this.repository.GetController(this.SelectedController);
+                        builds = this.SelectedTeamProject == BuildManagerViewModel.AllItem ? this.repository.GetBuildDefinitions(controller) : this.repository.GetBuildDefinitions(controller, this.SelectedTeamProject);
+                    }
+
+                    builds = this.viewmodel.IncludeDisabledBuildDefinitions ? builds : builds.Where(b => b.QueueStatus != DefinitionQueueStatus.Disabled);
+                    if (!string.IsNullOrWhiteSpace(this.viewmodel.BuildDefinitionFilterWsMap))
+                    {
+                        var filter = this.viewmodel.BuildDefinitionFilterWsMap.ToUpperInvariant();
+                        builds2.AddRange(builds.Where(b => b.Workspace.Mappings.Any(mapping => mapping.ServerItem.StartsWith(filter, StringComparison.OrdinalIgnoreCase))));
+                        var buildDefinitions = builds2.ToArray();
+                        this.viewmodel.AssignBuildDefinitions(buildDefinitions);
+                        this.lblCount.Content = buildDefinitions.Count();
+                    }
+                    else
+                    {
+                        var buildDefinitions = builds as IBuildDefinition[] ?? builds.ToArray();
+                        this.viewmodel.AssignBuildDefinitions(buildDefinitions);
+                        this.lblCount.Content = buildDefinitions.Count();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.DisplayError(ex);
+            }
+        }
+
         private void UpdateBuildDefinitions()
         {
             if (this.SelectedTeamProject == null)
@@ -218,7 +265,10 @@ namespace TfsBuildManager.Views
             if (this.viewmodel.SelectedBuildFilter == BuildFilter.Completed)
             {
                 var dateFilter = this.CompletedBuildsDateFilter.SelectedItem as BuildDateFilter;
-                this.viewmodel.AssignBuilds(this.repository.GetCompletedBuilds(filter, dateFilter.TimeSpan));
+                if (dateFilter != null)
+                {
+                    this.viewmodel.AssignBuilds(this.repository.GetCompletedBuilds(filter, dateFilter.TimeSpan));
+                }
             }
             else
             {
@@ -279,6 +329,16 @@ namespace TfsBuildManager.Views
                     this.UpdateBuildDefinitions();
                 }
 
+                if (e.PropertyName == "BuildDefinitionFilter")
+                {
+                    this.UpdateBuildDefinitions();
+                }
+
+                if (e.PropertyName == "BuildDefinitionFilterWsMap")
+                {
+                    this.UpdateBuildDefinitionsWsMap();
+                }
+                
                 if (e.PropertyName == "SelectedBuildView")
                 {
                     using (new WaitCursor())

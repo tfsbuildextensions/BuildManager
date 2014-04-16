@@ -501,7 +501,6 @@ namespace TfsBuildManager.Repository
                     return buildSettings.ProjectsToBuild;
                 }
             }
-
             else if (parameters.ContainsKey("ProjectsToBuild"))
             {
                 return parameters["ProjectsToBuild"] as string[];
