@@ -295,41 +295,34 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                if (e.PropertyName == "SelectedBuildFilter")
+                switch (e.PropertyName)
                 {
-                    using (new WaitCursor())
-                    {
-                        this.UpdateBuilds();
-                    }
-                }
-
-                if (e.PropertyName == "BuildDefinitionFilter")
-                {
-                    this.UpdateBuildDefinitions();
-                }
-
-                if (e.PropertyName == "BuildDefinitionFilter")
-                {
-                    this.UpdateBuildDefinitions();
-                }
-                
-                if (e.PropertyName == "SelectedBuildView")
-                {
-                    using (new WaitCursor())
-                    {
-                        this.UpdateBuildDefinitions();
-                        if (this.viewmodel.SelectedBuildView == BuildView.Builds)
+                    case "SelectedBuildFilter":
+                        using (new WaitCursor())
                         {
-                            this.RestartUpdateBuildsViewTimer();
+                            this.UpdateBuilds();
                         }
-                    }
-                }
-                else if (e.PropertyName == "includeDisabledBuildDefinitions")
-                {
-                    using (new WaitCursor())
-                    {
-                        this.UpdateBuildDefinitions();
-                    }
+
+                        break;
+                    case "BuildDefinitionFilter":
+                    case "includeDisabledBuildDefinitions":
+                        using (new WaitCursor())
+                        {
+                            this.UpdateBuildDefinitions();
+                        }
+
+                        break;
+                    case "SelectedBuildView":
+                        using (new WaitCursor())
+                        {
+                            this.UpdateBuildDefinitions();
+                            if (this.viewmodel.SelectedBuildView == BuildView.Builds)
+                            {
+                                this.RestartUpdateBuildsViewTimer();
+                            }
+                        }
+
+                        break;
                 }
             }
             catch (Exception ex)

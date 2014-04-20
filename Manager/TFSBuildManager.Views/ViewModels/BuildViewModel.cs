@@ -14,9 +14,6 @@ namespace TfsBuildManager.Views
 
         public BuildViewModel(IBuildDetail build)
         {
-            string[] refreshAllDetails = { "*" };
-            build.Refresh(refreshAllDetails, QueryOptions.Agents | QueryOptions.BatchedRequests);
-
             this.FullBuildDetail = build;
             this.FullBuildDefinition = build.BuildDefinition;
             this.Name = build.BuildNumber;
@@ -26,10 +23,10 @@ namespace TfsBuildManager.Views
             this.BuildStatus = build.Status.ToString();
             this.BuildController = build.BuildController != null ? build.BuildController.Name : "n/a";
             this.RequestedBy = build.RequestedFor;
-            this.QueuedTime = build.Requests.Count > 0 ? build.Requests[0].QueueTime.ToString("g") : build.StartTime.ToString("g");             
+            this.QueuedTime = build.Requests.Count > 0 ? build.Requests[0].QueueTime.ToString("g") : build.StartTime.ToString("g");
             this.StartTime = build.StartTime.ToString("g");
             this.SortableStartTime = build.StartTime.ToString("s");
-            this.SortableQueuedTime = build.Requests.Count > 0 ? build.Requests[0].QueueTime.ToString("s") : build.StartTime.ToString("s");             
+            this.SortableQueuedTime = build.Requests.Count > 0 ? build.Requests[0].QueueTime.ToString("s") : build.StartTime.ToString("s");
             this.DropLocation = build.DropLocation;
             if (build.BuildFinished)
             {
@@ -37,7 +34,7 @@ namespace TfsBuildManager.Views
                 this.SortableFinishTime = build.FinishTime.ToString("s");
                 this.Duration = string.Format("{0:hh\\:mm\\:ss}", build.FinishTime - build.StartTime);
             }
-            
+
             this.Uri = build.Uri;
             this.SortableUri = build.Uri.ToString();
             this.keep = build.KeepForever;

@@ -184,7 +184,7 @@ namespace TfsBuildManager.Repository
             spec.Status = BuildStatus.Succeeded | BuildStatus.Stopped | BuildStatus.PartiallySucceeded | BuildStatus.Failed;
             spec.QueryOrder = BuildQueryOrder.FinishTimeDescending;
             spec.MinFinishTime = minFinishTime;
-            spec.QueryOptions = QueryOptions.Definitions | QueryOptions.Controllers;
+            spec.QueryOptions = QueryOptions.Definitions | QueryOptions.Controllers | QueryOptions.Agents | QueryOptions.BatchedRequests;
             return this.buildServer.QueryBuilds(spec).Builds;
         }
 
