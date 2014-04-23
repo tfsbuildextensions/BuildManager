@@ -9,6 +9,7 @@
 
     <UserControl.Resources>
         <Views:EnumMatchToBooleanConverter x:Key="enumConverter" />
+        <Views:BoolToVisibilityConverter x:Key="visibilityConverter" />
     </UserControl.Resources>
 
     <Grid Background="#FFF6F6F6">
@@ -202,12 +203,12 @@
                             </MenuItem>
                             <MenuItem Command="{Binding ChangeTriggerCommand}" Header="Trigger"/>
                             </MenuItem>
-                            <MenuItem Header="Clone">
-                                <MenuItem Command="{Binding CloneBuildsCommand}" Header="Clone to Branch">
+                            <MenuItem Header="Clone" Visibility="{Binding IsTfvcProject, Converter={StaticResource visibilityConverter}}">
+                                <MenuItem Command="{Binding CloneBuildsCommand}" Header="Clone to Branch"/>
+                                <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="Clone to Project"/>
                             </MenuItem>
-                            <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="Clone to Project">
-                            </MenuItem>
-                            </MenuItem>
+                            <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="Clone" Visibility="{Binding IsGitProject, Converter={StaticResource visibilityConverter}}"/>
+
                             <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
                             <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
                         </ContextMenu>

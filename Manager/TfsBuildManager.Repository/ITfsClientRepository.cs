@@ -86,6 +86,8 @@ namespace TfsBuildManager.Repository
 
         string CloneBuild(Uri buildDefinition, string newName, Branch source, Branch target);
 
+        string CloneGitBuild(Uri buildDefinition, string newName);
+
         IEnumerable<Branch> GetChildBranchObjectsForItem(string item);
 
         Branch GetBranchObjectForItem(string item);
@@ -113,5 +115,7 @@ namespace TfsBuildManager.Repository
         void EnableController(IBuildController controller);
 
         void DisableController(IBuildController controller);
+
+        VersionControlTypeEnum GetVersionControlType(IBuildDefinition buildDefinition);
     }
 }

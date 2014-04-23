@@ -71,6 +71,7 @@ namespace TfsBuildManager.Views
             this.ChangeTriggerCommand = new DelegateCommand(this.OnChangeTrigger);
             
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
+            this.CloneGitBuildsCommand = new DelegateCommand(this.OnCloneGitBuilds, this.OnCanCloneGitBuilds);
             this.CloneBuildToProjectCommand = new DelegateCommand(this.OnCloneBuildToProject, this.OnCanCloneBuilds);
                         
             this.RemapWorkspacesCommand = new DelegateCommand(this.OnRemapWorkspaces, this.OnCanRemapWorkspaces);
@@ -161,6 +162,8 @@ namespace TfsBuildManager.Views
         public ICommand EditBuildDefinitionCommand { get; private set; }
 
         public ICommand CloneBuildsCommand { get; private set; }
+
+        public ICommand CloneGitBuildsCommand { get; private set; }
 
         public ICommand CloneBuildToProjectCommand { get; private set; }
 
@@ -288,6 +291,23 @@ namespace TfsBuildManager.Views
         public Visibility BuildsViewVisible
         {
             get { return this.SelectedBuildView == BuildView.Builds ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public bool IsTfvcProject
+        {
+            get
+            {
+                if (this.view.SelectedItems.Count() != 1) return false;
+                return this.view.SelectedItems.First().IsTfvcProject;
+            }
+        }
+
+        public bool IsGitProject
+        {
+            get
+            {
+                return !IsTfvcProject;
+            }
         }
 
         public Visibility BuildProcessTemplateViewVisible
@@ -935,7 +955,7 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                return this.view.SelectedItems.Count() == 1;
+                return this.view.SelectedItems.Count() == 1 && this.view.SelectedItems.First().IsTfvcProject;
             }
             catch (Exception ex)
             {
@@ -944,6 +964,21 @@ namespace TfsBuildManager.Views
 
             return false;
         }
+
+        private bool OnCanCloneGitBuilds()
+        {
+            try
+            {
+                return this.view.SelectedItems.Count() == 1 && this.view.SelectedItems.First().IsGitProject;
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+
+            return false;
+        }
+
 
         private void OnRefreshCurrentView()
         {
@@ -1014,6 +1049,38 @@ namespace TfsBuildManager.Views
                     {
                         this.repository.CloneBuild(item.Uri, dlg.NewBuildDefinitionName, branchObject, dlg.SelectedTargetBranch);
                     }
+
+                    this.OnRefresh(new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private void OnCloneGitBuilds()
+        {
+            try
+            {
+                var items = this.view.SelectedItems.ToList();
+                if (items.Count() != 1)
+                {
+                    return;
+                }
+
+                var item = items.First();
+                using (new WaitCursor())
+                {
+                    var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
+                    if (!projects.Any())
+                    {
+                        this.ShowInvalidActionMessage("Clone Build", "Could not locate any projects in the selected build(s)");
+                        return;
+                    }
+
+                    var project = projects.First();
+                    this.repository.CloneGitBuild(item.Uri, "Copy of " + item.Name);
 
                     this.OnRefresh(new EventArgs());
                 }

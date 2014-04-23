@@ -582,6 +582,39 @@ namespace TfsBuildManager.Repository
             return newBuildDefinition.ToString();
         }
 
+        public string CloneGitBuild(Uri buildDefinition, string newName)
+        {
+            var bd = this.buildServer.GetBuildDefinition(buildDefinition);
+            var newBuildDefinition = this.buildServer.CreateBuildDefinition(bd.TeamProject);
+            newBuildDefinition.Name = newName;
+            newBuildDefinition.Description = bd.Description;
+            newBuildDefinition.ContinuousIntegrationType = bd.ContinuousIntegrationType;
+            newBuildDefinition.QueueStatus = bd.QueueStatus;
+
+            newBuildDefinition.BuildController = bd.BuildController;
+            newBuildDefinition.ProcessParameters = bd.ProcessParameters;
+            newBuildDefinition.DefaultDropLocation = bd.DefaultDropLocation;
+
+            var provider = newBuildDefinition.CreateInitialSourceProvider("TFGIT");
+            var bdProvider = bd.SourceProviders.First();
+            foreach (var f in bdProvider.Fields)
+            {
+                provider.Fields[f.Key] = f.Value;
+            }
+            newBuildDefinition.SetSourceProvider(provider);
+
+            CloneBuildSchedule(bd, newBuildDefinition);
+            newBuildDefinition.ContinuousIntegrationQuietPeriod = bd.ContinuousIntegrationQuietPeriod;
+            newBuildDefinition.Process = bd.Process;
+            CloneRetentionPolicies(bd, newBuildDefinition);
+
+            var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
+            newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
+
+            newBuildDefinition.Save();
+            return newBuildDefinition.ToString();
+        }
+
         public string CloneBuildToProject(Uri buildDefinition, string newName, string targetProjectName)
         {
             var bd = this.buildServer.GetBuildDefinition(buildDefinition);
@@ -752,6 +785,13 @@ namespace TfsBuildManager.Repository
             controller.Save();
         }
 
+        public VersionControlTypeEnum GetVersionControlType(IBuildDefinition buildDefinition)
+        {
+            if( buildDefinition.SourceProviders.Any(s => s.Name == "TFGIT") )
+                return VersionControlTypeEnum.Git;
+            return VersionControlTypeEnum.Tfvc;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
@@ -772,7 +812,6 @@ namespace TfsBuildManager.Repository
                 newBuildDefinition.AddRetentionPolicy(retpol.BuildReason, retpol.BuildStatus, retpol.NumberToKeep, retpol.DeleteOptions);
             }
         }
-
         private static void CloneWorkspaceMappings(string rootBranch, string targetBranch, IBuildDefinition bd, IBuildDefinition newBuildDefinition)
         {
             var existingworkspace = bd.Workspace;

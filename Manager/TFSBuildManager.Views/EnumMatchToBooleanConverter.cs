@@ -59,6 +59,26 @@ namespace TfsBuildManager.Views
         }
     }
 
+
+    public class BoolToVisibilityConverter : System.Windows.Data.IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is bool)
+            {
+                bool boolValue = (bool)value;
+                return boolValue ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class BoolToFontWeightConverter : System.Windows.Data.IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

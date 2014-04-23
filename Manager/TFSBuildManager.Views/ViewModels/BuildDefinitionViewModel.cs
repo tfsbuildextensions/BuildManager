@@ -1,6 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildDefinitionViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using System.Linq;
+
 namespace TfsBuildManager.Views
 {
     using System;
@@ -25,7 +28,10 @@ namespace TfsBuildManager.Views
             this.Id = build.Id;
             this.QueueStatus = build.QueueStatus.ToString();
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
+            IsGitProject = build.SourceProviders.Any(s => s.Name == "TFGIT");
+            IsTfvcProject = !IsGitProject;
         }
+
 
         public IBuildDefinition BuildDefinition { get; set; }
 
@@ -50,6 +56,10 @@ namespace TfsBuildManager.Views
         public string DefaultDropLocation { get; set; }
 
         public bool Enabled { get; set; }
+
+        public bool IsTfvcProject { get; set; }
+
+        public bool IsGitProject { get; set; }
 
         public bool HasProcess
         {
