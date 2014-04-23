@@ -595,12 +595,8 @@ namespace TfsBuildManager.Repository
             newBuildDefinition.ProcessParameters = bd.ProcessParameters;
             newBuildDefinition.DefaultDropLocation = bd.DefaultDropLocation;
 
-            var provider = newBuildDefinition.CreateInitialSourceProvider("TFGIT");
-            var bdProvider = bd.SourceProviders.First();
-            foreach (var f in bdProvider.Fields)
-            {
-                provider.Fields[f.Key] = f.Value;
-            }
+            var provider = CloneSourceProviders(newBuildDefinition, bd);
+
             newBuildDefinition.SetSourceProvider(provider);
 
             CloneBuildSchedule(bd, newBuildDefinition);
@@ -787,8 +783,11 @@ namespace TfsBuildManager.Repository
 
         public VersionControlTypeEnum GetVersionControlType(IBuildDefinition buildDefinition)
         {
-            if( buildDefinition.SourceProviders.Any(s => s.Name == "TFGIT") )
+            if (buildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
+            {
                 return VersionControlTypeEnum.Git;
+            }
+
             return VersionControlTypeEnum.Tfvc;
         }
 
@@ -812,6 +811,7 @@ namespace TfsBuildManager.Repository
                 newBuildDefinition.AddRetentionPolicy(retpol.BuildReason, retpol.BuildStatus, retpol.NumberToKeep, retpol.DeleteOptions);
             }
         }
+
         private static void CloneWorkspaceMappings(string rootBranch, string targetBranch, IBuildDefinition bd, IBuildDefinition newBuildDefinition)
         {
             var existingworkspace = bd.Workspace;
@@ -1035,6 +1035,18 @@ namespace TfsBuildManager.Repository
             while (start >= 0);
 
             return org;
+        }
+
+        private static IBuildDefinitionSourceProvider CloneSourceProviders(IBuildDefinition newBuildDefinition, IBuildDefinition bd)
+        {
+            var provider = newBuildDefinition.CreateInitialSourceProvider("TFGIT");
+            var originalProviders = bd.SourceProviders.First();
+            foreach (var f in originalProviders.Fields)
+            {
+                provider.Fields[f.Key] = f.Value;
+            }
+
+            return provider;
         }
 
         private IProcessTemplate EnsureProjectHasBuildProcessTemplate(string teamProject, string templateServerPath)

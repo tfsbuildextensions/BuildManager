@@ -59,7 +59,6 @@ namespace TfsBuildManager.Views
         }
     }
 
-
     public class BoolToVisibilityConverter : System.Windows.Data.IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

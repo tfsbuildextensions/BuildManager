@@ -297,7 +297,11 @@ namespace TfsBuildManager.Views
         {
             get
             {
-                if (this.view.SelectedItems.Count() != 1) return false;
+                if (this.view.SelectedItems.Count() != 1)
+                {
+                    return false;
+                }
+
                 return this.view.SelectedItems.First().IsTfvcProject;
             }
         }
@@ -306,7 +310,7 @@ namespace TfsBuildManager.Views
         {
             get
             {
-                return !IsTfvcProject;
+                return !this.IsTfvcProject;
             }
         }
 
@@ -978,7 +982,6 @@ namespace TfsBuildManager.Views
 
             return false;
         }
-
 
         private void OnRefreshCurrentView()
         {

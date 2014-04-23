@@ -2,12 +2,11 @@
 // <copyright file="BuildDefinitionViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
 
-using System.Linq;
-
 namespace TfsBuildManager.Views
 {
     using System;
     using System.IO;
+    using System.Linq;
     using Microsoft.TeamFoundation.Build.Client;
 
     public class BuildDefinitionViewModel : ViewModelBase
@@ -28,10 +27,9 @@ namespace TfsBuildManager.Views
             this.Id = build.Id;
             this.QueueStatus = build.QueueStatus.ToString();
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
-            IsGitProject = build.SourceProviders.Any(s => s.Name == "TFGIT");
-            IsTfvcProject = !IsGitProject;
+            this.IsGitProject = build.SourceProviders.Any(s => s.Name == "TFGIT");
+            this.IsTfvcProject = !this.IsGitProject;
         }
-
 
         public IBuildDefinition BuildDefinition { get; set; }
 

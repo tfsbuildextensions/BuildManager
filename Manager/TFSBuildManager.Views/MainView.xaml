@@ -209,7 +209,7 @@
                             </MenuItem>
                             <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="Clone" Visibility="{Binding IsGitProject, Converter={StaticResource visibilityConverter}}"/>
 
-                            <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
+                            <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"  Visibility="{Binding IsTfvcProject, Converter={StaticResource visibilityConverter}}"/>
                             <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
                         </ContextMenu>
                     </Controls:SortableListView.ContextMenu>
