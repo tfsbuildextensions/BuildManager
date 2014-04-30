@@ -116,6 +116,6 @@ namespace TfsBuildManager.Repository
 
         void DisableController(IBuildController controller);
 
-        VersionControlTypeEnum GetVersionControlType(IBuildDefinition buildDefinition);
+        VersionControlType GetVersionControlType(IBuildDefinition buildDefinition);
     }
 }

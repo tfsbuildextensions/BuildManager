@@ -4,7 +4,7 @@
 
 namespace TfsBuildManager.Repository
 {
-    public enum VersionControlTypeEnum
+    public enum VersionControlType
     {
         /// <summary>
         /// Team foundation version control

@@ -781,14 +781,14 @@ namespace TfsBuildManager.Repository
             controller.Save();
         }
 
-        public VersionControlTypeEnum GetVersionControlType(IBuildDefinition buildDefinition)
+        public VersionControlType GetVersionControlType(IBuildDefinition buildDefinition)
         {
             if (buildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
             {
-                return VersionControlTypeEnum.Git;
+                return VersionControlType.Git;
             }
 
-            return VersionControlTypeEnum.Tfvc;
+            return VersionControlType.Tfvc;
         }
 
         protected virtual void Dispose(bool disposing)
