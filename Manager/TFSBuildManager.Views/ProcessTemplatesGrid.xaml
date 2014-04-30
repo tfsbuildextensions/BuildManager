@@ -6,6 +6,9 @@
              xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
+  <UserControl.Resources>
+    <ResourceDictionary Source="/TFSBuildManager.Views;component/Themes/ResourceDictionary.xaml"/>
+  </UserControl.Resources>  
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -14,7 +17,7 @@
             </Style>
         </Grid.Resources>
 
-        <Controls:SortableListView BorderThickness="0,0,0,0" x:Name="ProcessTemplateList" ItemsSource="{Binding BuildProcessTemplatess}" Margin="0,-1,0,1">
+    <Controls:SortableListView BorderThickness="0,0,0,0" x:Name="ProcessTemplateList" ItemsSource="{Binding BuildProcessTemplatess}" Margin="0,-1,0,1" Style="{StaticResource ResourceKey=ListViewStyle}">
             <ListView.Resources>
                 <DataTemplate x:Key="NameTemplate">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">

@@ -6,74 +6,52 @@
              xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls"
              xmlns:Views="clr-namespace:TfsBuildManager.Views" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <Grid.Resources>
+  <UserControl.Resources>
+    <ResourceDictionary Source="/TFSBuildManager.Views;component/Themes/ResourceDictionary.xaml"/>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.Resources>
 
-        </Grid.Resources>
+    </Grid.Resources>
+    <Controls:SortableListView BorderThickness="0,0,0,0" x:Name="BuildResourcesList" ItemsSource="{Binding BuildResources}" Margin="0,-1,0,1" VerticalAlignment="Stretch" Style="{StaticResource ResourceKey=ListViewStyle}">
+      <ListView.Resources>
+        <DataTemplate x:Key="NameTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="StatusTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Status}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="EnabledTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding EnabledText}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="TagsTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding TagsAsList}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="BuildDirectoryTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding BuildDirectory}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+            </StackPanel>
+        </DataTemplate>
+    </ListView.Resources>
 
-        <ListView BorderThickness="0,0,0,0" x:Name="BuildResourcesList" ItemsSource="{Binding BuildResources}" Margin="0,-1,0,1">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="ToolTip" Value="{Binding Path=StatusMessage}" />
-                    <Setter Property="FontStyle" >
-                        <Setter.Value>
-                            <Binding Path="Enabled">
-                                <Binding.Converter>
-                                    <Views:BoolToFontStyleConverter/>
-                                </Binding.Converter>
-                            </Binding>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="FontWeight" >
-                        <Setter.Value>
-                            <Binding Path="Enabled">
-                                <Binding.Converter>
-                                    <Views:BoolToFontWeightConverter/>
-                                </Binding.Converter>
-                            </Binding>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-
-            <ListView.Resources>
-                <DataTemplate x:Key="NameTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="StatusTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding Status}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="EnabledTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding EnabledText}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>              
-                <DataTemplate x:Key="TagsTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding TagsAsList}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="BuildDirectoryTemplate">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding BuildDirectory}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.Resources>
-
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" CellTemplate="{StaticResource NameTemplate}"/>
-                    <GridViewColumn Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
-                    <GridViewColumn Header="State" CellTemplate="{StaticResource EnabledTemplate}"/>
-                    <GridViewColumn Header="BuildDirectory" CellTemplate="{StaticResource BuildDirectoryTemplate}"/>
-                    <GridViewColumn Header="Tags" CellTemplate="{StaticResource TagsTemplate}"/>                    
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>
+      <ListView.View>
+        <GridView>
+          <Controls:SortableGridViewColumn Header="Name" IsDefaultSortColumn="False" CellTemplate="{StaticResource NameTemplate}" SortPropertyName="Name"/>
+          <Controls:SortableGridViewColumn Header="Status" IsDefaultSortColumn="False" CellTemplate="{StaticResource StatusTemplate}" SortPropertyName="Status"/>
+          <Controls:SortableGridViewColumn Header="State" IsDefaultSortColumn="False" CellTemplate="{StaticResource EnabledTemplate}" SortPropertyName="EnabledText"/>
+          <Controls:SortableGridViewColumn Header="BuildDirectory" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildDirectoryTemplate}" SortPropertyName="BuildDirectory"/>
+          <Controls:SortableGridViewColumn Header="Tags" IsDefaultSortColumn="False" CellTemplate="{StaticResource TagsTemplate}" SortPropertyName="TagsAsList"/>                    
+        </GridView>
+    </ListView.View>
+    </Controls:SortableListView>
+  </Grid>
 
 </UserControl>

@@ -6,14 +6,18 @@
              xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <Grid.Resources>
-        </Grid.Resources>
+  <UserControl.Resources>
+    <ResourceDictionary Source="/TFSBuildManager.Views;component/Themes/ResourceDictionary.xaml"/>
+  </UserControl.Resources>  
+  <Grid>
+    <Grid.Resources>
+    </Grid.Resources>
 
-        <Controls:SortableListView BorderThickness="0,0,0,0" x:Name="BuildList" ItemsSource="{Binding Builds}" Margin="0,-1,0,1"
+    <Controls:SortableListView x:Name="BuildList" ItemsSource="{Binding Builds}" Margin="0,-1,0,-1"
                                    ColumnHeaderSortedAscendingTemplate="HeaderTemplateArrowUp" 
                                    ColumnHeaderSortedDescendingTemplate="HeaderTemplateArrowDown" 
-                                   ColumnHeaderNotSortedTemplate="HeaderTemplateTransparent" MouseDoubleClick="OnMouseDoubleClick">
+                                   ColumnHeaderNotSortedTemplate="HeaderTemplateTransparent" MouseDoubleClick="OnMouseDoubleClick"
+                               Style="{StaticResource ResourceKey=ListViewStyle}">
           <ListView.Resources>
                 <DataTemplate x:Key="StatusTemplate">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -90,9 +94,9 @@
                     <Setter Property="Margin" Value="0,0,0,0" />
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
                 </Style>
-            </ListView.Resources>
+      </ListView.Resources>
 
-            <ListView.View>
+      <ListView.View>
                 <GridView>
                     <Controls:SortableGridViewColumn Header="" SortPropertyName="KeepForever" IsDefaultSortColumn="False" CellTemplate="{StaticResource KeepForeverTemplate}"/>                    
                     <Controls:SortableGridViewColumn Header="" SortPropertyName="Status" IsDefaultSortColumn="False" CellTemplate="{StaticResource StatusTemplate}"/>
@@ -111,6 +115,6 @@
                 </GridView>
             </ListView.View>
         </Controls:SortableListView>
-    </Grid>
+  </Grid>
 
 </UserControl>
