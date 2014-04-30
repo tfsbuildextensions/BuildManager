@@ -175,13 +175,14 @@
               </MenuItem>
               <MenuItem Command="{Binding ChangeTriggerCommand}" Header="Trigger"/>
               </MenuItem>
-              <MenuItem Header="Clone" Visibility="{Binding IsTfvcProject, Converter={StaticResource visibilityConverter}}">
-                  <MenuItem Command="{Binding CloneBuildsCommand}" Header="Clone to Branch"/>
-                  <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="Clone to Project"/>
+              <MenuItem Header="Clone">
+                <MenuItem Command="{Binding CloneBuildsCommand}" Header="To Branch (TFVC)"/>
+                <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="To Project (TFVC)"/>
+                <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="In Place (Git)"/>
               </MenuItem>
-              <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="Clone" Visibility="{Binding IsGitProject, Converter={StaticResource visibilityConverter}}"/>
-
-              <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"  Visibility="{Binding IsTfvcProject, Converter={StaticResource visibilityConverter}}"/>
+              <MenuItem Command="{Binding DumpDefinitionCommand}" Header="Dump Definition"/>
+              <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
+              <Separator/>
               <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
           </ContextMenu>
         </Controls:SortableListView.ContextMenu>                    

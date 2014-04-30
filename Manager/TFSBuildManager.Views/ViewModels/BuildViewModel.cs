@@ -1,10 +1,10 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views
 {
     using System;
+    using System.Globalization;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Common;
 
@@ -53,7 +53,7 @@ namespace TfsBuildManager.Views
             }
             else
             {
-                this.Name = build.Id.ToString();
+                this.Name = build.Id.ToString(CultureInfo.CurrentCulture);
             }
             
             this.FullBuildDefinition = build.BuildDefinition;
@@ -74,6 +74,13 @@ namespace TfsBuildManager.Views
                     this.FinishTime = build.Build.FinishTime.ToString("g");
                     this.SortableFinishTime = build.Build.FinishTime.ToString("s");
                     this.Duration = string.Format("{0:hh\\:mm\\:ss}", build.Build.FinishTime - build.Build.StartTime);
+                }
+                else
+                {
+                    if (build.Build.StartTime != Convert.ToDateTime("01/01/0001 00:00:00"))
+                    {
+                        this.Duration = string.Format("{0:hh\\:mm\\:ss}", DateTime.Now - build.Build.StartTime);
+                    }
                 }
 
                 this.QueuedTime = build.Build.Requests.Count > 0 ? build.Build.Requests[0].QueueTime.ToString("g") : build.Build.StartTime.ToString("g");

@@ -6,7 +6,6 @@ namespace TfsBuildManager.Repository
     using System;
     using System.Collections.Generic;
     using Microsoft.TeamFoundation.Build.Client;
-    using Microsoft.TeamFoundation.VersionControl.Client;
 
     public delegate bool EvaluateRemoveBuildProcessTemplate();
 

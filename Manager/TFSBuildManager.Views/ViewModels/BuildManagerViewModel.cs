@@ -69,11 +69,10 @@ namespace TfsBuildManager.Views
             this.ChangeBuildControllerCommand = new DelegateCommand(this.OnChangeBuildController);
             this.ChangeDefaultDropLocationCommand = new DelegateCommand(this.OnChangeDefaultDropLocation);
             this.ChangeTriggerCommand = new DelegateCommand(this.OnChangeTrigger);
-            
+            this.DumpDefinitionCommand = new DelegateCommand(this.OnDumpDefinition);
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
-            this.CloneGitBuildsCommand = new DelegateCommand(this.OnCloneGitBuilds, this.OnCanCloneGitBuilds);
+            this.CloneGitBuildsCommand = new DelegateCommand(this.OnCloneGitBuilds, this.OnCanCloneBuilds);
             this.CloneBuildToProjectCommand = new DelegateCommand(this.OnCloneBuildToProject, this.OnCanCloneBuilds);
-                        
             this.RemapWorkspacesCommand = new DelegateCommand(this.OnRemapWorkspaces, this.OnCanRemapWorkspaces);
             this.QueueBuildsCommand = new DelegateCommand(this.OnQueueBuilds, this.OnCanQueueBuilds);
             this.QueueHighBuildsCommand = new DelegateCommand(this.OnQueueHighBuilds, this.OnCanQueueBuilds);
@@ -152,6 +151,8 @@ namespace TfsBuildManager.Views
         public ICommand ChangeDefaultDropLocationCommand { get; private set; }
 
         public ICommand ChangeTriggerCommand { get; private set; }
+
+        public ICommand DumpDefinitionCommand { get; private set; }
 
         public ICommand SetRetentionPoliciesCommand { get; private set; }
 
@@ -959,21 +960,7 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                return this.view.SelectedItems.Count() == 1 && this.view.SelectedItems.First().IsTfvcProject;
-            }
-            catch (Exception ex)
-            {
-                this.view.DisplayError(ex);
-            }
-
-            return false;
-        }
-
-        private bool OnCanCloneGitBuilds()
-        {
-            try
-            {
-                return this.view.SelectedItems.Count() == 1 && this.view.SelectedItems.First().IsGitProject;
+                return this.view.SelectedItems.Count() == 1;
             }
             catch (Exception ex)
             {
@@ -1022,6 +1009,11 @@ namespace TfsBuildManager.Views
                 }
 
                 var item = items.First();
+                if (item.BuildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
+                {
+                    return;
+                }
+
                 using (new WaitCursor())
                 {
                     var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
@@ -1073,6 +1065,11 @@ namespace TfsBuildManager.Views
                 }
 
                 var item = items.First();
+                if (item.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+                {
+                    return;
+                }
+                
                 using (new WaitCursor())
                 {
                     var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
@@ -1110,8 +1107,7 @@ namespace TfsBuildManager.Views
                     var projects = this.repository.AllTeamProjects.Select(tp => tp).ToList();
                     var viewModel = new TeamProjectListViewModel(projects);
 
-                    var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject);
-                    wnd.cbSetAsDefault.Visibility = Visibility.Collapsed;
+                    var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject) { cbSetAsDefault = { Visibility = Visibility.Collapsed } };
                     bool? res = wnd.ShowDialog();
                     if (res.HasValue && res.Value)
                     {
@@ -1309,6 +1305,57 @@ namespace TfsBuildManager.Views
                     {
                         this.repository.AssignBuildProcessTemplate(items.Select(bd => bd.Uri), wnd.SelectedBuildTemplate.ServerPath);
                         this.OnRefresh(new EventArgs());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private void OnDumpDefinition()
+        {
+            try
+            {
+                var items = this.view.SelectedItems;
+                using (new WaitCursor())
+                {
+                    System.Windows.Forms.FolderBrowserDialog workingFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a valid WORKING FOLDER to execute tfpt.exe from..." };
+                    System.Windows.Forms.DialogResult result = workingFolder.ShowDialog();
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to save definition dumps to..." };
+                        System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
+                        if (result2 == System.Windows.Forms.DialogResult.OK)
+                        {
+                            foreach (var b in items)
+                            {
+                                ProcessStartInfo psi = new ProcessStartInfo { FileName = "tfpt.exe", Arguments = string.Format("builddefinition /dump \"{0}\\{1}\" /format:Detailed", b.BuildDefinition.TeamProject, b.Name), WorkingDirectory = workingFolder.SelectedPath, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
+                                using (System.Diagnostics.Process proc = new System.Diagnostics.Process())
+                                {
+                                    proc.StartInfo = psi;
+                                    proc.Start();
+                                    proc.WaitForExit();
+                                    string outputStream = proc.StandardOutput.ReadToEnd();
+                                    if (outputStream.Length > 0)
+                                    {
+                                        File.WriteAllText(Path.Combine(saveFolder.SelectedPath, b.Name + ".txt"), outputStream);
+                                    }
+
+                                    string errorStream = proc.StandardError.ReadToEnd();
+                                    if (errorStream.Length > 0)
+                                    {
+                                        File.AppendAllText(Path.Combine(saveFolder.SelectedPath, b.Name + ".txt"), errorStream);
+                                    }
+
+                                    if (proc.ExitCode != 0)
+                                    {
+                                        MessageBox.Show(errorStream, "Dump failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

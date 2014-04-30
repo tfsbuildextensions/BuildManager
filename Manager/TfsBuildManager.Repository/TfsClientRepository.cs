@@ -682,7 +682,7 @@ namespace TfsBuildManager.Repository
             {
                 foreach (var template in templates.ToList())
                 {
-                    if (!this.buildServer.QueryProcessTemplates(teamProject).Any(pt => pt.ServerPath == template))
+                    if (this.buildServer.QueryProcessTemplates(teamProject).All(pt => pt.ServerPath != template))
                     {
                         var t = this.buildServer.CreateProcessTemplate(teamProject, template);
                         t.Save();
