@@ -141,8 +141,8 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildQueueSpec(definitions.Select(d => d.Uri));
             }
 
-            spec.QueryOptions = QueryOptions.All;
-            spec.Status = QueueStatus.All;
+            spec.QueryOptions = QueryOptions.Definitions | QueryOptions.Controllers | QueryOptions.Agents | QueryOptions.BatchedRequests;
+            spec.Status = QueueStatus.InProgress | QueueStatus.Queued | QueueStatus.Postponed;
             return this.buildServer.QueryQueuedBuilds(spec).QueuedBuilds.AsEnumerable();
         }
 
