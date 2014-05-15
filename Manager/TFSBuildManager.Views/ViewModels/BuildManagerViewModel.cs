@@ -79,9 +79,11 @@ namespace TfsBuildManager.Views
             this.EditBuildDefinitionCommand = new DelegateCommand(this.OnEditBuildDefinition, this.OnCanEditBuildDefinition);
             this.GenerateBuildResourcesCommand = new DelegateCommand(this.OnGenerateBuildResources);
             this.Controllers = new ObservableCollection<string>(controllers.Select(c => c.Name));
+            this.Controllers.Sort();
             this.RefreshCurrentView = new DelegateCommand(this.OnRefreshCurrentView);
             this.Controllers.Insert(0, AllItem);
             this.TeamProjects = new ObservableCollection<string>(teamProjects.Select(tp => tp));
+            this.TeamProjects.Sort();
             this.TeamProjects.Insert(0, AllItem);
             this.SelectedBuildFilter = BuildFilter.Queued;
             this.includeDisabledBuildDefinitions = false;

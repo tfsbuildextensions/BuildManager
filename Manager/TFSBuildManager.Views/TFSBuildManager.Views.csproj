@@ -134,6 +134,7 @@
       <DependentUpon>BuildResourcesGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HighlightTextBlock.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="RemapWorkspaces.xaml.cs">
       <DependentUpon>RemapWorkspaces.xaml</DependentUpon>
     </Compile>
