@@ -58,9 +58,28 @@
       </Setter.Value>
     </Setter>
   </Style>
-  
+
   <!-- ListViewItem Style -->
   <Style TargetType="{x:Type ListViewItem}">
+    <Setter Property="ToolTip" Value="{Binding Path=Description}" />
+    <Setter Property="FontStyle" >
+      <Setter.Value>
+        <Binding Path="Enabled">
+          <Binding.Converter>
+            <local:BoolToFontStyleConverter/>
+          </Binding.Converter>
+        </Binding>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="FontWeight" >
+      <Setter.Value>
+        <Binding Path="Enabled">
+          <Binding.Converter>
+            <local:BoolToFontWeightConverter/>
+          </Binding.Converter>
+        </Binding>
+      </Setter.Value>
+    </Setter>
     <Setter Property="Control.Background" Value="{StaticResource ItemBrushKey}" />
     <Setter Property="Control.Foreground" Value="{StaticResource ItemTextBrushKey}" />
     <Setter Property="Control.BorderBrush" Value="{StaticResource ItemBorderBrushKey}" />
