@@ -7005,6 +7005,7 @@ namespace TfsBuildManager.Repository
         /// Deserializes xml markup from file into an DirectedGraphPath object
         /// </summary>
         /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="encoding">Encoding to use</param>
         /// <param name="obj">Output DirectedGraphPath object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>

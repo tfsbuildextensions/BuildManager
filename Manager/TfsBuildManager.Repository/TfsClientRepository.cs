@@ -1,7 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="TfsClientRepository.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Repository
 {
     using System;
@@ -564,7 +563,6 @@ namespace TfsBuildManager.Repository
             newBuildDefinition.QueueStatus = bd.QueueStatus;
             CloneWorkspaceMappings(rootBranch, targetBranch, bd, newBuildDefinition);
             newBuildDefinition.BuildController = bd.BuildController;
-            newBuildDefinition.ProcessParameters = bd.ProcessParameters;
             CloneDropLocation(sourceBranchName, branchName, bd, newBuildDefinition);
             CloneBuildSchedule(bd, newBuildDefinition);
             newBuildDefinition.ContinuousIntegrationQuietPeriod = bd.ContinuousIntegrationQuietPeriod;
@@ -993,7 +991,7 @@ namespace TfsBuildManager.Repository
 
         private static void CloneDropLocation(string rootBranchName, string targetBranchName, IBuildDefinition bd, IBuildDefinition newBuildDefinition, bool autoIncludeBranchName = true)
         {
-            if (bd.DefaultDropLocation == null)
+            if (bd.DefaultDropLocation == null || string.IsNullOrWhiteSpace(bd.DefaultDropLocation))
             {
                 return;
             }

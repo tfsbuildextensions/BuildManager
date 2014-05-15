@@ -1115,7 +1115,13 @@ namespace TfsBuildManager.Views
                     {
                         using (new WaitCursor())
                         {
-                            this.repository.CloneBuildToProject(item.Uri, item.Name, wnd.SelectedTeamProjects.Select(tp => tp.Name).First());
+                            string targetProject = wnd.SelectedTeamProjects.Select(tp => tp.Name).First();
+                            if (item.BuildDefinition.TeamProject == targetProject)
+                            {
+                                item.Name = item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-");
+                            }
+
+                            this.repository.CloneBuildToProject(item.Uri, item.Name, targetProject);
                         }
 
                         this.OnRefresh(new EventArgs());
