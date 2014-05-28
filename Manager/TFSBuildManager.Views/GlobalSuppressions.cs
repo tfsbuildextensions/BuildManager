@@ -49,3 +49,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "TfsBuildManager.Views.MainView.#UpdateBuildDefinitions()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "type", Target = "TfsBuildManager.Views.BuildManagerViewModel")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "TfsBuildManager.Views.BuildManagerViewModel.#OnDumpDefinition()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "TfsBuildManager.Views.MainView.#UpdateBuildDefinitions()")]

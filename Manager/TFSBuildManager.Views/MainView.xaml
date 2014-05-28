@@ -68,7 +68,19 @@
             <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"></CheckBox>                        
             <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
             <Label VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}">Filter:</Label>
-            <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}" ToolTip="Filter on Name or use $/ to filter on Server Mappings"/>
+              <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=550}">
+                  <TextBox.ToolTip>
+                      <TextBlock>
+                          Filter on Name or...
+                          <LineBreak />
+                          Use $/ to filter on Server Mappings
+                          <LineBreak />
+                          Use * to match Process Paramater values
+                          <LineBreak />
+                          Use ** to wildcard seach Process Paramater values
+                      </TextBlock>
+                  </TextBox.ToolTip>
+              </TextBox>
           </StackPanel>
           <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
             <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}">O</Label>                    

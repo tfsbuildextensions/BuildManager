@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="284BD365-D4C4-4208-B839-FB3E41B7B270" Version="2.12.0.10" Language="en-US" Publisher="TfsBuildExtensions.codeplex.com" />
+        <Identity Id="284BD365-D4C4-4208-B839-FB3E41B7B270" Version="2.12.0.11" Language="en-US" Publisher="TfsBuildExtensions.codeplex.com" />
         <DisplayName>Community TFS Build Manager VS2013</DisplayName>
         <Description xml:space="preserve">TfsBuildExtensions.codeplex.com</Description>
         <MoreInfo>http://visualstudiogallery.msdn.microsoft.com/73bf2d8e-aec6-406c-8e7f-1c678e46557f</MoreInfo>

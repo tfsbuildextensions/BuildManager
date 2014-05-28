@@ -4,6 +4,7 @@
 namespace TfsBuildManager.Views
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -12,6 +13,7 @@ namespace TfsBuildManager.Views
     using System.Windows.Controls;
     using System.Windows.Threading;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Workflow;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
 
@@ -172,6 +174,7 @@ namespace TfsBuildManager.Views
                         builds = this.viewmodel.IncludeDisabledBuildDefinitions ? builds : builds.Where(b => b.QueueStatus != DefinitionQueueStatus.Disabled);
                         if (!string.IsNullOrWhiteSpace(this.viewmodel.BuildDefinitionFilter))
                         {
+                            // if it starts with $/ then we seach on workspace mappings
                             if (this.viewmodel.BuildDefinitionFilter.StartsWith(@"$/", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (!string.IsNullOrWhiteSpace(this.viewmodel.BuildDefinitionFilter))
@@ -183,14 +186,93 @@ namespace TfsBuildManager.Views
                                     this.viewmodel.AssignBuildDefinitions(buildDefinitions);
                                     this.lblCount.Content = buildDefinitions.Count();
                                 }
-                                else
-                                {
-                                    var buildDefinitions = builds as IBuildDefinition[] ?? builds.ToArray();
-                                    this.viewmodel.AssignBuildDefinitions(buildDefinitions);
-                                    this.lblCount.Content = buildDefinitions.Count();
-                                }
                             }
-                            else
+                            else if (this.viewmodel.BuildDefinitionFilter.StartsWith(@"*", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // if it starts with * then we are going to search Process Parameters
+                                if (this.viewmodel.BuildDefinitionFilter == "*" || this.viewmodel.BuildDefinitionFilter == "**")
+                                {
+                                    return;
+                                }
+
+                                List<IBuildDefinition> builds2 = new List<IBuildDefinition>();
+                                foreach (var b in builds)
+                                {
+                                    var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.ProcessParameters);
+
+                                    // if it starts with ** we do a contains, otherwise it starts with * and we do a compare.
+                                    if (this.viewmodel.BuildDefinitionFilter.StartsWith(@"**", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        bool found = false;
+                                        foreach (var parameter in processParameters)
+                                        {
+                                            // some process paramaters are arrays so we need to look at each key value pair in the arrays
+                                            if (parameter.Value.GetType().GetElementType() == typeof(string))
+                                            {
+                                                string[] arr = ((IEnumerable)parameter.Value).Cast<object>()
+                                                    .Select(x => x.ToString())
+                                                    .ToArray();
+
+                                                if (arr.Any(s => s.IndexOf(this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) >= 0))
+                                                {
+                                                    builds2.Add(b);
+                                                    found = true;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (parameter.Value.ToString().IndexOf(this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) >= 0)
+                                                {
+                                                    builds2.Add(b);
+                                                    break;
+                                                }
+                                            }
+
+                                            if (found)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        bool found = false;
+                                        foreach (var parameter in processParameters)
+                                        {
+                                            if (parameter.Value.GetType().GetElementType() == typeof(string))
+                                            {
+                                                string[] arr = ((IEnumerable)parameter.Value).Cast<object>()
+                                                    .Select(x => x.ToString())
+                                                    .ToArray();
+
+                                                if (arr.Any(s => string.Compare(s, this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) == 0))
+                                                {
+                                                    builds2.Add(b);
+                                                    found = true;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (string.Compare(parameter.Value.ToString(), this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) == 0)
+                                                {
+                                                    builds2.Add(b);
+                                                    break;
+                                                }
+                                            }
+
+                                            if (found)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                var buildDefinitions = builds2.ToArray();
+                                this.viewmodel.AssignBuildDefinitions(buildDefinitions);
+                                this.lblCount.Content = buildDefinitions.Count();
+                            }
+                            else 
                             {
                                 var filter = this.viewmodel.BuildDefinitionFilter.ToUpperInvariant();
                                 builds = builds.Where(b => b.Name.ToUpperInvariant().Contains(filter)).ToArray();
