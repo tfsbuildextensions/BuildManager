@@ -206,7 +206,7 @@ namespace TfsBuildManager.Views
                                         bool found = false;
                                         foreach (var parameter in processParameters)
                                         {
-                                            // some process paramaters are arrays so we need to look at each key value pair in the arrays
+                                            // some process arameter are arrays so we need to look at each key value pair in the arrays
                                             if (parameter.Value.GetType().GetElementType() == typeof(string))
                                             {
                                                 string[] arr = ((IEnumerable)parameter.Value).Cast<object>()

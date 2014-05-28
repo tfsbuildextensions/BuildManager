@@ -75,9 +75,9 @@
                           <LineBreak />
                           Use $/ to filter on Server Mappings
                           <LineBreak />
-                          Use * to match Process Paramater values
+                          Use * to match Process Parameter values
                           <LineBreak />
-                          Use ** to wildcard seach Process Paramater values
+                          Use ** to 'contains' search Process Parameter values
                       </TextBlock>
                   </TextBox.ToolTip>
               </TextBox>
