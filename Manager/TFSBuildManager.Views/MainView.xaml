@@ -192,7 +192,7 @@
                 <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="To Project (TFVC)"/>
                 <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="In Place (Git)"/>
               </MenuItem>
-              <MenuItem Command="{Binding DumpDefinitionCommand}" Header="Dump Definition"/>
+              <MenuItem Command="{Binding DumpDefinitionCommand}" Header="Export"/>
               <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
               <Separator/>
               <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>

@@ -1,7 +1,6 @@
 //-----------------------------------------------------------------------
 // <copyright file="BuildManagerViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views
 {
     using System;
@@ -13,6 +12,8 @@ namespace TfsBuildManager.Views
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Workflow;
+    using Newtonsoft.Json;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
 
@@ -1329,40 +1330,13 @@ namespace TfsBuildManager.Views
                 var items = this.view.SelectedItems;
                 using (new WaitCursor())
                 {
-                    System.Windows.Forms.FolderBrowserDialog workingFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a valid WORKING FOLDER to execute tfpt.exe from..." };
-                    System.Windows.Forms.DialogResult result = workingFolder.ShowDialog();
-                    if (result == System.Windows.Forms.DialogResult.OK)
+                    System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to save definition dumps to..." };
+                    System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
+                    if (result2 == System.Windows.Forms.DialogResult.OK)
                     {
-                        System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to save definition dumps to..." };
-                        System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
-                        if (result2 == System.Windows.Forms.DialogResult.OK)
+                        foreach (var b in items)
                         {
-                            foreach (var b in items)
-                            {
-                                ProcessStartInfo psi = new ProcessStartInfo { FileName = "tfpt.exe", Arguments = string.Format("builddefinition /dump \"{0}\\{1}\" /format:Detailed", b.BuildDefinition.TeamProject, b.Name), WorkingDirectory = workingFolder.SelectedPath, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-                                using (System.Diagnostics.Process proc = new System.Diagnostics.Process())
-                                {
-                                    proc.StartInfo = psi;
-                                    proc.Start();
-                                    proc.WaitForExit();
-                                    string outputStream = proc.StandardOutput.ReadToEnd();
-                                    if (outputStream.Length > 0)
-                                    {
-                                        File.WriteAllText(Path.Combine(saveFolder.SelectedPath, b.Name + ".txt"), outputStream);
-                                    }
-
-                                    string errorStream = proc.StandardError.ReadToEnd();
-                                    if (errorStream.Length > 0)
-                                    {
-                                        File.AppendAllText(Path.Combine(saveFolder.SelectedPath, b.Name + ".txt"), errorStream);
-                                    }
-
-                                    if (proc.ExitCode != 0)
-                                    {
-                                        MessageBox.Show(errorStream, "Dump failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    }
-                                }
-                            }
+                            this.DumpDefinition(b, saveFolder.SelectedPath);
                         }
                     }
                 }
@@ -1371,6 +1345,28 @@ namespace TfsBuildManager.Views
             {
                 this.view.DisplayError(ex);
             }
+        }
+
+        private void DumpDefinition(BuildDefinitionViewModel b, string filePath)
+        {
+            ExportedBuildDefinition buildToDump = new ExportedBuildDefinition();
+            buildToDump.Name = b.BuildDefinition.Name;
+            buildToDump.Description = b.BuildDefinition.Description;
+            buildToDump.BuildController = b.BuildDefinition.BuildController.Name;
+            buildToDump.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
+            buildToDump.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
+            buildToDump.SourceProviders = b.BuildDefinition.SourceProviders;
+            if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+            {
+                buildToDump.Mappings = b.BuildDefinition.Workspace.Mappings;
+            }
+
+            buildToDump.SourceProviders = b.BuildDefinition.SourceProviders;
+            buildToDump.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
+            buildToDump.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
+            buildToDump.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+            
+            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToDump, Formatting.Indented));
         }
 
         private void OnChangeTrigger()
