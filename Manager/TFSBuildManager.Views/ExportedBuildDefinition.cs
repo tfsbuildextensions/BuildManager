@@ -28,7 +28,6 @@ namespace TfsBuildManager.Views
 
         public List<IRetentionPolicy> RetentionPolicyList { get; set; }
 
-
         public IDictionary<string, object> ProcessParameters { get; set; }
     }
 }
