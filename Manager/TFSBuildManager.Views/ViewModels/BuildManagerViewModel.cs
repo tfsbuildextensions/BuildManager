@@ -70,7 +70,7 @@ namespace TfsBuildManager.Views
             this.ChangeBuildControllerCommand = new DelegateCommand(this.OnChangeBuildController);
             this.ChangeDefaultDropLocationCommand = new DelegateCommand(this.OnChangeDefaultDropLocation);
             this.ChangeTriggerCommand = new DelegateCommand(this.OnChangeTrigger);
-            this.DumpDefinitionCommand = new DelegateCommand(this.OnDumpDefinition);
+            this.ExportDefinitionCommand = new DelegateCommand(this.OnExportBuildDefinition);
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
             this.CloneGitBuildsCommand = new DelegateCommand(this.OnCloneGitBuilds, this.OnCanCloneBuilds);
             this.CloneBuildToProjectCommand = new DelegateCommand(this.OnCloneBuildToProject, this.OnCanCloneBuilds);
@@ -82,6 +82,7 @@ namespace TfsBuildManager.Views
             this.Controllers = new ObservableCollection<string>(controllers.Select(c => c.Name));
             this.Controllers.Sort();
             this.RefreshCurrentView = new DelegateCommand(this.OnRefreshCurrentView);
+            this.ImportBuildDefinition = new DelegateCommand(this.OnImportBuildDefinition);
             this.Controllers.Insert(0, AllItem);
             this.TeamProjects = new ObservableCollection<string>(teamProjects.Select(tp => tp));
             this.TeamProjects.Sort();
@@ -155,7 +156,7 @@ namespace TfsBuildManager.Views
 
         public ICommand ChangeTriggerCommand { get; private set; }
 
-        public ICommand DumpDefinitionCommand { get; private set; }
+        public ICommand ExportDefinitionCommand { get; private set; }
 
         public ICommand SetRetentionPoliciesCommand { get; private set; }
 
@@ -176,6 +177,8 @@ namespace TfsBuildManager.Views
         public ICommand RemapWorkspacesCommand { get; private set; }
 
         public ICommand RefreshCurrentView { get; private set; }
+        
+        public ICommand ImportBuildDefinition { get; private set; }
 
         public ObservableCollection<BuildDefinitionViewModel> BuildDefinitions { get; private set; }
 
@@ -906,6 +909,28 @@ namespace TfsBuildManager.Views
             return shortest;
         }
 
+        private static void ExportDefinition(BuildDefinitionViewModel b, string filePath)
+        {
+            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition();
+            buildToExport.Name = b.BuildDefinition.Name;
+            buildToExport.Description = b.BuildDefinition.Description;
+            buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
+            buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
+            buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
+            buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
+            if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+            {
+                buildToExport.Mappings = b.BuildDefinition.Workspace.Mappings;
+            }
+
+            buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
+            buildToExport.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
+            buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
+            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+
+            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
+        }
+
         private void ShowNoBranchMessage(string project)
         {
             MessageBox.Show(this.owner, "Could not locate branch object for " + project, "Clone Build To Branch", MessageBoxButton.OK, MessageBoxImage.Stop);
@@ -976,6 +1001,11 @@ namespace TfsBuildManager.Views
         private void OnRefreshCurrentView()
         {
             this.OnRefresh(new EventArgs());
+        }
+        
+        private void OnImportBuildDefinition()
+        {
+            MessageBox.Show("Cool import code coming soon");
         }
 
         private void OnGenerateBuildResources()
@@ -1323,20 +1353,20 @@ namespace TfsBuildManager.Views
             }
         }
 
-        private void OnDumpDefinition()
+        private void OnExportBuildDefinition()
         {
             try
             {
                 var items = this.view.SelectedItems;
                 using (new WaitCursor())
                 {
-                    System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to save definition dumps to..." };
+                    System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to export to..." };
                     System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
                     if (result2 == System.Windows.Forms.DialogResult.OK)
                     {
                         foreach (var b in items)
                         {
-                            this.DumpDefinition(b, saveFolder.SelectedPath);
+                            ExportDefinition(b, saveFolder.SelectedPath);
                         }
                     }
                 }
@@ -1345,28 +1375,6 @@ namespace TfsBuildManager.Views
             {
                 this.view.DisplayError(ex);
             }
-        }
-
-        private void DumpDefinition(BuildDefinitionViewModel b, string filePath)
-        {
-            ExportedBuildDefinition buildToDump = new ExportedBuildDefinition();
-            buildToDump.Name = b.BuildDefinition.Name;
-            buildToDump.Description = b.BuildDefinition.Description;
-            buildToDump.BuildController = b.BuildDefinition.BuildController.Name;
-            buildToDump.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
-            buildToDump.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
-            buildToDump.SourceProviders = b.BuildDefinition.SourceProviders;
-            if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
-            {
-                buildToDump.Mappings = b.BuildDefinition.Workspace.Mappings;
-            }
-
-            buildToDump.SourceProviders = b.BuildDefinition.SourceProviders;
-            buildToDump.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
-            buildToDump.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
-            buildToDump.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
-            
-            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToDump, Formatting.Indented));
         }
 
         private void OnChangeTrigger()
