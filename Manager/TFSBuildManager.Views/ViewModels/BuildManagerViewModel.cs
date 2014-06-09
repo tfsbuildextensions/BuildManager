@@ -911,24 +911,31 @@ namespace TfsBuildManager.Views
 
         private static void ExportDefinition(BuildDefinitionViewModel b, string filePath)
         {
-            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition();
-            buildToExport.Name = b.BuildDefinition.Name;
-            buildToExport.Description = b.BuildDefinition.Description;
-            buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
-            buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
-            buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
-            buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
-            if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+            try
             {
-                buildToExport.Mappings = b.BuildDefinition.Workspace.Mappings;
+                ExportedBuildDefinition buildToExport = new ExportedBuildDefinition();
+                buildToExport.Name = b.BuildDefinition.Name;
+                buildToExport.Description = b.BuildDefinition.Description;
+                buildToExport.BuildController = b.BuildDefinition.BuildController == null ? string.Empty : b.BuildDefinition.BuildController.Name;
+                buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
+                buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
+                buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
+                if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+                {
+                    buildToExport.Mappings = b.BuildDefinition.Workspace.Mappings;
+                }
+
+                buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
+                buildToExport.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
+                buildToExport.ProcessTemplate = b.BuildDefinition.Process == null ? null : b.BuildDefinition.Process.ServerPath;
+                buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+
+                File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
             }
-
-            buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
-            buildToExport.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
-            buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
-            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
-
-            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Exporting '{0}' failed.\r\n{1}", b.Name, ex.Message), "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ShowNoBranchMessage(string project)
