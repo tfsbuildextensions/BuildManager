@@ -48,7 +48,7 @@
         <ColumnDefinition Width="146*" MinWidth="100"></ColumnDefinition>
         <ColumnDefinition Width="145*" MinWidth="100"></ColumnDefinition>
       </Grid.ColumnDefinitions>
-      <TextBlock Text="Show" Margin="10,2,0,0" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=TextBlockStyle}" />
+      <TextBlock Text="View" Margin="10,2,0,0" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=TextBlockStyle}" />
       <ComboBox Name="SelectedBuildViewCombo" Grid.Row="1" ItemsSource="{Binding BuildViews}" SelectedValuePath="Value" DisplayMemberPath="Name"  Margin="10,2,10,0"
                       SelectedValue="{Binding Path=SelectedBuildView}" Grid.ColumnSpan="2">
       </ComboBox>

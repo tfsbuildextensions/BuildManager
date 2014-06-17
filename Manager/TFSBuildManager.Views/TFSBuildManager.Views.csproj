@@ -139,6 +139,9 @@
     <Compile Include="Controls\HighlightTextBlock.cs" />
     <Compile Include="ExportedBuildDefinition.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ImportBuildDefinitions.xaml.cs">
+      <DependentUpon>ImportBuildDefinitions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RemapWorkspaces.xaml.cs">
       <DependentUpon>RemapWorkspaces.xaml</DependentUpon>
     </Compile>
@@ -232,6 +235,10 @@
     <Page Include="BuildResourcesGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ImportBuildDefinitions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RemapWorkspaces.xaml">
       <SubType>Designer</SubType>

@@ -1005,7 +1005,14 @@ namespace TfsBuildManager.Views
         
         private void OnImportBuildDefinition()
         {
-            MessageBox.Show("Cool import code coming soon");
+            if (this.view.SelectedTeamProject == "All")
+            {
+                MessageBox.Show("Please select a Team Project.", "Error: Unable to import into All projects", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var wnd = new ImportBuildDefinitions(this.view.SelectedTeamProject);
+            wnd.ShowDialog();
         }
 
         private void OnGenerateBuildResources()
