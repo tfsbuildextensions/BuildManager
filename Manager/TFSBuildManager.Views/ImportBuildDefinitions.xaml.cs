@@ -1,6 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ImportBuildDefinitions.xaml.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using System.IO;
+
 namespace TfsBuildManager.Views
 {
     using System.Windows;
@@ -28,6 +31,17 @@ namespace TfsBuildManager.Views
                 foreach (string filename in dlg.FileNames)
                 {
                     this.ListBoxBuilds.Items.Add(filename);
+                }
+            }
+        }
+
+        private void ButtonImport_OnClick(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in this.ListBoxBuilds.Items)
+            {
+                if (File.Exists(item.ToString()))
+                {
+                    MessageBox.Show("Processing " + item);
                 }
             }
         }

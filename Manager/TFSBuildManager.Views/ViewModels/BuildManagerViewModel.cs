@@ -1007,7 +1007,7 @@ namespace TfsBuildManager.Views
         {
             if (this.view.SelectedTeamProject == "All")
             {
-                MessageBox.Show("Please select a Team Project.", "Error: Unable to import into All projects", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please select an individual Team Project.", "Error: Unable to import into All projects", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

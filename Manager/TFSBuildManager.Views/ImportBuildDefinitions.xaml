@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Import Build Definitions" Height="377" Width="428" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
   <Grid>
-    <Button Content="Import" HorizontalAlignment="Left" Margin="335,317,0,0" VerticalAlignment="Top" Width="75"/>
+    <Button Name="ButtonImport" Content="Import" HorizontalAlignment="Left" Margin="335,317,0,0" VerticalAlignment="Top" Width="75" Click="ButtonImport_OnClick"/>
     <CheckBox Name="checkboxOverride" Content="Overwrite existing Build Definitions" HorizontalAlignment="Left" Margin="114,320,0,0" VerticalAlignment="Top"/>
-    <Label Content="You are importing into: " HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+    <Label Content="You are importing into: " HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
     <Label Name="lableTeamProject" Content="Label" HorizontalAlignment="Left" Margin="146,0,0,0" VerticalAlignment="Top"/>
-    <Button Name="ButtonSelectFiles" Content="Select Files" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="75" Click="ButtonSelectFiles_OnClick"/>
-    <ListBox Name="ListBoxBuilds" HorizontalAlignment="Left" Height="210" Margin="10,102,0,0" VerticalAlignment="Top" Width="400"/>
-    <Label Content="Builds Found" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top"/>
+    <Button Name="ButtonSelectFiles" Content="Select Files" HorizontalAlignment="Left" Margin="335,29,0,0" VerticalAlignment="Top" Width="75" Click="ButtonSelectFiles_OnClick"/>
+    <ListBox Name="ListBoxBuilds" HorizontalAlignment="Left" Height="230" Margin="10,82,0,0" VerticalAlignment="Top" Width="400"/>
+    <Label Content="Builds Selected" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="92"/>
+    <Label Content="You should only import json files exported using this tool." HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top"/>
 
   </Grid>
 </Window>
