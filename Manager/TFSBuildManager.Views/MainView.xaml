@@ -33,6 +33,7 @@
       <Button Name="btnRefresh" Command="{Binding RefreshCurrentView}" Width="18" Height="18" Margin="6,0,0,0">
         <Image Source="Graphics/refresh.png" ToolTip="Refresh Current View"/>
       </Button>
+      <CheckBox Content="Auto Refresh for Frans Vink" IsChecked="True"/>
     </StackPanel>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
       <Label Name="lblVersion">Version</Label>
@@ -132,6 +133,16 @@
                 <TextBlock Text="{Binding DefaultDropLocation}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
               </StackPanel>
             </DataTemplate>
+            <DataTemplate x:Key="LastModifiedBy">
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding LastModifiedBy}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+              </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="LastModifiedDate">
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding LastModifiedDate}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+              </StackPanel>
+            </DataTemplate>
           </ListView.Resources>
           <Controls:SortableListView.ContextMenu>
             <ContextMenu>
@@ -215,6 +226,8 @@
               <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}" />
               <Controls:SortableGridViewColumn Header="Process" SortPropertyName="Process" IsDefaultSortColumn="False" CellTemplate="{StaticResource ProcessTemplate}" />
               <Controls:SortableGridViewColumn Header="DefaultDropLocation" SortPropertyName="DefaultDropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DefaultDropLocation}" />
+              <Controls:SortableGridViewColumn Header="LastModifiedBy" SortPropertyName="LastModifiedBy" IsDefaultSortColumn="False" CellTemplate="{StaticResource LastModifiedBy}" />
+              <Controls:SortableGridViewColumn Header="LastModifiedDate" SortPropertyName="LastModifiedDate" IsDefaultSortColumn="False" CellTemplate="{StaticResource LastModifiedDate}" />
             </GridView>
           </ListView.View>
         </Controls:SortableListView>

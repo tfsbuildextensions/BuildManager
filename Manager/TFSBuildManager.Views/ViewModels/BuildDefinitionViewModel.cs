@@ -29,6 +29,8 @@ namespace TfsBuildManager.Views
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
             this.IsGitProject = build.SourceProviders.Any(s => s.Name == "TFGIT");
             this.IsTfvcProject = !this.IsGitProject;
+            this.LastModifiedBy = build.Workspace.LastModifiedBy;
+            this.LastModifiedDate = build.Workspace.LastModifiedDate;
         }
 
         public IBuildDefinition BuildDefinition { get; set; }
@@ -59,6 +61,10 @@ namespace TfsBuildManager.Views
 
         public bool IsGitProject { get; set; }
 
+        public string LastModifiedBy { get; set; }
+
+        public DateTime LastModifiedDate { get; set; }
+        
         public bool HasProcess
         {
             get
