@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------
 namespace TfsBuildManager.Views
 {
-    using System.IO;
+    using System.Collections.ObjectModel;
     using System.Windows;
 
     /// <summary>
@@ -11,37 +11,48 @@ namespace TfsBuildManager.Views
     /// </summary>
     public partial class ImportBuildDefinitions
     {
+        private readonly ObservableCollection<BuildImport> buildFiles = new ObservableCollection<BuildImport>();
+
         public ImportBuildDefinitions(string teamProjectName)
         {
             this.InitializeComponent();
             this.lableTeamProject.Content = teamProjectName;
         }
+        
+        public ObservableCollection<BuildImport> BuildFiles
+        {
+            get { return this.buildFiles; }
+        }
 
         private void ButtonSelectFiles_OnClick(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".json";
-            dlg.Filter = "json Files (*.json)|*.json";
-            dlg.Multiselect = true;
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".json", Filter = "json Files (*.json)|*.json", Multiselect = true };
             bool? result = dlg.ShowDialog();
             if (result == true)
             {
                 foreach (string filename in dlg.FileNames)
                 {
-                    this.ListBoxBuilds.Items.Add(filename);
+                    this.BuildFiles.Add(new BuildImport { JsonFile = filename });
                 }
+
+                this.DataGridBuildsToImport.ItemsSource = this.buildFiles;
             }
         }
 
         private void ButtonImport_OnClick(object sender, RoutedEventArgs e)
         {
-            foreach (var item in this.ListBoxBuilds.Items)
+            foreach (var item in this.DataGridBuildsToImport.Items)
             {
-                if (File.Exists(item.ToString()))
+                BuildImport bi = item as BuildImport;
+
+                if (bi != null)
                 {
-                    MessageBox.Show("Processing " + item);
+                    bi.Status = "Imported";
                 }
             }
+
+            this.DataGridBuildsToImport.ItemsSource = null;
+            this.DataGridBuildsToImport.ItemsSource = this.buildFiles;
         }
     }
 }
