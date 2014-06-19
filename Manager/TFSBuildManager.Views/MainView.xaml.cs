@@ -400,7 +400,10 @@ namespace TfsBuildManager.Views
                             this.UpdateBuildDefinitions();
                             if (this.viewmodel.SelectedBuildView == BuildView.Builds)
                             {
-                                this.RestartUpdateBuildsViewTimer();
+                                if (this.CheckBoxAutoRefresh.IsChecked == true)
+                                {
+                                    this.RestartUpdateBuildsViewTimer();
+                                }
                             }
                         }
 
@@ -417,7 +420,7 @@ namespace TfsBuildManager.Views
         {
             this.dispatcherTimer = new DispatcherTimer();
             this.dispatcherTimer.Tick += this.OnTimerUpdate;
-            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 25);
+            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 1, 0);
             this.dispatcherTimer.Start();
         }
 
@@ -433,7 +436,10 @@ namespace TfsBuildManager.Views
                         this.UpdateBuilds();
                     }
 
-                    this.RestartUpdateBuildsViewTimer();
+                    if (this.CheckBoxAutoRefresh.IsChecked == true)
+                    {
+                        this.RestartUpdateBuildsViewTimer();
+                    }
                 }
             }
             catch (Exception ex)
@@ -448,6 +454,16 @@ namespace TfsBuildManager.Views
             {
                 this.viewmodel.OnDelete();
             }
+        }
+
+        private void CheckBoxAutoRefresh_OnChecked(object sender, RoutedEventArgs e)
+        {
+            this.RestartUpdateBuildsViewTimer();
+        }
+
+        private void CheckBoxAutoRefresh_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            this.dispatcherTimer.Stop();
         }
     }
 }
