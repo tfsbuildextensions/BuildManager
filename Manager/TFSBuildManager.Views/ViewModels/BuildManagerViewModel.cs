@@ -884,7 +884,7 @@ namespace TfsBuildManager.Views
                                     x =>
                                     x.StartsWith(
                                         AppDomain.CurrentDomain.FriendlyName.ToLower() + "_p"
-                                        + Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture)));
+                                        + Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase));
                         if (myInstance != null)
                         {
                             myCounters = array[i].GetCounters(myInstance);
