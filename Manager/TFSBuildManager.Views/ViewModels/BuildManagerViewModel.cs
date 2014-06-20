@@ -918,7 +918,6 @@ namespace TfsBuildManager.Views
 
                 System.Diagnostics.Debug.WriteLine("++++++++++++++++++++++");
 
-
                 this.Builds.Clear();
                 foreach (var b in queuedBuilds.Where(b => b != null).Select(b => new BuildViewModel(b)))
                 {

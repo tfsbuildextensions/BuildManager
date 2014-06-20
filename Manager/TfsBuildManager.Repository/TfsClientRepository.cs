@@ -184,7 +184,7 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildDetailSpec(buildDefinitionUris);
             }
 
-            spec.InformationTypes = new []{ Microsoft.TeamFoundation.Build.Common.InformationTypes.AgentScopeActivityTracking };
+            spec.InformationTypes = new[] { Microsoft.TeamFoundation.Build.Common.InformationTypes.AgentScopeActivityTracking };
             spec.MaxBuildsPerDefinition = 100;
             spec.Status = BuildStatus.Succeeded | BuildStatus.Stopped | BuildStatus.PartiallySucceeded | BuildStatus.Failed;
             spec.QueryOrder = BuildQueryOrder.FinishTimeDescending;
