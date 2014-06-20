@@ -50,7 +50,6 @@ namespace TfsBuildManager.Views
             if (build.Build != null)
             {
                 string[] refreshAllDetails = { InformationTypes.AgentScopeActivityTracking };
-                ////string[] refreshAllDetails = new string[0];
                 build.Build.Refresh(refreshAllDetails, QueryOptions.Agents | QueryOptions.BatchedRequests);
                 this.Name = build.Build.BuildNumber;
             }

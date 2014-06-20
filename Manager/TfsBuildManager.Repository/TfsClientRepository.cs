@@ -140,7 +140,6 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildQueueSpec(definitions.Select(d => d.Uri));
             }
 
-            ////spec.DefinitionSpec.PropertyNameFilters = new List<string>();
             if (spec.DefinitionSpec != null)
             {
                 spec.DefinitionSpec.PropertyNameFilters = null;
