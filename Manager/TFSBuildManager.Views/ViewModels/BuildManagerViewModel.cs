@@ -868,26 +868,24 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                string myInstance = string.Empty;
-
                 PerformanceCounterCategory[] array = PerformanceCounterCategory.GetCategories();
                 PerformanceCounter[] myCounters = null;
-                for (int i = 0; i < array.Length; i++)
+                foreach (PerformanceCounterCategory t in array)
                 {
-                    ////System.Diagnostics.Debug.WriteLine("{0}. Name={1} Help={2}", i, array[i].CategoryName, array[i].CategoryHelp);
-                    if (array[i].CategoryName.Equals(".NET CLR Networking 4.0.0.0"))
+////System.Diagnostics.Debug.WriteLine("{0}. Name={1} Help={2}", i, array[i].CategoryName, array[i].CategoryHelp);
+                    if (t.CategoryName.Equals(".NET CLR Networking 4.0.0.0"))
                     {
-                        System.Diagnostics.Debug.WriteLine(".NET CLR Networking 4.0.0.0 instances:" + string.Join(", ", array[i].GetInstanceNames()));
-                        myInstance =
-                            array[i].GetInstanceNames()
-                                .FirstOrDefault(
-                                    x =>
+                        System.Diagnostics.Debug.WriteLine(".NET CLR Networking 4.0.0.0 instances:" + string.Join(", ", t.GetInstanceNames()));
+                        string myInstance = t.GetInstanceNames()
+                            .FirstOrDefault(
+                                x =>
                                     x.StartsWith(
                                         AppDomain.CurrentDomain.FriendlyName.ToLower() + "_p"
-                                        + Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase));
+                                        + Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture), 
+                                        StringComparison.OrdinalIgnoreCase));
                         if (myInstance != null)
                         {
-                            myCounters = array[i].GetCounters(myInstance);
+                            myCounters = t.GetCounters(myInstance);
                         }
                     }
                 }
