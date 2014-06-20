@@ -99,16 +99,21 @@ namespace TfsBuildManager.Views
 
         public void OnRefresh(object sender, EventArgs e)
         {
+#if !DEBUG
             try
             {
+#endif
                 this.UpdateBuildDefinitions();
+#if !DEBUG
+
             }
             catch (Exception ex)
             {
                 this.DisplayError(ex);
             }
+#endif
         }
-        
+
         public void DisplayError(Exception ex)
         {
             MessageBox.Show(ex.ToString(), "Community TFS Build Manager", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -154,8 +159,10 @@ namespace TfsBuildManager.Views
                 return;
             }
 
+#if !DEBUG
             try
             {
+#endif
                 using (new WaitCursor())
                 {
                     if (this.viewmodel.SelectedBuildView == BuildView.BuildDefinitions)
@@ -301,11 +308,13 @@ namespace TfsBuildManager.Views
                         this.UpdateBuildResources();
                     }
                 }
+#if !DEBUG
             }
             catch (Exception ex)
             {
                 this.DisplayError(ex);
             }
+#endif
         }
 
         private void UpdateBuildProcessTemplates()

@@ -7,6 +7,7 @@ namespace TfsBuildManager.Views
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
@@ -867,9 +868,65 @@ namespace TfsBuildManager.Views
         {
             try
             {
+                string myInstance = string.Empty;
+
+                PerformanceCounterCategory[] array = PerformanceCounterCategory.GetCategories();
+                PerformanceCounter[] myCounters = null;
+                for (int i = 0; i < array.Length; i++)
+                {
+                    ////System.Diagnostics.Debug.WriteLine("{0}. Name={1} Help={2}", i, array[i].CategoryName, array[i].CategoryHelp);
+                    if (array[i].CategoryName.Equals(".NET CLR Networking 4.0.0.0"))
+                    {
+                        System.Diagnostics.Debug.WriteLine(".NET CLR Networking 4.0.0.0 instances:" + string.Join(", ", array[i].GetInstanceNames()));
+                        myInstance =
+                            array[i].GetInstanceNames()
+                                .FirstOrDefault(
+                                    x =>
+                                    x.StartsWith(
+                                        AppDomain.CurrentDomain.FriendlyName.ToLower() + "_p"
+                                        + Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture)));
+                        if (myInstance != null)
+                        {
+                            myCounters = array[i].GetCounters(myInstance);
+                        }
+                    }
+                }
+
+                ////var c = new PerformanceCounter(".NET CLR Networking 4.0.0.0", "Bytes Received", myInstance, true);
+                CounterSample s = new CounterSample();
+                PerformanceCounter c = null;
+                if (myCounters != null)
+                {
+                    c = myCounters.First(x => x.CounterName.Equals("Bytes Received"));
+                    s = c.NextSample();
+                    System.Diagnostics.Debug.WriteLine(
+                        "{0}. Name={1} Type={2}",
+                        c.CategoryName,
+                        c.CounterName,
+                        c.CounterType);
+                    System.Diagnostics.Debug.WriteLine("+++++++++++");
+                    System.Diagnostics.Debug.WriteLine("Sample values -");
+                    System.Diagnostics.Debug.WriteLine("   BaseValue        = " + s.BaseValue);
+                    System.Diagnostics.Debug.WriteLine("   CounterFrequency = " + s.CounterFrequency);
+                    System.Diagnostics.Debug.WriteLine("   CounterTimeStamp = " + s.CounterTimeStamp);
+                    System.Diagnostics.Debug.WriteLine("   CounterType      = " + s.CounterType);
+                    System.Diagnostics.Debug.WriteLine("   RawValue         = " + s.RawValue);
+                    System.Diagnostics.Debug.WriteLine("   SystemFrequency  = " + s.SystemFrequency);
+                    System.Diagnostics.Debug.WriteLine("   TimeStamp        = " + s.TimeStamp);
+                    System.Diagnostics.Debug.WriteLine("   TimeStamp100nSec = " + s.TimeStamp100nSec);
+                }
+
+                System.Diagnostics.Debug.WriteLine("++++++++++++++++++++++");
+
+
                 this.Builds.Clear();
                 foreach (var b in queuedBuilds.Where(b => b != null).Select(b => new BuildViewModel(b)))
                 {
+                    if (c != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("   RawValue {0} = {1} {2} {3}", b.BuildDefinition, c.RawValue - s.RawValue, c.RawValue, b.QueuedBuildDetail.Status);
+                    }
+
                     this.Builds.Add(b);
                 }
             }

@@ -5,6 +5,8 @@ namespace TfsBuildManager.Views
 {
     using System;
     using System.Globalization;
+    using System.Linq;
+
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Common;
 
@@ -47,7 +49,8 @@ namespace TfsBuildManager.Views
             this.QueuedBuildDetail = build;
             if (build.Build != null)
             {
-                string[] refreshAllDetails = { "*" };
+                string[] refreshAllDetails = { InformationTypes.AgentScopeActivityTracking };
+                ////string[] refreshAllDetails = new string[0];
                 build.Build.Refresh(refreshAllDetails, QueryOptions.Agents | QueryOptions.BatchedRequests);
                 this.Name = build.Build.BuildNumber;
             }
@@ -148,14 +151,37 @@ namespace TfsBuildManager.Views
 
         private static string GetBuildAgentName(IBuildDetail build)
         {
-            var buildInformationNodes = build.Information.GetNodesByType("AgentScopeActivityTracking", true);
-            if (buildInformationNodes != null)
+            if (!build.BuildFinished)
             {
-                var node = buildInformationNodes.Find(s => s.Fields.ContainsKey(InformationFields.ReservedAgentName));
-                return node != null ? node.Fields[InformationFields.ReservedAgentName] : string.Empty;
-            }
+                System.Diagnostics.Debug.WriteLine(
+                    "build:{0}:{1} controller:{2} agents:{3}",
+                    build.BuildDefinition.Name,
+                    build.Uri,
+                    build.BuildController.Name,
+                    build.BuildController.Agents.Count);
+                System.Diagnostics.Debug.WriteLine(
+                    "Agents:" + string.Join(", ", build.BuildController.Agents.Select(x => x.Name + x.ReservedForBuild)));
 
-            return string.Empty;
+                var agents =
+                    build.BuildController.Agents.Where(x => x.IsReserved && x.ReservedForBuild.Equals(build.Uri));
+                var names = string.Join(", ", agents.Select(x => x.Name));
+                return names;
+            }
+            else
+            {
+                var buildInformationNodes = build.Information.GetNodesByType("AgentScopeActivityTracking", true);
+                if (buildInformationNodes != null)
+                {
+                    var names = string.Join(
+                        ", ",
+                        buildInformationNodes.Select(x => x.Fields[InformationFields.ReservedAgentName]));
+                    return names;
+                    ////var node = buildInformationNodes.Find(s => s.Fields.ContainsKey(InformationFields.ReservedAgentName));
+                    ////return node != null ? node.Fields[InformationFields.ReservedAgentName] : string.Empty;
+                }
+
+                return string.Empty;
+            }
         }
     }
 }

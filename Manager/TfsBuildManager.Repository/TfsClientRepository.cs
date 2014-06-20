@@ -140,6 +140,12 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildQueueSpec(definitions.Select(d => d.Uri));
             }
 
+            ////spec.DefinitionSpec.PropertyNameFilters = new List<string>();
+            if (spec.DefinitionSpec != null)
+            {
+                spec.DefinitionSpec.PropertyNameFilters = null;
+            }
+
             spec.QueryOptions = QueryOptions.Definitions | QueryOptions.Controllers | QueryOptions.Agents | QueryOptions.BatchedRequests;
             spec.Status = QueueStatus.InProgress | QueueStatus.Queued | QueueStatus.Postponed;
             return this.buildServer.QueryQueuedBuilds(spec).QueuedBuilds.AsEnumerable();
@@ -178,7 +184,7 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildDetailSpec(buildDefinitionUris);
             }
 
-            spec.InformationTypes = null;
+            spec.InformationTypes = new []{ Microsoft.TeamFoundation.Build.Common.InformationTypes.AgentScopeActivityTracking };
             spec.MaxBuildsPerDefinition = 100;
             spec.Status = BuildStatus.Succeeded | BuildStatus.Stopped | BuildStatus.PartiallySucceeded | BuildStatus.Failed;
             spec.QueryOrder = BuildQueryOrder.FinishTimeDescending;
