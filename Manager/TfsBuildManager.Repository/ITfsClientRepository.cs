@@ -89,6 +89,8 @@ namespace TfsBuildManager.Repository
 
         IEnumerable<Branch> GetChildBranchObjectsForItem(string item);
 
+        IBuildServer GetBuildServer();
+
         Branch GetBranchObjectForItem(string item);
 
         IEnumerable<string> GetProjectsToBuild(Uri buildDefinition);

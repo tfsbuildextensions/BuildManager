@@ -4,7 +4,12 @@
 namespace TfsBuildManager.Views
 {
     using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq;
     using System.Windows;
+    using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Workflow;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Interaction logic for ImportBuildDefinitions
@@ -12,11 +17,13 @@ namespace TfsBuildManager.Views
     public partial class ImportBuildDefinitions
     {
         private readonly ObservableCollection<BuildImport> buildFiles = new ObservableCollection<BuildImport>();
+        private readonly IBuildServer buildServer;
 
-        public ImportBuildDefinitions(string teamProjectName)
+        public ImportBuildDefinitions(string teamProjectName, IBuildServer server)
         {
             this.InitializeComponent();
             this.lableTeamProject.Content = teamProjectName;
+            this.buildServer = server;
         }
         
         public ObservableCollection<BuildImport> BuildFiles
@@ -44,10 +51,57 @@ namespace TfsBuildManager.Views
             foreach (var item in this.DataGridBuildsToImport.Items)
             {
                 BuildImport bi = item as BuildImport;
-
-                if (bi != null)
+                if (bi == null)
                 {
-                    bi.Status = "Imported";
+                    return;
+                }
+
+                if (!File.Exists(bi.JsonFile))
+                {
+                    bi.Status = "Failed";
+                    bi.Message = "File not found";
+                }
+                else
+                {
+                    ExportedBuildDefinition exdef = JsonConvert.DeserializeObject<ExportedBuildDefinition>(File.ReadAllText(bi.JsonFile));
+                    var newBuildDefinition = this.buildServer.CreateBuildDefinition(this.lableTeamProject.Content.ToString());
+                    newBuildDefinition.Name = exdef.Name;
+                    newBuildDefinition.Description = exdef.Description;
+                    newBuildDefinition.ContinuousIntegrationType = exdef.ContinuousIntegrationType;
+                    newBuildDefinition.ContinuousIntegrationQuietPeriod = exdef.ContinuousIntegrationQuietPeriod;
+
+                    newBuildDefinition.QueueStatus = exdef.QueueStatus;
+                    if (exdef.SourceProviders.All(s => s.Name != "TFGIT"))
+                    {
+                        foreach (var mapping in exdef.Mappings)
+                        {
+                            newBuildDefinition.Workspace.AddMapping(mapping.ServerItem, mapping.LocalItem, mapping.MappingType);
+                        }
+                    }
+
+                    foreach (var ret in exdef.RetentionPolicyList)
+                    {
+                        newBuildDefinition.RetentionPolicyList.Add(ret);
+                    }
+
+                    foreach (var sp in exdef.SourceProviders)
+                    {
+                        newBuildDefinition.CreateInitialSourceProvider(sp.Name);
+                    }
+
+                    newBuildDefinition.BuildController = this.buildServer.GetBuildController(exdef.BuildController);
+                    newBuildDefinition.Process = this.buildServer.QueryProcessTemplates(this.lableTeamProject.Content.ToString()).First(p => p.ServerPath == exdef.ProcessTemplate);
+                    newBuildDefinition.DefaultDropLocation = exdef.DefaultDropLocation;
+                    foreach (var sched in exdef.Schedules)
+                    {
+                        var newSched = newBuildDefinition.AddSchedule();
+                        newSched.DaysToBuild = sched.DaysToBuild;
+                        newSched.StartTime = sched.StartTime;
+                        newSched.TimeZone = sched.TimeZone;
+                    }
+
+                    newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(exdef.ProcessParameters);
+                    newBuildDefinition.Save();
                 }
             }
 

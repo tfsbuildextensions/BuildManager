@@ -16,17 +16,23 @@ namespace TfsBuildManager.Views
 
         public string BuildController { get; set; }
 
+        public DefinitionQueueStatus QueueStatus { get; set; }
+
         public string ProcessTemplate { get; set; }
 
         public string DefaultDropLocation { get; set; }
-        
-        public List<IBuildDefinitionSourceProvider> SourceProviders { get; set; }
+
+        public List<ExportedISchedule> Schedules { get; set; }
+
+        public int ContinuousIntegrationQuietPeriod { get; set; }
+
+        public List<ExportedIBuildDefinitionSourceProvider> SourceProviders { get; set; }
 
         public List<IWorkspaceMapping> Mappings { get; set; }
 
         public Dictionary<string, object> TestParameters { get; set; }
 
-        public List<IRetentionPolicy> RetentionPolicyList { get; set; }
+        public List<ExportedIRetentionPolicy> RetentionPolicyList { get; set; }
 
         public IDictionary<string, object> ProcessParameters { get; set; }
     }

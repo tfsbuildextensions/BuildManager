@@ -971,14 +971,33 @@ namespace TfsBuildManager.Views
             buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
             buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
             buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
-            buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
+            buildToExport.Schedules = new List<ExportedISchedule>();
+
+            foreach (var schedule in b.BuildDefinition.Schedules)
+            {
+                buildToExport.Schedules.Add(new ExportedISchedule() { StartTime = schedule.StartTime, DaysToBuild = schedule.DaysToBuild, TimeZone = schedule.TimeZone });
+            }
+
+            buildToExport.SourceProviders = new List<ExportedIBuildDefinitionSourceProvider>();
+            foreach (var provider in b.BuildDefinition.SourceProviders)
+            {
+                buildToExport.SourceProviders.Add(new ExportedIBuildDefinitionSourceProvider() { Fields = provider.Fields, Name = provider.Name, SupportedTriggerTypes = provider.SupportedTriggerTypes });
+            }
+
+            buildToExport.QueueStatus = b.BuildDefinition.QueueStatus;
+            buildToExport.ContinuousIntegrationQuietPeriod = b.BuildDefinition.ContinuousIntegrationQuietPeriod;
             if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
             {
                 buildToExport.Mappings = b.BuildDefinition.Workspace.Mappings;
             }
 
-            buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
-            buildToExport.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
+            buildToExport.RetentionPolicyList = new List<ExportedIRetentionPolicy>();
+
+            foreach (var rp in b.BuildDefinition.RetentionPolicyList)
+            {
+                buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus });
+            }
+
             buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
 
@@ -1065,7 +1084,7 @@ namespace TfsBuildManager.Views
                 return;
             }
 
-            var wnd = new ImportBuildDefinitions(this.view.SelectedTeamProject);
+            var wnd = new ImportBuildDefinitions(this.view.SelectedTeamProject, this.repository.GetBuildServer());
             wnd.ShowDialog();
         }
 

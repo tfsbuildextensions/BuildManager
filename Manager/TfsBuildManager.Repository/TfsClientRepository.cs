@@ -27,11 +27,8 @@ namespace TfsBuildManager.Repository
     public class TfsClientRepository : IDisposable, ITfsClientRepository
     {
         private const string ConfigurationFolderPath = "ConfigurationFolderPath";
-
         private const string BuildSettings = "BuildSettings";
-
         private const string TestSpecs = "TestSpecs";
-
         private readonly IBuildServer buildServer;
         private TfsTeamProjectCollection collection;
         private WorkItemStore workItemStore;
@@ -94,6 +91,11 @@ namespace TfsBuildManager.Repository
         public IBuildController GetController(string selectedController)
         {
             return this.buildServer.GetBuildController(selectedController);
+        }
+
+        public IBuildServer GetBuildServer()
+        {
+            return (IBuildServer)this.collection.GetService(typeof(IBuildServer));
         }
 
         public IEnumerable<IBuildDefinition> GetBuildDefinitions(IBuildController controller)
