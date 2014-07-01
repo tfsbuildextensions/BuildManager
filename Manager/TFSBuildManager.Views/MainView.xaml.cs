@@ -436,17 +436,20 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                this.dispatcherTimer.Stop();
-                if (this.viewmodel.SelectedBuildView == BuildView.Builds && this.viewmodel.SelectedBuildFilter == BuildFilter.Queued)
+                if (this.viewmodel != null)
                 {
-                    using (new WaitCursor())
+                    this.dispatcherTimer.Stop();
+                    if (this.viewmodel.SelectedBuildView == BuildView.Builds && this.viewmodel.SelectedBuildFilter == BuildFilter.Queued)
                     {
-                        this.UpdateBuilds();
-                    }
+                        using (new WaitCursor())
+                        {
+                            this.UpdateBuilds();
+                        }
 
-                    if (this.CheckBoxAutoRefresh.IsChecked == true)
-                    {
-                        this.RestartUpdateBuildsViewTimer();
+                        if (this.CheckBoxAutoRefresh.IsChecked == true)
+                        {
+                            this.RestartUpdateBuildsViewTimer();
+                        }
                     }
                 }
             }

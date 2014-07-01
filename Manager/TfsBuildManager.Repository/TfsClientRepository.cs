@@ -1036,6 +1036,12 @@ namespace TfsBuildManager.Repository
                 }
 
                 start = org.ToUpper().IndexOf(search, System.StringComparison.Ordinal);
+
+                if (start == 0)
+                {
+                    // we have a recursive loop as we are starting at 0 again and have a match. Let's force an exit.
+                    start = -1;
+                }
             }
             while (start >= 0);
 
