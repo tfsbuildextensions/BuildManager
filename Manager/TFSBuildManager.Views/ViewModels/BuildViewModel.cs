@@ -34,7 +34,7 @@ namespace TfsBuildManager.Views
             {
                 this.FinishTime = build.FinishTime.ToString("g");
                 this.SortableFinishTime = build.FinishTime.ToString("s");
-                this.Duration = string.Format("{0:hh\\:mm\\:ss}", build.FinishTime - build.StartTime);
+                this.Duration = string.Format("{0:dd\\:hh\\:mm\\:ss}", build.FinishTime - build.StartTime);
             }
 
             this.Uri = build.Uri;
@@ -75,13 +75,13 @@ namespace TfsBuildManager.Views
                 {
                     this.FinishTime = build.Build.FinishTime.ToString("g");
                     this.SortableFinishTime = build.Build.FinishTime.ToString("s");
-                    this.Duration = string.Format("{0:hh\\:mm\\:ss}", build.Build.FinishTime - build.Build.StartTime);
+                    this.Duration = string.Format("{0:dd\\:hh\\:mm\\:ss}", build.Build.FinishTime - build.Build.StartTime);
                 }
                 else
                 {
                     if (build.Build.StartTime != Convert.ToDateTime("01/01/0001 00:00:00"))
                     {
-                        this.Duration = string.Format("{0:hh\\:mm\\:ss}", DateTime.Now - build.Build.StartTime);
+                        this.Duration = string.Format("{0:dd\\:hh\\:mm\\:ss}", DateTime.Now - build.Build.StartTime);
                     }
                 }
 

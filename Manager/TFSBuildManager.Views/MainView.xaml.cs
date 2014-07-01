@@ -105,7 +105,6 @@ namespace TfsBuildManager.Views
 #endif
                 this.UpdateBuildDefinitions();
 #if !DEBUG
-
             }
             catch (Exception ex)
             {
