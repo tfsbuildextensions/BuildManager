@@ -981,7 +981,7 @@ namespace TfsBuildManager.Views
             buildToExport.SourceProviders = new List<ExportedIBuildDefinitionSourceProvider>();
             foreach (var provider in b.BuildDefinition.SourceProviders)
             {
-                buildToExport.SourceProviders.Add(new ExportedIBuildDefinitionSourceProvider() { Fields = provider.Fields, Name = provider.Name, SupportedTriggerTypes = provider.SupportedTriggerTypes });
+                buildToExport.SourceProviders.Add(new ExportedIBuildDefinitionSourceProvider { Fields = provider.Fields, Name = provider.Name, SupportedTriggerTypes = provider.SupportedTriggerTypes });
             }
 
             buildToExport.QueueStatus = b.BuildDefinition.QueueStatus;
@@ -995,7 +995,7 @@ namespace TfsBuildManager.Views
 
             foreach (var rp in b.BuildDefinition.RetentionPolicyList)
             {
-                buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus });
+                buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus, NumberToKeep = rp.NumberToKeep, DeleteOptions = rp.DeleteOptions });
             }
 
             buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;

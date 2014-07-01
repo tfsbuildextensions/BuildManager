@@ -79,14 +79,24 @@ namespace TfsBuildManager.Views
                         }
                     }
 
+                    newBuildDefinition.RetentionPolicyList.Clear();
                     foreach (var ret in exdef.RetentionPolicyList)
                     {
-                        newBuildDefinition.RetentionPolicyList.Add(ret);
+                        newBuildDefinition.AddRetentionPolicy(ret.BuildReason, ret.BuildStatus, ret.NumberToKeep, ret.DeleteOptions);
                     }
 
                     foreach (var sp in exdef.SourceProviders)
                     {
-                        newBuildDefinition.CreateInitialSourceProvider(sp.Name);
+                        var provider = newBuildDefinition.CreateInitialSourceProvider(sp.Name);
+                        if (exdef.SourceProviders.All(s => s.Name == "TFGIT"))
+                        {
+                            provider.Fields["RepositoryName"] = sp.Fields["RepositoryName"];
+                            provider.Fields["DefaultBranch"] = sp.Fields["DefaultBranch"];
+                            provider.Fields["CIBranches"] = sp.Fields["CIBranches"];
+                            provider.Fields["RepositoryUrl"] = sp.Fields["RepositoryUrl"];
+                        }
+
+                        newBuildDefinition.SetSourceProvider(provider);
                     }
 
                     newBuildDefinition.BuildController = this.buildServer.GetBuildController(exdef.BuildController);
@@ -100,7 +110,40 @@ namespace TfsBuildManager.Views
                         newSched.TimeZone = sched.TimeZone;
                     }
 
-                    newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(exdef.ProcessParameters);
+                    var process = WorkflowHelpers.DeserializeProcessParameters(newBuildDefinition.ProcessParameters);
+                    process.Add("ProjectsToBuild", new[] { "Test.sln" });
+                    process.Add("ConfigurationsToBuild", new[] { "Mixed Platforms|Debug" });
+
+                    //////Advanced build settings
+                    ////var buildParams = new Dictionary<string, string>();
+                    ////buildParams.Add("PreActionScriptPath", "/prebuild.ps1");
+                    ////buildParams.Add("PostActionScriptPath", "/postbuild.ps1");
+                    ////var param = new BuildParameter(buildParams);
+                    ////process.Add("AdvancedBuildSettings", param);
+
+                    //////test settings
+                    ////var testParams = new Dictionary<string, object>
+                    ////             {
+                    ////                 { "AssemblyFileSpec", "*.exe" },
+                    ////                 { "HasRunSettingsFile", true },
+                    ////                 { "ExecutionPlatform", "X86" },
+                    ////                 { "FailBuildOnFailure", true },
+                    ////                 { "RunName", "MyTestRunName" },
+                    ////                 { "HasTestCaseFilter", false },
+                    ////                 { "TestCaseFilter", null }
+                    ////             };
+
+                    ////var runSettingsForTestRun = new Dictionary<string, object>
+                    ////                        {
+                    ////                            { "HasRunSettingsFile", true },
+                    ////                            { "ServerRunSettingsFile", "" },
+                    ////                            { "TypeRunSettings", "CodeCoverageEnabled" }
+                    ////                        };
+                    ////testParams.Add("RunSettingsForTestRun", runSettingsForTestRun);
+                    ////process.Add("AutomatedTests", new[] { new BuildParameter(testParams) });
+                    ////process.Add("SymbolStorePath", @"\\server\symbols\somepath");
+
+                    newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(process);
                     newBuildDefinition.Save();
                 }
             }
