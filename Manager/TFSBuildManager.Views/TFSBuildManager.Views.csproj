@@ -140,6 +140,7 @@
     <Compile Include="BuildImport.cs" />
     <Compile Include="ExportedBuildDefinition.cs" />
     <Compile Include="ExportedIBuildDefinitionSourceProvider.cs" />
+    <Compile Include="ExportedIWorkspaceMapping.cs" />
     <Compile Include="ExportedISchedule.cs" />
     <Compile Include="ExportedIRetentionPolicy.cs" />
     <Compile Include="Extensions.cs" />

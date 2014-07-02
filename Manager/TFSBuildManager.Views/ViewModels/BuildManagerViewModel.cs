@@ -990,13 +990,17 @@ namespace TfsBuildManager.Views
 
             buildToExport.QueueStatus = b.BuildDefinition.QueueStatus;
             buildToExport.ContinuousIntegrationQuietPeriod = b.BuildDefinition.ContinuousIntegrationQuietPeriod;
+
             if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
             {
-                buildToExport.Mappings = b.BuildDefinition.Workspace.Mappings;
+                buildToExport.Mappings = new List<ExportedIWorkspaceMapping>();
+                foreach (var map in b.BuildDefinition.Workspace.Mappings)
+                {
+                    buildToExport.Mappings.Add(new ExportedIWorkspaceMapping { Depth = map.Depth, LocalItem = map.LocalItem, MappingType = map.MappingType, ServerItem = map.ServerItem });
+                }
             }
 
             buildToExport.RetentionPolicyList = new List<ExportedIRetentionPolicy>();
-
             foreach (var rp in b.BuildDefinition.RetentionPolicyList)
             {
                 buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus, NumberToKeep = rp.NumberToKeep, DeleteOptions = rp.DeleteOptions });

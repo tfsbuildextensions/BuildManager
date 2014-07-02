@@ -28,7 +28,7 @@ namespace TfsBuildManager.Views
 
         public List<ExportedIBuildDefinitionSourceProvider> SourceProviders { get; set; }
 
-        public List<IWorkspaceMapping> Mappings { get; set; }
+        public List<ExportedIWorkspaceMapping> Mappings { get; set; }
 
         public Dictionary<string, object> TestParameters { get; set; }
 
