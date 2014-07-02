@@ -383,6 +383,11 @@ namespace TfsBuildManager.Views
 
         private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            if (this.dispatcherTimer != null)
+            {
+                this.dispatcherTimer.Stop();
+            }
+
             try
             {
                 switch (e.PropertyName)
@@ -428,7 +433,7 @@ namespace TfsBuildManager.Views
         {
             this.dispatcherTimer = new DispatcherTimer();
             this.dispatcherTimer.Tick += this.OnTimerUpdate;
-            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 1, 0);
+            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 2, 0);
             this.dispatcherTimer.Start();
         }
 
@@ -469,7 +474,10 @@ namespace TfsBuildManager.Views
 
         private void CheckBoxAutoRefresh_OnChecked(object sender, RoutedEventArgs e)
         {
-            this.RestartUpdateBuildsViewTimer();
+            if (this.initialized)
+            {
+                this.RestartUpdateBuildsViewTimer();
+            }
         }
 
         private void CheckBoxAutoRefresh_OnUnchecked(object sender, RoutedEventArgs e)

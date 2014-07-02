@@ -968,14 +968,18 @@ namespace TfsBuildManager.Views
             ExportedBuildDefinition buildToExport = new ExportedBuildDefinition();
             buildToExport.Name = b.BuildDefinition.Name;
             buildToExport.Description = b.BuildDefinition.Description;
-            buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
+            if (b.BuildDefinition.BuildController != null)
+            {
+                buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
+            }
+
             buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
             buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
             buildToExport.Schedules = new List<ExportedISchedule>();
 
             foreach (var schedule in b.BuildDefinition.Schedules)
             {
-                buildToExport.Schedules.Add(new ExportedISchedule() { StartTime = schedule.StartTime, DaysToBuild = schedule.DaysToBuild, TimeZone = schedule.TimeZone });
+                buildToExport.Schedules.Add(new ExportedISchedule { StartTime = schedule.StartTime, DaysToBuild = schedule.DaysToBuild, TimeZone = schedule.TimeZone });
             }
 
             buildToExport.SourceProviders = new List<ExportedIBuildDefinitionSourceProvider>();
@@ -998,7 +1002,11 @@ namespace TfsBuildManager.Views
                 buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus, NumberToKeep = rp.NumberToKeep, DeleteOptions = rp.DeleteOptions });
             }
 
-            buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
+            if (b.BuildDefinition.Process != null)
+            {
+                buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
+            }
+
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
 
             File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
@@ -1435,25 +1443,25 @@ namespace TfsBuildManager.Views
 
         private void OnExportBuildDefinition()
         {
-            try
+            var items = this.view.SelectedItems;
+            using (new WaitCursor())
             {
-                var items = this.view.SelectedItems;
-                using (new WaitCursor())
+                System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to export to..." };
+                System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
+                if (result2 == System.Windows.Forms.DialogResult.OK)
                 {
-                    System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to export to..." };
-                    System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
-                    if (result2 == System.Windows.Forms.DialogResult.OK)
+                    foreach (var b in items)
                     {
-                        foreach (var b in items)
+                        try
                         {
                             ExportDefinition(b, saveFolder.SelectedPath);
                         }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString(), "Error Exporting " + b.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                this.view.DisplayError(ex);
             }
         }
 
