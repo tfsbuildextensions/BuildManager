@@ -67,3 +67,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "TfsBuildManager.Views.ExportedISchedule.#BuildDefinition")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "TfsBuildManager.Views.ExportedISchedule.#Type")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member", Target = "TfsBuildManager.Views.ImportBuildDefinitions.#ButtonImport_OnClick(System.Object,System.Windows.RoutedEventArgs)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "TfsBuildManager.Views.ImportBuildDefinitions.#ButtonImport_OnClick(System.Object,System.Windows.RoutedEventArgs)")]
