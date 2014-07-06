@@ -5,6 +5,7 @@ namespace TfsBuildManager.Views
 {
     using System.Collections.Generic;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Common;
 
     internal class ExportedBuildDefinition
     {
@@ -21,6 +22,8 @@ namespace TfsBuildManager.Views
         public string ProcessTemplate { get; set; }
 
         public string DefaultDropLocation { get; set; }
+
+        public BuildParameter BuildAgentSettings { get; set; }
 
         public List<ExportedISchedule> Schedules { get; set; }
 

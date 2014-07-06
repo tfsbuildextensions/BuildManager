@@ -62,6 +62,7 @@ namespace TfsBuildManager.Views
                     if (!File.Exists(bi.JsonFile))
                     {
                         bi.Status = "Failed";
+                        bi.StatusImage = "Graphics/Failed.png";
                         bi.Message = "File not found";
                     }
                     else
@@ -107,8 +108,9 @@ namespace TfsBuildManager.Views
                         if (x.All(p => p.ServerPath != exdef.ProcessTemplate))
                         {
                             bi.Status = "Failed";
-                            bi.Message = "ProcessTemplate not found";
-                            break;
+                            bi.StatusImage = "Graphics/Failed.png";
+                            bi.Message = "Process Template not found - " + exdef.ProcessTemplate;
+                            continue;
                         }
 
                         newBuildDefinition.Process = this.buildServer.QueryProcessTemplates(this.lableTeamProject.Content.ToString()).First(p => p.ServerPath == exdef.ProcessTemplate);
@@ -125,61 +127,42 @@ namespace TfsBuildManager.Views
 
                         foreach (var param in exdef.ProcessParameters)
                         {
-                            switch (param.Key)
+                            if (param.Key != "AgentSettings")
                             {
-                                case "ProjectsToBuild":
-                                    break;
-                                case "ConfigurationsToBuild":
-                                    break;
-                                case "AdvancedBuildSettings":
-                                    break;
-                                case "RunSettingsForTestRun":
-                                    break;
-                                default:
+                                Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
+                                if (arrayItem == null)
+                                {
                                     process.Add(param.Key, param.Value);
-                                    break;
+                                }
+                                else
+                                {
+                                    string[] arrayItemList = new string[arrayItem.Count];
+                                    for (int i = 0; i < arrayItem.Count; i++)
+                                    {
+                                        arrayItemList[i] = arrayItem[i].ToString();
+                                    }
+
+                                    process.Add(param.Key, arrayItemList);
+                                }
                             }
                         }
 
-                        // process.Add("ProjectsToBuild", new[] { "Test.sln" });
-                        // process.Add("ConfigurationsToBuild", new[] { "Mixed Platforms|Debug" });
-
-                        //////Advanced build settings
-                        ////var buildParams = new Dictionary<string, string>();
-                        ////buildParams.Add("PreActionScriptPath", "/prebuild.ps1");
-                        ////buildParams.Add("PostActionScriptPath", "/postbuild.ps1");
-                        ////var param = new BuildParameter(buildParams);
-                        ////process.Add("AdvancedBuildSettings", param);
-
-                        //////test settings
-                        ////var testParams = new Dictionary<string, object>
-                        ////             {
-                        ////                 { "AssemblyFileSpec", "*.exe" },
-                        ////                 { "HasRunSettingsFile", true },
-                        ////                 { "ExecutionPlatform", "X86" },
-                        ////                 { "FailBuildOnFailure", true },
-                        ////                 { "RunName", "MyTestRunName" },
-                        ////                 { "HasTestCaseFilter", false },
-                        ////                 { "TestCaseFilter", null }
-                        ////             };
-
-                        ////var runSettingsForTestRun = new Dictionary<string, object>
-                        ////                        {
-                        ////                            { "HasRunSettingsFile", true },
-                        ////                            { "ServerRunSettingsFile", "" },
-                        ////                            { "TypeRunSettings", "CodeCoverageEnabled" }
-                        ////                        };
-                        ////testParams.Add("RunSettingsForTestRun", runSettingsForTestRun);
-                        ////process.Add("AutomatedTests", new[] { new BuildParameter(testParams) });
-                        ////process.Add("SymbolStorePath", @"\\server\symbols\somepath");
+                        if (exdef.BuildAgentSettings != null)
+                        {
+                            process.Add("AgentSettings", exdef.BuildAgentSettings);   
+                        }
 
                         newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(process);
                         newBuildDefinition.Save();
+                        bi.Status = "Succeeded";
+                        bi.StatusImage = "Graphics/Succeeded.png";
+                        bi.Message = string.Empty;
                     }
                 }
                 catch (Exception ex)
                 {
                     bi.Status = "Failed";
+                    bi.StatusImage = "Graphics/Failed.png"; 
                     bi.Message = ex.Message;
                 }
                 finally

@@ -13,6 +13,7 @@ namespace TfsBuildManager.Views
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Common;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Newtonsoft.Json;
     using TfsBuildManager.Repository;
@@ -965,9 +966,7 @@ namespace TfsBuildManager.Views
 
         private static void ExportDefinition(BuildDefinitionViewModel b, string filePath)
         {
-            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition();
-            buildToExport.Name = b.BuildDefinition.Name;
-            buildToExport.Description = b.BuildDefinition.Description;
+            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition { Name = b.BuildDefinition.Name, Description = b.BuildDefinition.Description };
             if (b.BuildDefinition.BuildController != null)
             {
                 buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
@@ -1011,8 +1010,14 @@ namespace TfsBuildManager.Views
                 buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
             }
 
-            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+            var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+            if (processParameters.ContainsKey("AgentSettings"))
+            {
+                buildToExport.BuildAgentSettings = (BuildParameter)processParameters["AgentSettings"];
+            }
 
+            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+         
             File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
         }
 

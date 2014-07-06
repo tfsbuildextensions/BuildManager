@@ -9,6 +9,8 @@ namespace TfsBuildManager.Views
 
         public string Status { get; set; }
 
+        public string StatusImage { get; set; }
+
         public string Message { get; set; }
     }
 }
