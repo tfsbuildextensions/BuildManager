@@ -116,6 +116,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -137,8 +138,16 @@
       <DependentUpon>BuildResourcesGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HighlightTextBlock.cs" />
+    <Compile Include="BuildImport.cs" />
     <Compile Include="ExportedBuildDefinition.cs" />
+    <Compile Include="ExportedIBuildDefinitionSourceProvider.cs" />
+    <Compile Include="ExportedIWorkspaceMapping.cs" />
+    <Compile Include="ExportedISchedule.cs" />
+    <Compile Include="ExportedIRetentionPolicy.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ImportBuildDefinitions.xaml.cs">
+      <DependentUpon>ImportBuildDefinitions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RemapWorkspaces.xaml.cs">
       <DependentUpon>RemapWorkspaces.xaml</DependentUpon>
     </Compile>
@@ -232,6 +241,10 @@
     <Page Include="BuildResourcesGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ImportBuildDefinitions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RemapWorkspaces.xaml">
       <SubType>Designer</SubType>

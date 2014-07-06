@@ -99,16 +99,20 @@ namespace TfsBuildManager.Views
 
         public void OnRefresh(object sender, EventArgs e)
         {
+#if !DEBUG
             try
             {
+#endif
                 this.UpdateBuildDefinitions();
+#if !DEBUG
             }
             catch (Exception ex)
             {
                 this.DisplayError(ex);
             }
+#endif
         }
-        
+
         public void DisplayError(Exception ex)
         {
             MessageBox.Show(ex.ToString(), "Community TFS Build Manager", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -154,8 +158,10 @@ namespace TfsBuildManager.Views
                 return;
             }
 
+#if !DEBUG
             try
             {
+#endif
                 using (new WaitCursor())
                 {
                     if (this.viewmodel.SelectedBuildView == BuildView.BuildDefinitions)
@@ -301,11 +307,13 @@ namespace TfsBuildManager.Views
                         this.UpdateBuildResources();
                     }
                 }
+#if !DEBUG
             }
             catch (Exception ex)
             {
                 this.DisplayError(ex);
             }
+#endif
         }
 
         private void UpdateBuildProcessTemplates()
@@ -375,6 +383,11 @@ namespace TfsBuildManager.Views
 
         private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            if (this.dispatcherTimer != null)
+            {
+                this.dispatcherTimer.Stop();
+            }
+
             try
             {
                 switch (e.PropertyName)
@@ -400,7 +413,10 @@ namespace TfsBuildManager.Views
                             this.UpdateBuildDefinitions();
                             if (this.viewmodel.SelectedBuildView == BuildView.Builds)
                             {
-                                this.RestartUpdateBuildsViewTimer();
+                                if (this.CheckBoxAutoRefresh.IsChecked == true)
+                                {
+                                    this.RestartUpdateBuildsViewTimer();
+                                }
                             }
                         }
 
@@ -417,7 +433,7 @@ namespace TfsBuildManager.Views
         {
             this.dispatcherTimer = new DispatcherTimer();
             this.dispatcherTimer.Tick += this.OnTimerUpdate;
-            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 25);
+            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 2, 0);
             this.dispatcherTimer.Start();
         }
 
@@ -425,15 +441,21 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                this.dispatcherTimer.Stop();
-                if (this.viewmodel.SelectedBuildView == BuildView.Builds && this.viewmodel.SelectedBuildFilter == BuildFilter.Queued)
+                if (this.viewmodel != null)
                 {
-                    using (new WaitCursor())
+                    this.dispatcherTimer.Stop();
+                    if (this.viewmodel.SelectedBuildView == BuildView.Builds && this.viewmodel.SelectedBuildFilter == BuildFilter.Queued)
                     {
-                        this.UpdateBuilds();
-                    }
+                        using (new WaitCursor())
+                        {
+                            this.UpdateBuilds();
+                        }
 
-                    this.RestartUpdateBuildsViewTimer();
+                        if (this.CheckBoxAutoRefresh.IsChecked == true)
+                        {
+                            this.RestartUpdateBuildsViewTimer();
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -448,6 +470,19 @@ namespace TfsBuildManager.Views
             {
                 this.viewmodel.OnDelete();
             }
+        }
+
+        private void CheckBoxAutoRefresh_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (this.initialized)
+            {
+                this.RestartUpdateBuildsViewTimer();
+            }
+        }
+
+        private void CheckBoxAutoRefresh_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            this.dispatcherTimer.Stop();
         }
     }
 }

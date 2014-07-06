@@ -27,11 +27,8 @@ namespace TfsBuildManager.Repository
     public class TfsClientRepository : IDisposable, ITfsClientRepository
     {
         private const string ConfigurationFolderPath = "ConfigurationFolderPath";
-
         private const string BuildSettings = "BuildSettings";
-
         private const string TestSpecs = "TestSpecs";
-
         private readonly IBuildServer buildServer;
         private TfsTeamProjectCollection collection;
         private WorkItemStore workItemStore;
@@ -96,6 +93,11 @@ namespace TfsBuildManager.Repository
             return this.buildServer.GetBuildController(selectedController);
         }
 
+        public IBuildServer GetBuildServer()
+        {
+            return (IBuildServer)this.collection.GetService(typeof(IBuildServer));
+        }
+
         public IEnumerable<IBuildDefinition> GetBuildDefinitions(IBuildController controller)
         {
             return this.AllBuildDefinitions.Where(bd => bd.BuildControllerUri == controller.Uri);
@@ -140,6 +142,11 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildQueueSpec(definitions.Select(d => d.Uri));
             }
 
+            if (spec.DefinitionSpec != null)
+            {
+                spec.DefinitionSpec.PropertyNameFilters = null;
+            }
+
             spec.QueryOptions = QueryOptions.Definitions | QueryOptions.Controllers | QueryOptions.Agents | QueryOptions.BatchedRequests;
             spec.Status = QueueStatus.InProgress | QueueStatus.Queued | QueueStatus.Postponed;
             return this.buildServer.QueryQueuedBuilds(spec).QueuedBuilds.AsEnumerable();
@@ -178,7 +185,7 @@ namespace TfsBuildManager.Repository
                 spec = this.buildServer.CreateBuildDetailSpec(buildDefinitionUris);
             }
 
-            spec.InformationTypes = null;
+            spec.InformationTypes = new[] { Microsoft.TeamFoundation.Build.Common.InformationTypes.AgentScopeActivityTracking };
             spec.MaxBuildsPerDefinition = 100;
             spec.Status = BuildStatus.Succeeded | BuildStatus.Stopped | BuildStatus.PartiallySucceeded | BuildStatus.Failed;
             spec.QueryOrder = BuildQueryOrder.FinishTimeDescending;
@@ -1029,6 +1036,12 @@ namespace TfsBuildManager.Repository
                 }
 
                 start = org.ToUpper().IndexOf(search, System.StringComparison.Ordinal);
+
+                if (start == 0)
+                {
+                    // we have a recursive loop as we are starting at 0 again and have a match. Let's force an exit.
+                    start = -1;
+                }
             }
             while (start >= 0);
 

@@ -11,7 +11,7 @@ namespace TfsBuildManager.Views
     {
         public BuildAgentViewModel(IBuildAgent agent)
         {
-            this.Name = "   " + agent.Name;
+            this.Name = "\t" + agent.Name;
             this.BuildDirectory = agent.BuildDirectory;
             this.Status = agent.Status.ToString();
             this.Enabled = agent.Enabled;

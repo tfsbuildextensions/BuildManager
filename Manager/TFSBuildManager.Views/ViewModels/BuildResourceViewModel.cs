@@ -5,6 +5,7 @@
 namespace TfsBuildManager.Views
 {
     using System.Collections.Generic;
+    using System.Linq;
     using TfsBuildManager.Repository;
 
     public abstract class BuildResourceViewModel : ViewModelBase
@@ -28,12 +29,7 @@ namespace TfsBuildManager.Views
         {
             get
             {
-                string tags = string.Empty;
-                foreach (var tag in this.Tags)
-                {
-                    tags = tags + tag + ",";
-                }
-
+                string tags = this.Tags.Aggregate(string.Empty, (current, tag) => current + tag + ",");
                 return tags.TrimEnd(',');
             }
         }

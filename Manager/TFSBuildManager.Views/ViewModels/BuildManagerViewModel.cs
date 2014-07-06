@@ -7,11 +7,13 @@ namespace TfsBuildManager.Views
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Common;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Newtonsoft.Json;
     using TfsBuildManager.Repository;
@@ -867,9 +869,62 @@ namespace TfsBuildManager.Views
         {
             try
             {
+                PerformanceCounterCategory[] array = PerformanceCounterCategory.GetCategories();
+                PerformanceCounter[] myCounters = null;
+                foreach (PerformanceCounterCategory t in array)
+                {
+////System.Diagnostics.Debug.WriteLine("{0}. Name={1} Help={2}", i, array[i].CategoryName, array[i].CategoryHelp);
+                    if (t.CategoryName.Equals(".NET CLR Networking 4.0.0.0"))
+                    {
+                        System.Diagnostics.Debug.WriteLine(".NET CLR Networking 4.0.0.0 instances:" + string.Join(", ", t.GetInstanceNames()));
+                        string myInstance = t.GetInstanceNames()
+                            .FirstOrDefault(
+                                x =>
+                                    x.StartsWith(
+                                        AppDomain.CurrentDomain.FriendlyName.ToLower() + "_p"
+                                        + Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture), 
+                                        StringComparison.OrdinalIgnoreCase));
+                        if (myInstance != null)
+                        {
+                            myCounters = t.GetCounters(myInstance);
+                        }
+                    }
+                }
+
+                ////var c = new PerformanceCounter(".NET CLR Networking 4.0.0.0", "Bytes Received", myInstance, true);
+                CounterSample s = new CounterSample();
+                PerformanceCounter c = null;
+                if (myCounters != null)
+                {
+                    c = myCounters.First(x => x.CounterName.Equals("Bytes Received"));
+                    s = c.NextSample();
+                    System.Diagnostics.Debug.WriteLine(
+                        "{0}. Name={1} Type={2}",
+                        c.CategoryName,
+                        c.CounterName,
+                        c.CounterType);
+                    System.Diagnostics.Debug.WriteLine("+++++++++++");
+                    System.Diagnostics.Debug.WriteLine("Sample values -");
+                    System.Diagnostics.Debug.WriteLine("   BaseValue        = " + s.BaseValue);
+                    System.Diagnostics.Debug.WriteLine("   CounterFrequency = " + s.CounterFrequency);
+                    System.Diagnostics.Debug.WriteLine("   CounterTimeStamp = " + s.CounterTimeStamp);
+                    System.Diagnostics.Debug.WriteLine("   CounterType      = " + s.CounterType);
+                    System.Diagnostics.Debug.WriteLine("   RawValue         = " + s.RawValue);
+                    System.Diagnostics.Debug.WriteLine("   SystemFrequency  = " + s.SystemFrequency);
+                    System.Diagnostics.Debug.WriteLine("   TimeStamp        = " + s.TimeStamp);
+                    System.Diagnostics.Debug.WriteLine("   TimeStamp100nSec = " + s.TimeStamp100nSec);
+                }
+
+                System.Diagnostics.Debug.WriteLine("++++++++++++++++++++++");
+
                 this.Builds.Clear();
                 foreach (var b in queuedBuilds.Where(b => b != null).Select(b => new BuildViewModel(b)))
                 {
+                    if (c != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("   RawValue {0} = {1} {2} {3}", b.BuildDefinition, c.RawValue - s.RawValue, c.RawValue, b.QueuedBuildDetail.Status);
+                    }
+
                     this.Builds.Add(b);
                 }
             }
@@ -911,31 +966,59 @@ namespace TfsBuildManager.Views
 
         private static void ExportDefinition(BuildDefinitionViewModel b, string filePath)
         {
-            try
+            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition { Name = b.BuildDefinition.Name, Description = b.BuildDefinition.Description };
+            if (b.BuildDefinition.BuildController != null)
             {
-                ExportedBuildDefinition buildToExport = new ExportedBuildDefinition();
-                buildToExport.Name = b.BuildDefinition.Name;
-                buildToExport.Description = b.BuildDefinition.Description;
-                buildToExport.BuildController = b.BuildDefinition.BuildController == null ? string.Empty : b.BuildDefinition.BuildController.Name;
-                buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
-                buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
-                buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
-                if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+                buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
+            }
+
+            buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
+            buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
+            buildToExport.Schedules = new List<ExportedISchedule>();
+
+            foreach (var schedule in b.BuildDefinition.Schedules)
+            {
+                buildToExport.Schedules.Add(new ExportedISchedule { StartTime = schedule.StartTime, DaysToBuild = schedule.DaysToBuild, TimeZone = schedule.TimeZone });
+            }
+
+            buildToExport.SourceProviders = new List<ExportedIBuildDefinitionSourceProvider>();
+            foreach (var provider in b.BuildDefinition.SourceProviders)
+            {
+                buildToExport.SourceProviders.Add(new ExportedIBuildDefinitionSourceProvider { Fields = provider.Fields, Name = provider.Name, SupportedTriggerTypes = provider.SupportedTriggerTypes });
+            }
+
+            buildToExport.QueueStatus = b.BuildDefinition.QueueStatus;
+            buildToExport.ContinuousIntegrationQuietPeriod = b.BuildDefinition.ContinuousIntegrationQuietPeriod;
+
+            if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+            {
+                buildToExport.Mappings = new List<ExportedIWorkspaceMapping>();
+                foreach (var map in b.BuildDefinition.Workspace.Mappings)
                 {
-                    buildToExport.Mappings = b.BuildDefinition.Workspace.Mappings;
+                    buildToExport.Mappings.Add(new ExportedIWorkspaceMapping { Depth = map.Depth, LocalItem = map.LocalItem, MappingType = map.MappingType, ServerItem = map.ServerItem });
                 }
-
-                buildToExport.SourceProviders = b.BuildDefinition.SourceProviders;
-                buildToExport.RetentionPolicyList = b.BuildDefinition.RetentionPolicyList;
-                buildToExport.ProcessTemplate = b.BuildDefinition.Process == null ? null : b.BuildDefinition.Process.ServerPath;
-                buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
-
-                File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
             }
-            catch (Exception ex)
+
+            buildToExport.RetentionPolicyList = new List<ExportedIRetentionPolicy>();
+            foreach (var rp in b.BuildDefinition.RetentionPolicyList)
             {
-                MessageBox.Show(string.Format("Exporting '{0}' failed.\r\n{1}", b.Name, ex.Message), "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus, NumberToKeep = rp.NumberToKeep, DeleteOptions = rp.DeleteOptions });
             }
+
+            if (b.BuildDefinition.Process != null)
+            {
+                buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
+            }
+
+            var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+            if (processParameters.ContainsKey("AgentSettings"))
+            {
+                buildToExport.BuildAgentSettings = (BuildParameter)processParameters["AgentSettings"];
+            }
+
+            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+         
+            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
         }
 
         private void ShowNoBranchMessage(string project)
@@ -1012,7 +1095,15 @@ namespace TfsBuildManager.Views
         
         private void OnImportBuildDefinition()
         {
-            MessageBox.Show("Cool import code coming soon");
+            if (this.view.SelectedTeamProject == "All")
+            {
+                MessageBox.Show("Please select an individual Team Project.", "Error: Unable to import into All projects", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var wnd = new ImportBuildDefinitions(this.view.SelectedTeamProject, this.repository.GetBuildServer());
+            wnd.ShowDialog();
+            this.OnRefresh(new EventArgs());
         }
 
         private void OnGenerateBuildResources()
@@ -1362,25 +1453,25 @@ namespace TfsBuildManager.Views
 
         private void OnExportBuildDefinition()
         {
-            try
+            var items = this.view.SelectedItems;
+            using (new WaitCursor())
             {
-                var items = this.view.SelectedItems;
-                using (new WaitCursor())
+                System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to export to..." };
+                System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
+                if (result2 == System.Windows.Forms.DialogResult.OK)
                 {
-                    System.Windows.Forms.FolderBrowserDialog saveFolder = new System.Windows.Forms.FolderBrowserDialog { Description = "Select a folder to export to..." };
-                    System.Windows.Forms.DialogResult result2 = saveFolder.ShowDialog();
-                    if (result2 == System.Windows.Forms.DialogResult.OK)
+                    foreach (var b in items)
                     {
-                        foreach (var b in items)
+                        try
                         {
                             ExportDefinition(b, saveFolder.SelectedPath);
                         }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString(), "Error Exporting " + b.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                this.view.DisplayError(ex);
             }
         }
 

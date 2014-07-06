@@ -42,9 +42,9 @@
 
             <ListView.View>
                 <GridView>
+                    <Controls:SortableGridViewColumn Header="Type" SortPropertyName="TemplateType" IsDefaultSortColumn="False" CellTemplate="{StaticResource TypeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Path" SortPropertyName="ServerPath" IsDefaultSortColumn="True" CellTemplate="{StaticResource NameTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Team Project" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Type" SortPropertyName="TemplateType" IsDefaultSortColumn="False" CellTemplate="{StaticResource TypeTemplate}"/>
                 </GridView>
             </ListView.View>
         </Controls:SortableListView>

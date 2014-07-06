@@ -102,16 +102,16 @@
                     <Controls:SortableGridViewColumn Header="" SortPropertyName="Status" IsDefaultSortColumn="False" CellTemplate="{StaticResource StatusTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="False" CellTemplate="{StaticResource NameTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Build Definition" SortPropertyName="BuildDefinition" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildDefinitionTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Team Project" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Queued Time" SortPropertyName="SortableQueuedTime" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueuedTimeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Start Time" SortPropertyName="SortableStartTime" IsDefaultSortColumn="False" CellTemplate="{StaticResource StartTimeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Finish Time" SortPropertyName="SortableFinishTime" IsDefaultSortColumn="True" CellTemplate="{StaticResource FinishTimeTemplate}" DefaultSortDirection="Descending"/>
                     <Controls:SortableGridViewColumn Header="Duration" SortPropertyName="Duration" IsDefaultSortColumn="False" CellTemplate="{StaticResource DurationTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Requested By" SortPropertyName="RequestedBy" IsDefaultSortColumn="False" CellTemplate="{StaticResource RequestedByTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Build Quality" SortPropertyName="Quality" IsDefaultSortColumn="False" CellTemplate="{StaticResource QualityTemplate}"/>                    
                     <Controls:SortableGridViewColumn Header="Agent" SortPropertyName="BuildAgent" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildAgentTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Drop Location" SortPropertyName="DropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DropLocationTemplate}" />
+                    <Controls:SortableGridViewColumn Header="Build Quality" SortPropertyName="Quality" IsDefaultSortColumn="False" CellTemplate="{StaticResource QualityTemplate}"/>
+                    <Controls:SortableGridViewColumn Header="Team Project" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}"/>
                 </GridView>
             </ListView.View>
         </Controls:SortableListView>
