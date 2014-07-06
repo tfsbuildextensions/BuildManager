@@ -1103,6 +1103,7 @@ namespace TfsBuildManager.Views
 
             var wnd = new ImportBuildDefinitions(this.view.SelectedTeamProject, this.repository.GetBuildServer());
             wnd.ShowDialog();
+            this.OnRefresh(new EventArgs());
         }
 
         private void OnGenerateBuildResources()

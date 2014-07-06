@@ -86,7 +86,7 @@
                         </TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
-                        <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}" FontSize="14" FontWeight="Bold" Foreground="#FF3C4F67">O</Label>
+                        <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}" FontSize="16" FontWeight="Bold" Foreground="#FF3C4F67">O</Label>
                     </StackPanel>
                 </Grid>
                 <Controls:SortableListView Grid.Row="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}"
