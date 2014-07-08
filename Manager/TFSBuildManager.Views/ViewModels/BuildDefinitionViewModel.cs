@@ -1,10 +1,10 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildDefinitionViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Microsoft.TeamFoundation.Build.Client;
@@ -20,6 +20,19 @@ namespace TfsBuildManager.Views
             this.Uri = build.Uri;
             this.TeamProject = build.TeamProject;
             this.ContinuousIntegrationType = GetFriendlyTriggerName(build.ContinuousIntegrationType);
+            if (build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Schedule || build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.ScheduleForced)
+            {
+                this.ContinuousIntegrationType = string.Format("{0} - {1}", this.ContinuousIntegrationType, ConvertTime(build.Schedules[0].StartTime.ToString(CultureInfo.CurrentCulture)));
+            }
+            else if (build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Gated)
+            {
+                this.ContinuousIntegrationType = string.Format("{0} - {1}", this.ContinuousIntegrationType, build.BatchSize);
+            }
+            else if (build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Batch)
+            {
+                this.ContinuousIntegrationType = string.Format("{0} - {1}", this.ContinuousIntegrationType, build.ContinuousIntegrationQuietPeriod);
+            }
+
             this.BuildController = build.BuildController != null ? build.BuildController.Name : NotAvailable;
             this.Process = build.Process != null ? Path.GetFileNameWithoutExtension(build.Process.ServerPath) : NotAvailable;
             this.Description = build.Description;
@@ -88,17 +101,28 @@ namespace TfsBuildManager.Views
                     friendlyName = "CI";
                     break;
                 case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.None:
-                    friendlyName = "Manual (None)";
+                    friendlyName = "Manual";
                     break;
                 case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Schedule:
                     friendlyName = "Schedule";
                     break;
                 case Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.ScheduleForced:
-                    friendlyName = "Forced Schedule";
+                    friendlyName = "Schedule Forced";
                     break;
             }
 
             return friendlyName;
+        }
+
+        private static string ConvertTime(string secondsSinceMidnight)
+        {
+            int value = Convert.ToInt32(secondsSinceMidnight);
+            int hours = value / 3600;
+            int minutes = (value / 60) - (hours * 60);
+            int seconds = value - ((hours * 3600) + (minutes * 60));
+            string time = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+
+            return time;
         }
     }
 }
