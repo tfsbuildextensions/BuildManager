@@ -796,6 +796,25 @@ namespace TfsBuildManager.Repository
             return VersionControlType.Tfvc;
         }
 
+        public void UpdateOutputLocation(IEnumerable<Uri> buildDefinitions, string location)
+        {
+            foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
+            {
+                var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
+                if (parameters.ContainsKey("OutputLocation"))
+                {
+                    parameters["OutputLocation"] = location;
+                }
+                else
+                {
+                    parameters.Add("OutputLocation", location);
+                }
+
+                bd.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
+                bd.Save();
+            }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
@@ -928,12 +947,14 @@ namespace TfsBuildManager.Repository
             }
 
             var projects = parameters["ProjectsToBuild"] as string[];
-
-            for (int i = 0; i < projects.Count(); i++)
+            if (projects != null)
             {
-                if (projects[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
+                for (int i = 0; i < projects.Count(); i++)
                 {
-                    projects[i] = projects[i].Replace(chkBranch, setBranch);
+                    if (projects[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
+                    {
+                        projects[i] = projects[i].Replace(chkBranch, setBranch);
+                    }
                 }
             }
         }

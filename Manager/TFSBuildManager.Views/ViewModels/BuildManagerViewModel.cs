@@ -71,6 +71,9 @@ namespace TfsBuildManager.Views
             this.SetRetentionPoliciesCommand = new DelegateCommand(this.OnSetRetentionsPolicies);
             this.ChangeBuildControllerCommand = new DelegateCommand(this.OnChangeBuildController);
             this.ChangeDefaultDropLocationCommand = new DelegateCommand(this.OnChangeDefaultDropLocation);
+            this.ChangeOutputLocationAsConfiguredCommand = new DelegateCommand(this.OnChangeOutputLocationAsConfiguredCommand);
+            this.ChangeOutputLocationPerProjectCommand = new DelegateCommand(this.OnChangeOutputLocationPerProjectCommand);
+            this.ChangeOutputLocationSingleFolderCommand = new DelegateCommand(this.OnChangeOutputLocationSingleFolderCommand);
             this.ChangeTriggerCommand = new DelegateCommand(this.OnChangeTrigger);
             this.ExportDefinitionCommand = new DelegateCommand(this.OnExportBuildDefinition);
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
@@ -153,6 +156,12 @@ namespace TfsBuildManager.Views
         public ICommand BuildNotesCommand { get; private set; }
 
         public ICommand ChangeBuildControllerCommand { get; private set; }
+
+        public ICommand ChangeOutputLocationAsConfiguredCommand { get; private set; }
+
+        public ICommand ChangeOutputLocationPerProjectCommand { get; private set; }
+
+        public ICommand ChangeOutputLocationSingleFolderCommand { get; private set; }
 
         public ICommand ChangeDefaultDropLocationCommand { get; private set; }
 
@@ -1496,6 +1505,36 @@ namespace TfsBuildManager.Views
             catch (Exception ex)
             {
                 this.view.DisplayError(ex);
+            }
+        }
+        
+        private void OnChangeOutputLocationAsConfiguredCommand()
+        {
+            var items = this.view.SelectedItems;
+            using (new WaitCursor())
+            {
+                this.repository.UpdateOutputLocation(items.Select(bd => bd.Uri), "AsConfigured");
+                this.OnRefresh(new EventArgs());
+            }
+        }
+
+        private void OnChangeOutputLocationPerProjectCommand()
+        {
+            var items = this.view.SelectedItems;
+            using (new WaitCursor())
+            {
+                this.repository.UpdateOutputLocation(items.Select(bd => bd.Uri), "PerProject");
+                this.OnRefresh(new EventArgs());
+            }
+        }
+
+        private void OnChangeOutputLocationSingleFolderCommand()
+        {
+            var items = this.view.SelectedItems;
+            using (new WaitCursor())
+            {
+                this.repository.UpdateOutputLocation(items.Select(bd => bd.Uri), "SingleFolder");
+                this.OnRefresh(new EventArgs());
             }
         }
 

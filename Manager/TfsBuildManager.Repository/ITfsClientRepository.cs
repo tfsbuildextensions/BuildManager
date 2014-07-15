@@ -118,5 +118,7 @@ namespace TfsBuildManager.Repository
         void DisableController(IBuildController controller);
 
         VersionControlType GetVersionControlType(IBuildDefinition buildDefinition);
+
+        void UpdateOutputLocation(IEnumerable<Uri> buildDefinitions, string location);
     }
 }
