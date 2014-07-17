@@ -8,6 +8,7 @@ namespace TfsBuildManager.Views
     using System.IO;
     using System.Linq;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Workflow;
 
     public class BuildDefinitionViewModel : ViewModelBase
     {
@@ -44,6 +45,9 @@ namespace TfsBuildManager.Views
             this.IsTfvcProject = !this.IsGitProject;
             this.LastModifiedBy = build.Workspace.LastModifiedBy;
             this.LastModifiedDate = build.Workspace.LastModifiedDate;
+
+            var parameters = WorkflowHelpers.DeserializeProcessParameters(build.ProcessParameters);
+            this.OutputLocation = parameters.ContainsKey("OutputLocation") ? parameters["OutputLocation"].ToString() : "SingleFolder";
         }
 
         public IBuildDefinition BuildDefinition { get; set; }
@@ -67,6 +71,8 @@ namespace TfsBuildManager.Views
         public string Description { get; set; }
 
         public string DefaultDropLocation { get; set; }
+
+        public string OutputLocation { get; set; }
 
         public bool Enabled { get; set; }
 
