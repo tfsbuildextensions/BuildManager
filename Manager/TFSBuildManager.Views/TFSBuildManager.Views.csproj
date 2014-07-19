@@ -125,6 +125,7 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AgentSettingsBuildParameter.cs" />
     <Compile Include="BuildControllerWindow.xaml.cs">
       <DependentUpon>BuildControllerWindow.xaml</DependentUpon>
     </Compile>

@@ -23,8 +23,10 @@ namespace TfsBuildManager.Views
 
         public string DefaultDropLocation { get; set; }
 
-        public BuildParameter BuildAgentSettings { get; set; }
+        public AgentSettingsBuildParameter TfvcAgentSettings { get; set; }
 
+        public BuildParameter GitAgentSettings { get; set; }
+        
         public List<ExportedISchedule> Schedules { get; set; }
 
         public int ContinuousIntegrationQuietPeriod { get; set; }

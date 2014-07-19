@@ -15,6 +15,7 @@ namespace TfsBuildManager.Views
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Common;
     using Microsoft.TeamFoundation.Build.Workflow;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
     using Newtonsoft.Json;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
@@ -1022,7 +1023,24 @@ namespace TfsBuildManager.Views
             var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
             if (processParameters.ContainsKey("AgentSettings"))
             {
-                buildToExport.BuildAgentSettings = (BuildParameter)processParameters["AgentSettings"];
+                if (processParameters["AgentSettings"].GetType() == typeof(AgentSettings))
+                {
+                    AgentSettings ags = (AgentSettings)processParameters["AgentSettings"];
+                    AgentSettingsBuildParameter agentSet = new AgentSettingsBuildParameter();
+                    agentSet.MaxExecutionTime = ags.MaxExecutionTime;
+                    agentSet.MaxWaitTime = ags.MaxWaitTime;
+                    agentSet.Name = ags.Name;
+                    agentSet.Comparison = ags.TagComparison;
+                    agentSet.Tags = ags.Tags;
+                    buildToExport.TfvcAgentSettings = agentSet;
+                }
+                else if (processParameters["AgentSettings"].GetType() == typeof(BuildParameter))
+                {
+                    BuildParameter ags = (BuildParameter)processParameters["AgentSettings"];
+                    {
+                        buildToExport.GitAgentSettings = ags;
+                    }
+                }
             }
 
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);

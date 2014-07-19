@@ -10,6 +10,7 @@ namespace TfsBuildManager.Views
     using System.Windows;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Workflow;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -147,9 +148,13 @@ namespace TfsBuildManager.Views
                             }
                         }
 
-                        if (exdef.BuildAgentSettings != null)
+                        if (exdef.TfvcAgentSettings != null)
                         {
-                            process.Add("AgentSettings", exdef.BuildAgentSettings);   
+                            process.Add("AgentSettings", new AgentSettings { MaxExecutionTime = exdef.TfvcAgentSettings.MaxExecutionTime, MaxWaitTime = exdef.TfvcAgentSettings.MaxWaitTime, Name = exdef.TfvcAgentSettings.Name, TagComparison = exdef.TfvcAgentSettings.Comparison, Tags = exdef.TfvcAgentSettings.Tags });   
+                        }
+                        else if (exdef.GitAgentSettings != null)
+                        {
+                            process.Add("AgentSettings", exdef.GitAgentSettings);
                         }
 
                         newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(process);

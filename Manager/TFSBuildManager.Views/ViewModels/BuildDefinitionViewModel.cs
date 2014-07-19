@@ -8,7 +8,10 @@ namespace TfsBuildManager.Views
     using System.IO;
     using System.Linq;
     using Microsoft.TeamFoundation.Build.Client;
+    using Microsoft.TeamFoundation.Build.Common;
     using Microsoft.TeamFoundation.Build.Workflow;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
+    using Newtonsoft.Json;
 
     public class BuildDefinitionViewModel : ViewModelBase
     {
@@ -48,6 +51,36 @@ namespace TfsBuildManager.Views
 
             var parameters = WorkflowHelpers.DeserializeProcessParameters(build.ProcessParameters);
             this.OutputLocation = parameters.ContainsKey("OutputLocation") ? parameters["OutputLocation"].ToString() : "SingleFolder";
+
+            if (parameters.ContainsKey("AgentSettings"))
+            {
+                try
+                {
+                    if (parameters["AgentSettings"].GetType() == typeof(AgentSettings))
+                    {
+                        AgentSettings ags = (AgentSettings)parameters["AgentSettings"];
+                        if (ags.HasTags)
+                        {
+                            this.AgentTags = ags.Tags.ToString();
+                        }
+                    }
+                    else if (parameters["AgentSettings"].GetType() == typeof(BuildParameter))
+                    {
+                        BuildParameter ags = (BuildParameter)parameters["AgentSettings"];
+                        {
+                            var jstt = JsonConvert.DeserializeObject<AgentSettingsBuildParameter>(ags.Json);
+                            if (jstt.Tags != null && jstt.Tags.Count > 0)
+                            {
+                                this.AgentTags = string.Join(", ", jstt.Tags.ToArray());
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    this.AgentTags = "Failed to determine";
+                }
+            }
         }
 
         public IBuildDefinition BuildDefinition { get; set; }
@@ -63,6 +96,8 @@ namespace TfsBuildManager.Views
         public string ContinuousIntegrationType { get; set; }
 
         public string BuildController { get; set; }
+
+        public string AgentTags { get; set; }
 
         public string QueueStatus { get; set; }
         
