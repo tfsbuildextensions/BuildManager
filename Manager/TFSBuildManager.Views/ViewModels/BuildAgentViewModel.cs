@@ -19,7 +19,7 @@ namespace TfsBuildManager.Views
             this.StatusMessage = agent.StatusMessage;
             this.Agent = agent;
             string url = agent.Url.ToString();
-            url = url.Substring(url.LastIndexOf(@"/", StringComparison.OrdinalIgnoreCase) + 1, url.Length - url.LastIndexOf(@"/" + 1, StringComparison.OrdinalIgnoreCase) - 1);
+            url = url.Substring(url.LastIndexOf(@"/", StringComparison.OrdinalIgnoreCase) + 1, url.Length - url.LastIndexOf(@"/", StringComparison.OrdinalIgnoreCase) - 1);
             this.Id = Convert.ToInt32(url);
         }
 
