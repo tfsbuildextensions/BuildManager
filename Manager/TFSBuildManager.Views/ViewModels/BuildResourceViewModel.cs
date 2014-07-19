@@ -12,6 +12,8 @@ namespace TfsBuildManager.Views
     {
         public string Name { get; set; }
 
+        public int Id { get; set; }
+        
         public string Status { get; set; }
 
         public bool Enabled { get; set; }

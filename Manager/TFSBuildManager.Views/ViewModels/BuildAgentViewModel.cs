@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------
 // <copyright file="BuildAgentViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views
 {
+    using System;
     using Microsoft.TeamFoundation.Build.Client;
     using TfsBuildManager.Repository;
 
@@ -18,6 +18,9 @@ namespace TfsBuildManager.Views
             this.Tags = agent.Tags;
             this.StatusMessage = agent.StatusMessage;
             this.Agent = agent;
+            string url = agent.Url.ToString();
+            url = url.Substring(url.LastIndexOf(@"/", StringComparison.OrdinalIgnoreCase) + 1, url.Length - url.LastIndexOf(@"/" + 1, StringComparison.OrdinalIgnoreCase) - 1);
+            this.Id = Convert.ToInt32(url);
         }
 
         protected IBuildAgent Agent { get; set; }
@@ -47,8 +50,10 @@ namespace TfsBuildManager.Views
             this.Enabled = controller.Enabled;
             this.Tags = controller.Tags;
             this.StatusMessage = controller.StatusMessage;
-
             this.Controller = controller;
+            string url = controller.Url.ToString();
+            url = url.Substring(url.LastIndexOf(@"/", StringComparison.OrdinalIgnoreCase) + 1, url.Length - url.LastIndexOf(@"/", StringComparison.OrdinalIgnoreCase) - 1);
+            this.Id = Convert.ToInt32(url);
         }
 
         private IBuildController Controller { get; set; }

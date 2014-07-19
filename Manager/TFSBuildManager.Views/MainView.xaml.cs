@@ -33,6 +33,9 @@ namespace TfsBuildManager.Views
             try
             {
                 this.InitializeComponent();
+                this.dispatcherTimer = new DispatcherTimer();
+                this.dispatcherTimer.Tick += this.OnTimerUpdate;
+                this.dispatcherTimer.Interval = new TimeSpan(0, 0, 2, 0);
                 FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
                 this.lblVersion.Content = fvi.ProductVersion;
                 this.initialized = false;
@@ -164,6 +167,11 @@ namespace TfsBuildManager.Views
 #endif
                 using (new WaitCursor())
                 {
+                    if (this.dispatcherTimer.IsEnabled)
+                    {
+                        this.dispatcherTimer.Stop();
+                    }
+
                     if (this.viewmodel.SelectedBuildView == BuildView.BuildDefinitions)
                     {
                         IEnumerable<IBuildDefinition> builds;
@@ -329,6 +337,11 @@ namespace TfsBuildManager.Views
 
         private void UpdateBuilds()
         {
+            if (!this.dispatcherTimer.IsEnabled && this.CheckBoxAutoRefresh.IsChecked == true)
+            {
+                this.dispatcherTimer.Start();
+            }
+
             BuildResourceFilter filter = this.CreateBuildResourceFilter();
 
             if (this.viewmodel.SelectedBuildFilter == BuildFilter.Completed)
@@ -383,11 +396,6 @@ namespace TfsBuildManager.Views
 
         private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (this.dispatcherTimer != null)
-            {
-                this.dispatcherTimer.Stop();
-            }
-
             try
             {
                 switch (e.PropertyName)
@@ -401,23 +409,10 @@ namespace TfsBuildManager.Views
                         break;
                     case "BuildDefinitionFilter":
                     case "includeDisabledBuildDefinitions":
-                        using (new WaitCursor())
-                        {
-                            this.UpdateBuildDefinitions();
-                        }
-
-                        break;
                     case "SelectedBuildView":
                         using (new WaitCursor())
                         {
                             this.UpdateBuildDefinitions();
-                            if (this.viewmodel.SelectedBuildView == BuildView.Builds)
-                            {
-                                if (this.CheckBoxAutoRefresh.IsChecked == true)
-                                {
-                                    this.RestartUpdateBuildsViewTimer();
-                                }
-                            }
                         }
 
                         break;
@@ -427,14 +422,6 @@ namespace TfsBuildManager.Views
             {
                 this.DisplayError(ex);
             }
-        }
-
-        private void RestartUpdateBuildsViewTimer()
-        {
-            this.dispatcherTimer = new DispatcherTimer();
-            this.dispatcherTimer.Tick += this.OnTimerUpdate;
-            this.dispatcherTimer.Interval = new TimeSpan(0, 0, 2, 0);
-            this.dispatcherTimer.Start();
         }
 
         private void OnTimerUpdate(object sender, EventArgs e)
@@ -453,7 +440,7 @@ namespace TfsBuildManager.Views
 
                         if (this.CheckBoxAutoRefresh.IsChecked == true)
                         {
-                            this.RestartUpdateBuildsViewTimer();
+                            this.dispatcherTimer.Start();
                         }
                     }
                 }
@@ -476,7 +463,7 @@ namespace TfsBuildManager.Views
         {
             if (this.initialized)
             {
-                this.RestartUpdateBuildsViewTimer();
+                this.dispatcherTimer.Start();
             }
         }
 

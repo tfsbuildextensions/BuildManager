@@ -20,6 +20,11 @@
             <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
           </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="IdTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Id}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Key="StatusTemplate">
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
             <TextBlock Text="{Binding Status}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
@@ -44,6 +49,7 @@
 
       <ListView.View>
         <GridView>
+          <Controls:SortableGridViewColumn Header="Id" IsDefaultSortColumn="False" CellTemplate="{StaticResource IdTemplate}" SortPropertyName="Id"/>
           <Controls:SortableGridViewColumn Header="Name" IsDefaultSortColumn="False" CellTemplate="{StaticResource NameTemplate}" SortPropertyName="Name"/>
           <Controls:SortableGridViewColumn Header="Status" IsDefaultSortColumn="False" CellTemplate="{StaticResource StatusTemplate}" SortPropertyName="Status"/>
           <Controls:SortableGridViewColumn Header="State" IsDefaultSortColumn="False" CellTemplate="{StaticResource EnabledTemplate}" SortPropertyName="EnabledText"/>
