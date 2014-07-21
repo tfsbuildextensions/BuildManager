@@ -5,11 +5,10 @@ namespace WordDocumentGenerator.Client
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using DocumentFormat.OpenXml.Packaging;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.TestManagement.Client;
@@ -35,7 +34,6 @@ namespace WordDocumentGenerator.Client
             this.TestManagementService = tms;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Don't have a fix for this just now")]
         public IBuildDetail[] Builds
         {
             get
@@ -79,34 +77,36 @@ namespace WordDocumentGenerator.Client
         /// <summary>
         /// Generates the final report by appending documents.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Don't have a fix for this just now")]
         private static void MergeBuildNotesAndCreateFinalOutput(List<byte[]> otherDocs)
         {
             // Test final report i.e. created by merging documents generation
             DirectoryInfo di = new DirectoryInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            byte[] primaryDoc = File.ReadAllBytes(Path.Combine(di.Parent.FullName, @"Templates\BuildTemplateCover.docx"));
-
-            // Final report generation
-            OpenXmlHelper openXmlHelper = new OpenXmlHelper(DocumentGenerationInfo.NamespaceUri);
-            byte[] result = openXmlHelper.AppendDocumentsToPrimaryDocument(primaryDoc, otherDocs);
-
-            // Final Protected report generation
-            using (MemoryStream msfinalDocument = new MemoryStream())
+            if (di.Parent != null)
             {
-                msfinalDocument.Write(result, 0, result.Length);
+                byte[] primaryDoc = File.ReadAllBytes(Path.Combine(di.Parent.FullName, @"Templates\BuildTemplateCover.docx"));
 
-                using (WordprocessingDocument finalDocument = WordprocessingDocument.Open(msfinalDocument, true))
+                // Final report generation
+                OpenXmlHelper openXmlHelper = new OpenXmlHelper(DocumentGenerationInfo.NamespaceUri);
+                byte[] result = openXmlHelper.AppendDocumentsToPrimaryDocument(primaryDoc, otherDocs);
+
+                // Final Protected report generation
+                using (MemoryStream msfinalDocument = new MemoryStream())
                 {
-                    OpenXmlHelper.ProtectDocument(finalDocument);
+                    msfinalDocument.Write(result, 0, result.Length);
+
+                    using (WordprocessingDocument finalDocument = WordprocessingDocument.Open(msfinalDocument, true))
+                    {
+                        OpenXmlHelper.ProtectDocument(finalDocument);
+                    }
+
+                    msfinalDocument.Position = 0;
+                    result = new byte[msfinalDocument.Length];
+                    msfinalDocument.Read(result, 0, result.Length);
+                    msfinalDocument.Close();
                 }
 
-                msfinalDocument.Position = 0;
-                result = new byte[msfinalDocument.Length];
-                msfinalDocument.Read(result, 0, result.Length);
-                msfinalDocument.Close();
+                WriteOutputToFile("BuildNotes.docx", result);
             }
-
-            WriteOutputToFile("BuildNotes.docx", result);
         }
 
         /// <summary>
@@ -121,11 +121,15 @@ namespace WordDocumentGenerator.Client
         private static DocumentGenerationInfo GetDocumentGenerationInfo(string docType, string docVersion, object dataContext, string fileName, bool useDataBoundControls)
         {
             DocumentGenerationInfo generationInfo = new DocumentGenerationInfo();
-            generationInfo.Metadata = new DocumentMetadata() { DocumentType = docType, DocumentVersion = docVersion };
+            generationInfo.Metadata = new DocumentMetadata { DocumentType = docType, DocumentVersion = docVersion };
             generationInfo.DataContext = dataContext;
 
             DirectoryInfo di = new DirectoryInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            generationInfo.TemplateData = File.ReadAllBytes(Path.Combine(di.Parent.FullName, fileName));
+            if (di.Parent != null)
+            {
+                generationInfo.TemplateData = File.ReadAllBytes(Path.Combine(di.Parent.FullName, fileName));
+            }
+
             generationInfo.IsDataBoundControls = useDataBoundControls;
 
             return generationInfo;
@@ -138,16 +142,14 @@ namespace WordDocumentGenerator.Client
         /// <param name="fileContents">The file contents.</param>
         private static void WriteOutputToFile(string fileName, byte[] fileContents)
         {
-            string path = string.Empty;
             if (fileContents != null)
             {
-                path = Path.Combine(Path.GetTempPath(), string.Format("{0}_{1}.docx", fileName, Guid.NewGuid()));
+                string path = Path.Combine(Path.GetTempPath(), string.Format("{0}_{1}.docx", fileName, Guid.NewGuid()));
+                File.WriteAllBytes(path, fileContents);
+                var filestream = File.OpenRead(path);
+                filestream.Dispose();
+                Process.Start(path);
             }
-
-            File.WriteAllBytes(path, fileContents);
-            var filestream = File.OpenRead(path);
-            filestream.Dispose();
-            Process.Start(path);
         }
 
         private static string CalculateTotalBuildExecutionTime(DateTime start, DateTime end)
@@ -182,14 +184,13 @@ namespace WordDocumentGenerator.Client
         /// Gets the data context.
         /// </summary>
         /// <returns>Returns the Data context i.e. the build details</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Don't have an alternative implementation just yet."), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Don't have a fix for this just now")]
         private List<WordDocumentGenerator.Client.Entities.BuildDetail> GetDataContext()
         {
             var buildDetails = new List<BuildDetail>();
 
             foreach (var build in this.Builds)
             {
-                var buildDetail = new BuildDetail()
+                var buildDetail = new BuildDetail
                 {
                     DocumentDetail = new DocumentDetail(),
                     Build = new Build(),
@@ -253,8 +254,8 @@ namespace WordDocumentGenerator.Client
                         var buildConfigSummary = new BuildConfiguration();
                         buildConfigSummary.BuildConfigFlavor = configSummary.Flavor;  // "Mixed Platform";
                         buildConfigSummary.BuildConfigPlatform = configSummary.Platform; // "Debug";
-                        buildConfigSummary.BuildConfigTotalErrors = configSummary.TotalCompilationErrors.ToString(); // "0";
-                        buildConfigSummary.BuildConfigTotalWarnings = configSummary.TotalCompilationWarnings.ToString(); // "1";
+                        buildConfigSummary.BuildConfigTotalErrors = configSummary.TotalCompilationErrors.ToString(CultureInfo.CurrentCulture); // "0";
+                        buildConfigSummary.BuildConfigTotalWarnings = configSummary.TotalCompilationWarnings.ToString(CultureInfo.CurrentCulture); // "1";
 
                         buildDetail.BuildConfigurations.Add(buildConfigSummary);
                     }
@@ -264,8 +265,8 @@ namespace WordDocumentGenerator.Client
                     {
                         var buildConfigurationSolution = new BuildConfigurationSolution();
                         buildConfigurationSolution.BuildRootNodeSolutionServerPath = buildConfig.ServerPath;
-                        buildConfigurationSolution.BuildRootNodeErrorCount = buildConfig.CompilationErrors.ToString();
-                        buildConfigurationSolution.BuildRootNodeWarningCount = buildConfig.CompilationWarnings.ToString();
+                        buildConfigurationSolution.BuildRootNodeErrorCount = buildConfig.CompilationErrors.ToString(CultureInfo.CurrentCulture);
+                        buildConfigurationSolution.BuildRootNodeWarningCount = buildConfig.CompilationWarnings.ToString(CultureInfo.CurrentCulture);
                         buildConfigurationSolution.BuildRootNodeLogFile = buildConfig.LogFile != null ? buildConfig.LogFile.Url.AbsolutePath : string.Empty;
 
                         buildDetail.BuildConfigurationSolutions.Add(buildConfigurationSolution);
@@ -282,7 +283,7 @@ namespace WordDocumentGenerator.Client
                         {
                             ChangesetId = changesetDetail.ChangesetId.ToString(),
                             ChangesetUri = changesetDetail.ArtifactUri, // new Uri(@"vstfs:///VersionControl/Changeset/63"),
-                            ChangesetCommittedOn = changesetDetail.CreationDate.ToString(), // "01-01-2011 12:05:01",
+                            ChangesetCommittedOn = changesetDetail.CreationDate.ToString(CultureInfo.CurrentCulture), // "01-01-2011 12:05:01",
                             ChangesetCommittedBy = changesetDetail.Owner, // @"UK\tarora",
                             ChangesetComment = changesetDetail.Comment // "Refactoring code improvements"
                         });
@@ -295,7 +296,7 @@ namespace WordDocumentGenerator.Client
 
                         buildDetail.ChangesetChangeDetails.Add(new ChangesetChangeDetail
                         {
-                            ChangesetChangeId = changesetDetail.ChangesetId.ToString(),
+                            ChangesetChangeId = changesetDetail.ChangesetId.ToString(CultureInfo.CurrentCulture),
                             ChangesetChangeServerPaths = changes
                         });
                     }
@@ -308,9 +309,9 @@ namespace WordDocumentGenerator.Client
                     foreach (IWorkItemSummary workItemInfo in InformationNodeConverters.GetAssociatedWorkItems(build))
                     {
                         var workItemDetail = WorkItemStore.GetWorkItem(workItemInfo.WorkItemId);
-                        buildDetail.WorkItems.Add(new WordDocumentGenerator.Client.Entities.WorkItem()
+                        buildDetail.WorkItems.Add(new WordDocumentGenerator.Client.Entities.WorkItem
                         {
-                            WorkItemId = workItemDetail.Id.ToString(),
+                            WorkItemId = workItemDetail.Id.ToString(CultureInfo.CurrentCulture),
                             WorkItemUri = workItemDetail.Uri,
                             WorkItemType = workItemDetail.Type.Name,
                             WorkItemTitle = workItemDetail.Title,
@@ -341,14 +342,14 @@ namespace WordDocumentGenerator.Client
                     // Load test results into BuildDetails
                     foreach (var tr in TestManagementService.GetTeamProject(buildDetail.Build.BuildTeamProject).TestRuns.ByBuild(build.Uri))
                     {
-                        buildDetail.TestResult.TestResultId = tr.Id.ToString();
+                        buildDetail.TestResult.TestResultId = tr.Id.ToString(CultureInfo.CurrentCulture);
                         buildDetail.TestResult.TestResultTitle = tr.Title;
                         buildDetail.TestResult.TestResultStatus = tr.State.ToString(); // "Complete";
-                        buildDetail.TestResult.TestResultTotalTest = tr.Statistics.TotalTests.ToString(); // "24";
-                        buildDetail.TestResult.TestResultTotalTestCompleted = tr.Statistics.CompletedTests.ToString(); // "24";
-                        buildDetail.TestResult.TestResultTotalTestPassed = tr.Statistics.PassedTests.ToString(); // "22";
-                        buildDetail.TestResult.TestResultTotalTestFailed = tr.Statistics.FailedTests.ToString(); // "1";
-                        buildDetail.TestResult.TestResultTotalTestInconclusive = tr.Statistics.InconclusiveTests.ToString(); // "1";
+                        buildDetail.TestResult.TestResultTotalTest = tr.Statistics.TotalTests.ToString(CultureInfo.CurrentCulture); // "24";
+                        buildDetail.TestResult.TestResultTotalTestCompleted = tr.Statistics.CompletedTests.ToString(CultureInfo.CurrentCulture); // "24";
+                        buildDetail.TestResult.TestResultTotalTestPassed = tr.Statistics.PassedTests.ToString(CultureInfo.CurrentCulture); // "22";
+                        buildDetail.TestResult.TestResultTotalTestFailed = tr.Statistics.FailedTests.ToString(CultureInfo.CurrentCulture); // "1";
+                        buildDetail.TestResult.TestResultTotalTestInconclusive = tr.Statistics.InconclusiveTests.ToString(CultureInfo.CurrentCulture); // "1";
 
                         double result = 0.0;
                         if (tr.Statistics.TotalTests != 0)
@@ -357,8 +358,8 @@ namespace WordDocumentGenerator.Client
                             result = tr.Statistics.PassedTests * 100 / tr.Statistics.TotalTests;
                         }
 
-                        buildDetail.TestResult.TestResultTotalTestPassRate = result.ToString();
-                        buildDetail.TestResult.TestResultIsAutomated = tr.IsAutomated.ToString(); // "false";
+                        buildDetail.TestResult.TestResultTotalTestPassRate = result.ToString(CultureInfo.CurrentCulture);
+                        buildDetail.TestResult.TestResultIsAutomated = tr.IsAutomated.ToString(CultureInfo.CurrentCulture); // "false";
 
                         // Load testResultPassedItems into BuildDetails
                         // Check for passed tests
@@ -374,7 +375,7 @@ namespace WordDocumentGenerator.Client
                         // Load testResultsFailedItems into BuildDetails
                         foreach (ITestCaseResult lf in tr.QueryResultsByOutcome(TestOutcome.Failed))
                         {
-                            buildDetail.TestResultFailedItems.Add(new WordDocumentGenerator.Client.Entities.TestResultFailedItem()
+                            buildDetail.TestResultFailedItems.Add(new WordDocumentGenerator.Client.Entities.TestResultFailedItem
                             {
                                 TestResultFailedListStatus = "Failed",
                                 TestResultFailedListTitle = lf.TestCaseTitle,
@@ -385,7 +386,7 @@ namespace WordDocumentGenerator.Client
                         // Load testResultsInconclusiveItems into BuildDetails
                         foreach (ITestCaseResult li in tr.QueryResultsByOutcome(TestOutcome.Inconclusive))
                         {
-                            buildDetail.TestResultInconclusiveItems.Add(new WordDocumentGenerator.Client.Entities.TestResultInconclusiveItem()
+                            buildDetail.TestResultInconclusiveItems.Add(new WordDocumentGenerator.Client.Entities.TestResultInconclusiveItem
                             {
                                 TestResultInconclusiveListStatus = "Inconclusive",
                                 TestResultInconclusiveListTitle = li.TestCaseTitle

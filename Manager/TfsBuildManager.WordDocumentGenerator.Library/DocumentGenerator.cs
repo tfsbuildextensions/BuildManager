@@ -314,7 +314,7 @@ namespace WordDocumentGenerator.Library
         protected void SetDataBinding(string xpath, SdtElement element)
         {
             element.SdtProperties.RemoveAllChildren<DataBinding>();
-            DataBinding dataBinding = new DataBinding() { XPath = xpath, StoreItemId = new StringValue(this.customXmlPartHelper.CustomXmlPartCore.GetStoreItemId(element.Ancestors<Document>().First().MainDocumentPart)) };
+            DataBinding dataBinding = new DataBinding { XPath = xpath, StoreItemId = new StringValue(this.customXmlPartHelper.CustomXmlPartCore.GetStoreItemId(element.Ancestors<Document>().First().MainDocumentPart)) };
             element.SdtProperties.Append(dataBinding);
         }
 
