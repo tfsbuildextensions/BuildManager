@@ -49,37 +49,44 @@ namespace TfsBuildManager.Views
             this.LastModifiedBy = build.Workspace.LastModifiedBy;
             this.LastModifiedDate = build.Workspace.LastModifiedDate;
 
-            var parameters = WorkflowHelpers.DeserializeProcessParameters(build.ProcessParameters);
-            this.OutputLocation = parameters.ContainsKey("OutputLocation") ? parameters["OutputLocation"].ToString() : "SingleFolder";
-
-            if (parameters.ContainsKey("AgentSettings"))
+            try
             {
-                try
+                var parameters = WorkflowHelpers.DeserializeProcessParameters(build.ProcessParameters);
+                this.OutputLocation = parameters.ContainsKey("OutputLocation") ? parameters["OutputLocation"].ToString() : "SingleFolder";
+
+                if (parameters.ContainsKey("AgentSettings"))
                 {
-                    if (parameters["AgentSettings"].GetType() == typeof(AgentSettings))
+                    try
                     {
-                        AgentSettings ags = (AgentSettings)parameters["AgentSettings"];
-                        if (ags.HasTags)
+                        if (parameters["AgentSettings"].GetType() == typeof(AgentSettings))
                         {
-                            this.AgentTags = ags.Tags.ToString();
-                        }
-                    }
-                    else if (parameters["AgentSettings"].GetType() == typeof(BuildParameter))
-                    {
-                        BuildParameter ags = (BuildParameter)parameters["AgentSettings"];
-                        {
-                            var jstt = JsonConvert.DeserializeObject<AgentSettingsBuildParameter>(ags.Json);
-                            if (jstt.Tags != null && jstt.Tags.Count > 0)
+                            AgentSettings ags = (AgentSettings)parameters["AgentSettings"];
+                            if (ags.HasTags)
                             {
-                                this.AgentTags = string.Join(", ", jstt.Tags.ToArray());
+                                this.AgentTags = ags.Tags.ToString();
+                            }
+                        }
+                        else if (parameters["AgentSettings"].GetType() == typeof(BuildParameter))
+                        {
+                            BuildParameter ags = (BuildParameter)parameters["AgentSettings"];
+                            {
+                                var jstt = JsonConvert.DeserializeObject<AgentSettingsBuildParameter>(ags.Json);
+                                if (jstt.Tags != null && jstt.Tags.Count > 0)
+                                {
+                                    this.AgentTags = string.Join(", ", jstt.Tags.ToArray());
+                                }
                             }
                         }
                     }
+                    catch (Exception)
+                    {
+                        this.AgentTags = "Failed to determine";
+                    }
                 }
-                catch (Exception)
-                {
-                    this.AgentTags = "Failed to determine";
-                }
+            }
+            catch (Exception)
+            {
+                this.OutputLocation = "Failed to determine";
             }
         }
 
