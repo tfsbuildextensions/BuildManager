@@ -41,7 +41,7 @@ namespace TfsBuildManager.Views
             this.Process = build.Process != null ? Path.GetFileNameWithoutExtension(build.Process.ServerPath) : NotAvailable;
             this.Description = build.Description;
             this.DefaultDropLocation = build.DefaultDropLocation;
-            this.Id = build.Id;
+            this.Id = Convert.ToInt32(build.Id);
             this.QueueStatus = build.QueueStatus.ToString();
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
             this.IsGitProject = build.SourceProviders.Any(s => s.Name == "TFGIT");
@@ -87,7 +87,7 @@ namespace TfsBuildManager.Views
 
         public string Name { get; set; }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public Uri Uri { get; set; }
 
