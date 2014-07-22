@@ -16,6 +16,8 @@ namespace TfsBuildManager.Views
     using Microsoft.TeamFoundation.Build.Common;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
+    using Microsoft.TeamFoundation.VersionControl.Client;
+    using System.Reflection;
     using Newtonsoft.Json;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
@@ -33,6 +35,8 @@ namespace TfsBuildManager.Views
         private DateFilter selectedBuildDateFilter;
         private BuildFilter selectedBuildFilter;
         private BuildView selectedBuildView;
+
+        static List<Assembly> s_assemblies;
 
         public BuildManagerViewModel(Window owner, ITfsClientRepository repository, IMainView view, IEnumerable<IBuildController> controllers, IEnumerable<string> teamProjects, ITfsContext context)
         {
@@ -812,6 +816,16 @@ namespace TfsBuildManager.Views
             try
             {
                 this.BuildDefinitions.Clear();
+                List<IFailure> failures;
+                List<Type> activityTypes;
+                List<Type> extensionTypes;
+                s_assemblies = builds.First().BuildController.LoadCustomActivitiesAndExtensions(builds.First().BuildController.CustomAssemblyPath,
+                                                                                        RecursionType.Full,
+                                                                                        HostEnvironmentOption.All,
+                                                                                        out activityTypes,
+                                                                                        out extensionTypes,
+                                                                                        out failures);
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                 foreach (var b in builds.Select(b => new BuildDefinitionViewModel(b)))
                 {
                     this.BuildDefinitions.Add(b);
@@ -1618,6 +1632,15 @@ namespace TfsBuildManager.Views
             {
                 this.view.DisplayError(ex);
             }
+        }
+        static Assembly CurrentDomain_AssemblyResolve(Object sender, ResolveEventArgs args)
+        {
+            if (s_assemblies == null || s_assemblies.Count == 0)
+            {
+                return null;
+            }
+
+            return s_assemblies.FirstOrDefault(x => x.FullName.Equals(args.Name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
