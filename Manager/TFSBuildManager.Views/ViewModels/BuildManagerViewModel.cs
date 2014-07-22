@@ -7,9 +7,9 @@ namespace TfsBuildManager.Views
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.TeamFoundation.Build.Client;
@@ -17,7 +17,6 @@ namespace TfsBuildManager.Views
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
     using Microsoft.TeamFoundation.VersionControl.Client;
-    using System.Reflection;
     using Newtonsoft.Json;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
@@ -25,7 +24,7 @@ namespace TfsBuildManager.Views
     public class BuildManagerViewModel : ViewModelBase
     {
         public const string AllItem = "All";
-
+        private static List<Assembly> assemblies;
         private readonly Window owner;
         private readonly ITfsContext context;
         private readonly ITfsClientRepository repository;
@@ -35,8 +34,6 @@ namespace TfsBuildManager.Views
         private DateFilter selectedBuildDateFilter;
         private BuildFilter selectedBuildFilter;
         private BuildView selectedBuildView;
-
-        static List<Assembly> s_assemblies;
 
         public BuildManagerViewModel(Window owner, ITfsClientRepository repository, IMainView view, IEnumerable<IBuildController> controllers, IEnumerable<string> teamProjects, ITfsContext context)
         {
@@ -819,7 +816,8 @@ namespace TfsBuildManager.Views
                 List<IFailure> failures;
                 List<Type> activityTypes;
                 List<Type> extensionTypes;
-                s_assemblies = builds.First().BuildController.LoadCustomActivitiesAndExtensions(builds.First().BuildController.CustomAssemblyPath,
+                assemblies = builds.First().BuildController.LoadCustomActivitiesAndExtensions(
+                                                                                        builds.First().BuildController.CustomAssemblyPath,
                                                                                         RecursionType.Full,
                                                                                         HostEnvironmentOption.All,
                                                                                         out activityTypes,
@@ -1059,6 +1057,16 @@ namespace TfsBuildManager.Views
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
          
             File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (assemblies == null || assemblies.Count == 0)
+            {
+                return null;
+            }
+
+            return assemblies.FirstOrDefault(x => x.FullName.Equals(args.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void ShowNoBranchMessage(string project)
@@ -1632,15 +1640,6 @@ namespace TfsBuildManager.Views
             {
                 this.view.DisplayError(ex);
             }
-        }
-        static Assembly CurrentDomain_AssemblyResolve(Object sender, ResolveEventArgs args)
-        {
-            if (s_assemblies == null || s_assemblies.Count == 0)
-            {
-                return null;
-            }
-
-            return s_assemblies.FirstOrDefault(x => x.FullName.Equals(args.Name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
