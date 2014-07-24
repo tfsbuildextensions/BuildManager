@@ -61,7 +61,6 @@
 
   <!-- ListViewItem Style -->
   <Style TargetType="{x:Type ListViewItem}">
-    <Setter Property="ToolTip" Value="{Binding Path=Description}" />
     <Setter Property="FontStyle" >
       <Setter.Value>
         <Binding Path="Enabled">
