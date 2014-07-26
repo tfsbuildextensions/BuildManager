@@ -1,6 +1,6 @@
 ﻿<Window x:Class="TfsBuildManager.Views.SelectBuildProcessTemplateWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls" xmlns:Views="clr-namespace:TfsBuildManager.Views" Title="Select Build Process Template" Height="400" Width="600" Icon="Graphics/AppIcon.ico">
     <Grid Name="Grid1">
         <Grid.Resources>

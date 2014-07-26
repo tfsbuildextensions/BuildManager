@@ -43,9 +43,39 @@
         <DataTemplate x:Key="BuildDirectoryTemplate">
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
             <TextBlock Text="{Binding BuildDirectory}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-            </StackPanel>
+          </StackPanel>
         </DataTemplate>
-    </ListView.Resources>
+        <DataTemplate x:Key="CustomAssemblyPathTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding CustomAssemblyPath}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="MaxConcurrentBuildsTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding MaxConcurrentBuilds}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="QueueCountTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding QueueCount}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DateCreatedTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding DateCreated}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DateUpdatedTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding DateUpdated}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="IsReservedTemplate">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding IsReserved}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+          </StackPanel>
+        </DataTemplate>
+      </ListView.Resources>
 
       <ListView.View>
         <GridView>
@@ -53,10 +83,16 @@
           <Controls:SortableGridViewColumn Header="Name" IsDefaultSortColumn="False" CellTemplate="{StaticResource NameTemplate}" SortPropertyName="Name"/>
           <Controls:SortableGridViewColumn Header="Status" IsDefaultSortColumn="False" CellTemplate="{StaticResource StatusTemplate}" SortPropertyName="Status"/>
           <Controls:SortableGridViewColumn Header="State" IsDefaultSortColumn="False" CellTemplate="{StaticResource EnabledTemplate}" SortPropertyName="EnabledText"/>
+          <Controls:SortableGridViewColumn Header="IsReserved" IsDefaultSortColumn="False" CellTemplate="{StaticResource IsReservedTemplate}" SortPropertyName="IsReserved"/>
           <Controls:SortableGridViewColumn Header="BuildDirectory" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildDirectoryTemplate}" SortPropertyName="BuildDirectory"/>
-          <Controls:SortableGridViewColumn Header="Tags" IsDefaultSortColumn="False" CellTemplate="{StaticResource TagsTemplate}" SortPropertyName="TagsAsList"/>                    
+          <Controls:SortableGridViewColumn Header="Tags" IsDefaultSortColumn="False" CellTemplate="{StaticResource TagsTemplate}" SortPropertyName="TagsAsList"/>
+          <Controls:SortableGridViewColumn Header="QueueCount" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueCountTemplate}" SortPropertyName="QueueCount"/>
+          <Controls:SortableGridViewColumn Header="CustomAssemblyPath" IsDefaultSortColumn="False" CellTemplate="{StaticResource CustomAssemblyPathTemplate}" SortPropertyName="CustomAssemblyPath"/>
+          <Controls:SortableGridViewColumn Header="MaxConcurrentBuilds" IsDefaultSortColumn="False" CellTemplate="{StaticResource MaxConcurrentBuildsTemplate}" SortPropertyName="MaxConcurrentBuilds"/>
+          <Controls:SortableGridViewColumn Header="DateCreated" IsDefaultSortColumn="False" CellTemplate="{StaticResource DateCreatedTemplate}" SortPropertyName="DateCreated"/>
+          <Controls:SortableGridViewColumn Header="DateUpdated" IsDefaultSortColumn="False" CellTemplate="{StaticResource DateUpdatedTemplate}" SortPropertyName="DateUpdated"/>
         </GridView>
-    </ListView.View>
+      </ListView.View>
     </Controls:SortableListView>
   </Grid>
 

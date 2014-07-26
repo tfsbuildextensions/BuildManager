@@ -1,9 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildResourceViewModel.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using TfsBuildManager.Repository;
@@ -17,6 +17,18 @@ namespace TfsBuildManager.Views
         public string Status { get; set; }
 
         public bool Enabled { get; set; }
+        
+        public string IsReserved { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+        public DateTime DateUpdated { get; set; }
+
+        public int QueueCount { get; set; }
+
+        public int MaxConcurrentBuilds { get; set; }
+
+        public string CustomAssemblyPath { get; set; }
 
         public string EnabledText
         {

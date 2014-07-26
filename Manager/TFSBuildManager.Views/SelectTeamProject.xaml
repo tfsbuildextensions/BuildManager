@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls"
-        WindowStartupLocation="CenterOwner"
-        Title="Select Team Project" Height="500" Width="300" Icon="Graphics/AppIcon.ico">
+        WindowStartupLocation="CenterScreen"
+        Title="Select Team Project" Height="500" Width="475.847" Icon="Graphics/AppIcon.ico">
     <Grid Name="Grid1">
         <Grid.Resources>
             <Style TargetType="{x:Type GridViewColumnHeader}">

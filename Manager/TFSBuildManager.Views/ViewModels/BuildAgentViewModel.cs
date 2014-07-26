@@ -13,6 +13,9 @@ namespace TfsBuildManager.Views
         {
             this.Name = "\t" + agent.Name;
             this.BuildDirectory = agent.BuildDirectory;
+            this.DateCreated = agent.DateCreated;
+            this.DateUpdated = agent.DateUpdated;
+            this.IsReserved = agent.IsReserved ? "True" : "False";
             this.Status = agent.Status.ToString();
             this.Enabled = agent.Enabled;
             this.Tags = agent.Tags;
@@ -46,6 +49,11 @@ namespace TfsBuildManager.Views
         public BuildControllerResourceViewModel(IBuildController controller)
         {
             this.Name = controller.Name;
+            this.QueueCount = controller.QueueCount;
+            this.DateCreated = controller.DateCreated;
+            this.DateUpdated = controller.DateUpdated;
+            this.CustomAssemblyPath = controller.CustomAssemblyPath;
+            this.MaxConcurrentBuilds = controller.MaxConcurrentBuilds;
             this.Status = controller.Status.ToString();
             this.Enabled = controller.Enabled;
             this.Tags = controller.Tags;
