@@ -24,9 +24,9 @@ namespace TfsBuildManager.Views
 
         public DateTime DateUpdated { get; set; }
 
-        public int QueueCount { get; set; }
+        public string QueueCount { get; set; }
 
-        public int MaxConcurrentBuilds { get; set; }
+        public string MaxConcurrentBuilds { get; set; }
 
         public string CustomAssemblyPath { get; set; }
 
@@ -43,8 +43,13 @@ namespace TfsBuildManager.Views
         {
             get
             {
-                string tags = this.Tags.Aggregate(string.Empty, (current, tag) => current + tag + ",");
-                return tags.TrimEnd(',');
+                if (this.Tags != null)
+                {
+                    string tags = this.Tags.Aggregate(string.Empty, (current, tag) => current + tag + ",");
+                    return tags.TrimEnd(',');
+                }
+
+                return string.Empty;
             }
         }
 

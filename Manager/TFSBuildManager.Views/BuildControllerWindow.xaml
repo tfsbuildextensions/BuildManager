@@ -5,7 +5,7 @@
         xmlns:Views="clr-namespace:TfsBuildManager.Views" 
         WindowStartupLocation="CenterScreen"
         Title="Select Build Controller" 
-        Height="300" Width="400" ResizeMode="NoResize" Icon="Graphics/AppIcon.ico">
+        Height="500" Width="600" ResizeMode="NoResize" Icon="Graphics/AppIcon.ico">
     <Grid Name="Grid1">
         <Grid.Resources>
             <Style TargetType="{x:Type GridViewColumnHeader}">

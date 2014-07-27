@@ -4,6 +4,7 @@
 namespace TfsBuildManager.Views
 {
     using System;
+    using System.Globalization;
     using Microsoft.TeamFoundation.Build.Client;
     using TfsBuildManager.Repository;
 
@@ -49,14 +50,15 @@ namespace TfsBuildManager.Views
         public BuildControllerResourceViewModel(IBuildController controller)
         {
             this.Name = controller.Name;
-            this.QueueCount = controller.QueueCount;
+            this.QueueCount = controller.QueueCount.ToString(CultureInfo.CurrentCulture);
             this.DateCreated = controller.DateCreated;
             this.DateUpdated = controller.DateUpdated;
             this.CustomAssemblyPath = controller.CustomAssemblyPath;
-            this.MaxConcurrentBuilds = controller.MaxConcurrentBuilds;
+            this.MaxConcurrentBuilds = controller.MaxConcurrentBuilds.ToString(CultureInfo.CurrentCulture);
             this.Status = controller.Status.ToString();
             this.Enabled = controller.Enabled;
-            this.Tags = controller.Tags;
+
+           // this.Tags = controller.Tags;
             this.StatusMessage = controller.StatusMessage;
             this.Controller = controller;
             string url = controller.Url.ToString();

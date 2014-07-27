@@ -9,14 +9,12 @@ namespace TfsBuildManager.Views
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Common;
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
-    using Microsoft.TeamFoundation.VersionControl.Client;
     using Newtonsoft.Json;
     using TfsBuildManager.Repository;
     using TfsBuildManager.Views.ViewModels;
@@ -24,7 +22,6 @@ namespace TfsBuildManager.Views
     public class BuildManagerViewModel : ViewModelBase
     {
         public const string AllItem = "All";
-        private static List<Assembly> assemblies;
         private readonly Window owner;
         private readonly ITfsContext context;
         private readonly ITfsClientRepository repository;
@@ -813,17 +810,6 @@ namespace TfsBuildManager.Views
             try
             {
                 this.BuildDefinitions.Clear();
-                List<IFailure> failures;
-                List<Type> activityTypes;
-                List<Type> extensionTypes;
-                assemblies = builds.First().BuildController.LoadCustomActivitiesAndExtensions(
-                                                                                        builds.First().BuildController.CustomAssemblyPath,
-                                                                                        RecursionType.Full,
-                                                                                        HostEnvironmentOption.All,
-                                                                                        out activityTypes,
-                                                                                        out extensionTypes,
-                                                                                        out failures);
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                 foreach (var b in builds.Select(b => new BuildDefinitionViewModel(b)))
                 {
                     this.BuildDefinitions.Add(b);
@@ -1057,16 +1043,6 @@ namespace TfsBuildManager.Views
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
          
             File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
-        }
-
-        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            if (assemblies == null || assemblies.Count == 0)
-            {
-                return null;
-            }
-
-            return assemblies.FirstOrDefault(x => x.FullName.Equals(args.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void ShowNoBranchMessage(string project)
