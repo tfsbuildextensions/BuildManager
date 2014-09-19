@@ -6,6 +6,7 @@ namespace TfsBuildManager.Views
     using System.Collections.Generic;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Common;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
 
     internal class ExportedBuildDefinition
     {
@@ -16,6 +17,10 @@ namespace TfsBuildManager.Views
         public ContinuousIntegrationType ContinuousIntegrationType { get; set; }
 
         public string BuildController { get; set; }
+
+        public StringList ProjectsToBuild { get; set; }
+
+        public PlatformConfigurationList ConfigurationsToBuild { get; set; }
 
         public DefinitionQueueStatus QueueStatus { get; set; }
 

@@ -150,37 +150,39 @@ namespace TfsBuildManager.Views
 
         private static string GetBuildAgentName(IBuildDetail build)
         {
-            if (!build.BuildFinished)
+            try
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "build:{0}:{1} controller:{2} agents:{3}",
-                    build.BuildDefinition.Name,
-                    build.Uri,
-                    build.BuildController.Name,
-                    build.BuildController.Agents.Count);
-                System.Diagnostics.Debug.WriteLine(
-                    "Agents:" + string.Join(", ", build.BuildController.Agents.Select(x => x.Name + x.ReservedForBuild)));
+                if (!build.BuildFinished)
+                {
+                    ////System.Diagnostics.Debug.WriteLine(
+                    ////    "build:{0}:{1} controller:{2} agents:{3}",
+                    ////    build.BuildDefinition.Name,
+                    ////    build.Uri,
+                    ////    build.BuildController.Name,
+                    ////    build.BuildController.Agents.Count);
+                    ////System.Diagnostics.Debug.WriteLine(
+                    ////    "Agents:" + string.Join(", ", build.BuildController.Agents.Select(x => x.Name + x.ReservedForBuild)));
 
-                var agents =
-                    build.BuildController.Agents.Where(x => x.IsReserved && x.ReservedForBuild.Equals(build.Uri));
-                var names = string.Join(", ", agents.Select(x => x.Name));
-                return names;
-            }
-            else
-            {
+                    var agents = build.BuildController.Agents.Where(x => x.IsReserved && x.ReservedForBuild.Equals(build.Uri));
+                    var names = string.Join(", ", agents.Select(x => x.Name));
+                    return names;
+                }
+
                 var buildInformationNodes = build.Information.GetNodesByType("AgentScopeActivityTracking", true);
                 if (buildInformationNodes != null)
                 {
-                    var names = string.Join(
-                        ", ",
-                        buildInformationNodes.Select(x => x.Fields[InformationFields.ReservedAgentName]));
+                    var names = string.Join(", ", buildInformationNodes.Select(x => x.Fields[InformationFields.ReservedAgentName]));
                     return names;
                     ////var node = buildInformationNodes.Find(s => s.Fields.ContainsKey(InformationFields.ReservedAgentName));
                     ////return node != null ? node.Fields[InformationFields.ReservedAgentName] : string.Empty;
                 }
-
-                return string.Empty;
             }
+            catch
+            {
+                // swallow here to see if it resolves a nullref for a user. Not ideal....
+            }
+
+            return string.Empty;
         }
     }
 }

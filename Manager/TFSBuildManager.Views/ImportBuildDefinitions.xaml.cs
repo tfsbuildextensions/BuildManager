@@ -128,7 +128,7 @@ namespace TfsBuildManager.Views
 
                         foreach (var param in exdef.ProcessParameters)
                         {
-                            if (param.Key != "AgentSettings")
+                            if (param.Key != "AgentSettings" && param.Key != "BuildSettings")
                             {
                                 Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
                                 if (arrayItem == null)
@@ -146,6 +146,11 @@ namespace TfsBuildManager.Views
                                     process.Add(param.Key, arrayItemList);
                                 }
                             }
+                        }
+
+                        if (exdef.ProjectsToBuild != null)
+                        {
+                            process.Add("BuildSettings", new BuildSettings { ProjectsToBuild = exdef.ProjectsToBuild, PlatformConfigurations = exdef.ConfigurationsToBuild });
                         }
 
                         if (exdef.TfvcAgentSettings != null)

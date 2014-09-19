@@ -1040,6 +1040,19 @@ namespace TfsBuildManager.Views
                 }
             }
 
+            if (processParameters.ContainsKey("BuildSettings"))
+            {
+                var buildSettings = processParameters["BuildSettings"] as BuildSettings;
+                if (buildSettings != null && buildSettings.HasProjectsToBuild)
+                {
+                    buildToExport.ProjectsToBuild = buildSettings.ProjectsToBuild;
+                    if (buildSettings.HasPlatformConfigurations)
+                    {
+                        buildToExport.ConfigurationsToBuild = buildSettings.PlatformConfigurations;
+                    }
+                }
+            }
+
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
          
             File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
