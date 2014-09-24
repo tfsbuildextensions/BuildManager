@@ -1299,6 +1299,10 @@ namespace TfsBuildManager.Views
 
                             this.OnRefresh(new EventArgs());
                         }
+                        else if (res.HasValue && !res.Value)
+                        {
+                            break;
+                        }
                     }
                 }
             }
