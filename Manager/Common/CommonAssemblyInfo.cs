@@ -1,16 +1,16 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="CommonAssemblyInfo.cs">(c) http://TfsBuildExtensions.codeplex.com/. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
+// <copyright file="CommonAssemblyInfo.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyVersion("2.12.0.16")]
-[assembly: AssemblyFileVersion("2.12.0.16")]
-[assembly: AssemblyInformationalVersion("2.12.0.16")]
-[assembly: AssemblyCompany("Community TFS Build Manager http://TfsBuildExtensions.codeplex.com/")]
-[assembly: AssemblyCopyright("Copyright © Community TFS Build Manager http://TfsBuildExtensions.codeplex.com/")]
-[assembly: AssemblyTrademark("Community TFS Build Manager http://TfsBuildExtensions.codeplex.com/")]
+[assembly: AssemblyVersion("2.12.0.17")]
+[assembly: AssemblyFileVersion("2.12.0.17")]
+[assembly: AssemblyInformationalVersion("2.12.0.17")]
+[assembly: AssemblyCompany("Community TFS Build Manager https://github.com/tfsbuildextensions/BuildManager")]
+[assembly: AssemblyCopyright("Copyright © Community TFS Build Manager https://github.com/tfsbuildextensions/BuildManager")]
+[assembly: AssemblyTrademark("Community TFS Build Manager https://github.com/tfsbuildextensions/BuildManager")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyProduct("Community TFS Build Manager")]
