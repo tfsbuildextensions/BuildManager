@@ -1115,7 +1115,7 @@ namespace TfsBuildManager.Views
         {
             try
             {
-                return this.view.SelectedItems.Count() == 1;
+                return this.view.SelectedItems.Count() > 0;
             }
             catch (Exception ex)
             {
@@ -1171,50 +1171,56 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedItems.ToList();
-                if (items.Count() != 1)
+                if (items.Count() < 1)
                 {
                     return;
                 }
-
-                var item = items.First();
-                if (item.BuildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
+                foreach (var item in items)
                 {
-                    return;
+                    if (item.BuildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
+                    {
+                        return;
+                    }
+
+                    using (new WaitCursor())
+                    {
+                        var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
+                        if (!projects.Any())
+                        {
+                            this.ShowInvalidActionMessage("Clone Build to Branch", "Could not locate any projects in the selected build(s)");
+                            return;
+                        }
+
+                        var project = projects.First();
+                        var branchObject = this.repository.GetBranchObjectForItem(project);
+                        if (branchObject == null)
+                        {
+                            this.ShowNoBranchMessage(project);
+                            return;
+                        }
+
+                        var childBranches = this.repository.GetChildBranchObjectsForItem(branchObject.ServerPath).ToList();
+                        if (!childBranches.Any())
+                        {
+                            MessageBox.Show(this.owner, "No branch exist for " + branchObject.ServerPath, "Clone Build To Branch", MessageBoxButton.OK, MessageBoxImage.Stop);
+                            return;
+                        }
+
+                        var dlg = new SelectTargetBranchWindow(item.Name, childBranches, item.TeamProject, this.repository);
+                        bool? res = dlg.ShowDialog();
+                        if (res.HasValue && res.Value)
+                        {
+                            this.repository.CloneBuild(item.Uri, dlg.NewBuildDefinitionName, branchObject, dlg.SelectedTargetBranch);
+                        }
+                        else if(res.HasValue && !res.Value)
+                        {
+                            break;
+                        }
+
+                        this.OnRefresh(new EventArgs());
+                    }
                 }
-
-                using (new WaitCursor())
-                {
-                    var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
-                    if (!projects.Any())
-                    {
-                        this.ShowInvalidActionMessage("Clone Build to Branch", "Could not locate any projects in the selected build(s)");
-                        return;
-                    }
-
-                    var project = projects.First();
-                    var branchObject = this.repository.GetBranchObjectForItem(project);
-                    if (branchObject == null)
-                    {
-                        this.ShowNoBranchMessage(project);
-                        return;
-                    }
-
-                    var childBranches = this.repository.GetChildBranchObjectsForItem(branchObject.ServerPath).ToList();
-                    if (!childBranches.Any())
-                    {
-                        MessageBox.Show(this.owner, "No branch exist for " + branchObject.ServerPath, "Clone Build To Branch", MessageBoxButton.OK, MessageBoxImage.Stop);
-                        return;
-                    }
-
-                    var dlg = new SelectTargetBranchWindow(item.Name, childBranches, item.TeamProject, this.repository);
-                    bool? res = dlg.ShowDialog();
-                    if (res.HasValue && res.Value)
-                    {
-                        this.repository.CloneBuild(item.Uri, dlg.NewBuildDefinitionName, branchObject, dlg.SelectedTargetBranch);
-                    }
-
-                    this.OnRefresh(new EventArgs());
-                }
+                
             }
             catch (Exception ex)
             {
@@ -1227,30 +1233,31 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedItems.ToList();
-                if (items.Count() != 1)
+                if (items.Count() < 1)
                 {
                     return;
                 }
-
-                var item = items.First();
-                if (item.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+                foreach (var item in items)
                 {
-                    return;
-                }
-                
-                using (new WaitCursor())
-                {
-                    var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
-                    if (!projects.Any())
+                    if (item.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
                     {
-                        this.ShowInvalidActionMessage("Clone Build", "Could not locate any projects in the selected build(s)");
                         return;
                     }
 
-                    var project = projects.First();
-                    this.repository.CloneGitBuild(item.Uri, "Copy of " + item.Name);
+                    using (new WaitCursor())
+                    {
+                        var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
+                        if (!projects.Any())
+                        {
+                            this.ShowInvalidActionMessage("Clone Build", "Could not locate any projects in the selected build(s)");
+                            return;
+                        }
 
-                    this.OnRefresh(new EventArgs());
+                        var project = projects.First();
+                        this.repository.CloneGitBuild(item.Uri, "Copy of " + item.Name);
+
+                        this.OnRefresh(new EventArgs());
+                    }
                 }
             }
             catch (Exception ex)
@@ -1264,33 +1271,38 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedItems.ToList();
-                if (items.Count() != 1)
+                if (items.Count() < 1)
                 {
                     return;
                 }
-
-                var item = items.First();
-                using (new WaitCursor())
+                foreach (var item in items)
                 {
-                    var projects = this.repository.AllTeamProjects.Select(tp => tp).ToList();
-                    var viewModel = new TeamProjectListViewModel(projects);
-
-                    var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject) { cbSetAsDefault = { Visibility = Visibility.Collapsed } };
-                    bool? res = wnd.ShowDialog();
-                    if (res.HasValue && res.Value)
+                    using (new WaitCursor())
                     {
-                        using (new WaitCursor())
+                        var projects = this.repository.AllTeamProjects.Select(tp => tp).ToList();
+                        var viewModel = new TeamProjectListViewModel(projects);
+
+                        var wnd = new SelectTeamProject(viewModel, this.view.SelectedTeamProject) { cbSetAsDefault = { Visibility = Visibility.Collapsed } };
+                        bool? res = wnd.ShowDialog();
+                        if (res.HasValue && res.Value)
                         {
-                            string targetProject = wnd.SelectedTeamProjects.Select(tp => tp.Name).First();
-                            if (item.BuildDefinition.TeamProject == targetProject)
+                            using (new WaitCursor())
                             {
-                                item.Name = item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-");
+                                string targetProject = wnd.SelectedTeamProjects.Select(tp => tp.Name).First();
+                                if (item.BuildDefinition.TeamProject == targetProject)
+                                {
+                                    item.Name = item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-");
+                                }
+
+                                this.repository.CloneBuildToProject(item.Uri, item.Name, targetProject);
                             }
 
-                            this.repository.CloneBuildToProject(item.Uri, item.Name, targetProject);
+                            this.OnRefresh(new EventArgs());
                         }
-
-                        this.OnRefresh(new EventArgs());
+                        else if (res.HasValue && !res.Value)
+                        {
+                            break;
+                        }
                     }
                 }
             }
