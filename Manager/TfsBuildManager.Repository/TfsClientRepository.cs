@@ -489,6 +489,39 @@ namespace TfsBuildManager.Repository
             }
         }
 
+        public void ChangeProcessParameter(IEnumerable<Uri> buildDefinitions, string[] parameter, bool booleanType)
+        {
+            foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
+            {
+                var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
+                if (parameters.ContainsKey(parameter[0]))
+                {
+                    if (booleanType)
+                    {
+                        parameters[parameter[0]] = Convert.ToBoolean(parameter[1]);
+                    }
+                    else if (parameters[parameter[0]] is bool)
+                    {
+                        parameters[parameter[0]] = parameter[1];
+                    }
+                }
+                else
+                {
+                    if (booleanType)
+                    {
+                        parameters.Add(parameter[0], Convert.ToBoolean(parameter[1]));
+                    }
+                    else if (parameters[parameter[0]] is bool)
+                    {
+                        parameters.Add(parameter[0], parameter[1]);
+                    }
+                }
+
+                bd.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(parameters);
+                bd.Save();
+            }
+        }
+        
         public IEnumerable<string> GetProjectsToBuild(Uri buildDefinition)
         {
             var bd = this.buildServer.GetBuildDefinition(buildDefinition);

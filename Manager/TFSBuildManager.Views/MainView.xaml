@@ -208,6 +208,7 @@
                   <MenuItem Command="{Binding ChangeOutputLocationPerProjectCommand}" Header="PerProject"/>
                   <MenuItem Command="{Binding ChangeOutputLocationSingleFolderCommand}" Header="SingleFolder"/>
                 </MenuItem>
+                <MenuItem Command="{Binding ChangeProcessParameterCommand}" Header="Process Parameter"/>
                 <MenuItem Command="{Binding SetRetentionPoliciesCommand}" Header="Retention Policies">
                   <MenuItem.Icon>
                     <Image Source="Graphics/retention.png" Width="16" Height="16" />

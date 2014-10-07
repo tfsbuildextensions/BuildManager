@@ -68,6 +68,7 @@ namespace TfsBuildManager.Views
             this.DisableCommand = new DelegateCommand(this.OnDisable);
             this.PauseCommand = new DelegateCommand(this.OnPause);
             this.SetRetentionPoliciesCommand = new DelegateCommand(this.OnSetRetentionsPolicies);
+            this.ChangeProcessParameterCommand = new DelegateCommand(this.OnChangeProcessParameterCommand);
             this.ChangeBuildControllerCommand = new DelegateCommand(this.OnChangeBuildController);
             this.ChangeDefaultDropLocationCommand = new DelegateCommand(this.OnChangeDefaultDropLocation);
             this.ChangeOutputLocationAsConfiguredCommand = new DelegateCommand(this.OnChangeOutputLocationAsConfiguredCommand);
@@ -170,6 +171,8 @@ namespace TfsBuildManager.Views
 
         public ICommand SetRetentionPoliciesCommand { get; private set; }
 
+        public ICommand ChangeProcessParameterCommand { get; private set; }
+        
         public ICommand QueueBuildsCommand { get; private set; }
 
         public ICommand QueueHighBuildsCommand { get; private set; }
@@ -1432,6 +1435,28 @@ namespace TfsBuildManager.Views
                     using (new WaitCursor())
                     {
                         this.repository.SetRetentionPolicies(items.Select(bd => bd.Uri), wnd.BuildRetentionPolicy);
+                        this.OnRefresh(new EventArgs());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private void OnChangeProcessParameterCommand()
+        {
+            try
+            {
+                var items = this.view.SelectedItems;
+                var wnd = new ProcessParameterWindow();
+                bool? res = wnd.ShowDialog();
+                if (res.HasValue && res.Value)
+                {
+                    using (new WaitCursor())
+                    {
+                        this.repository.ChangeProcessParameter(items.Select(bd => bd.Uri), wnd.ProcessParameter, wnd.BooleanType);
                         this.OnRefresh(new EventArgs());
                     }
                 }
