@@ -1174,10 +1174,11 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedItems.ToList();
-                if (items.Count() < 1)
+                if (!items.Any())
                 {
                     return;
                 }
+
                 foreach (var item in items)
                 {
                     if (item.BuildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
@@ -1215,7 +1216,7 @@ namespace TfsBuildManager.Views
                         {
                             this.repository.CloneBuild(item.Uri, dlg.NewBuildDefinitionName, branchObject, dlg.SelectedTargetBranch);
                         }
-                        else if(res.HasValue && !res.Value)
+                        else if (res.HasValue && !res.Value)
                         {
                             break;
                         }
@@ -1223,7 +1224,6 @@ namespace TfsBuildManager.Views
                         this.OnRefresh(new EventArgs());
                     }
                 }
-                
             }
             catch (Exception ex)
             {
@@ -1236,10 +1236,11 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedItems.ToList();
-                if (items.Count() < 1)
+                if (!items.Any())
                 {
                     return;
                 }
+
                 foreach (var item in items)
                 {
                     if (item.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
@@ -1274,10 +1275,11 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedItems.ToList();
-                if (items.Count() < 1)
+                if (!items.Any())
                 {
                     return;
                 }
+
                 foreach (var item in items)
                 {
                     using (new WaitCursor())
@@ -1468,7 +1470,7 @@ namespace TfsBuildManager.Views
                 {
                     using (new WaitCursor())
                     {
-                        this.repository.ChangeProcessParameter(items.Select(bd => bd.Uri), wnd.ProcessParameter, wnd.BooleanType);
+                        this.repository.ChangeProcessParameter(items.Select(bd => bd.Uri), wnd.ProcessParameter, wnd.BooleanParameter);
                         this.OnRefresh(new EventArgs());
                     }
                 }

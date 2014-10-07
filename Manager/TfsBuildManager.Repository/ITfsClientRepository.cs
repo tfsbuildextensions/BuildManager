@@ -67,7 +67,7 @@ namespace TfsBuildManager.Repository
         
         void SetRetentionPolicies(IEnumerable<Uri> buildDefinitions, BuildRetentionPolicy policies);
 
-        void ChangeProcessParameter(IEnumerable<Uri> buildDefinitions, string[] parameter, bool booleanType);
+        void ChangeProcessParameter(IEnumerable<Uri> buildDefinitions, string[] parameter, bool booleanParameter);
 
         void AssignBuildProcessTemplate(IEnumerable<Uri> buildDefinitions, string serverPath);
 

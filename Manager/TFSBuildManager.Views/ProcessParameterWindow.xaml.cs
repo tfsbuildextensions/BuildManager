@@ -12,7 +12,7 @@ namespace TfsBuildManager.Views
     {
         public string[] ProcessParameter;
 
-        public bool BooleanType;
+        public bool BooleanParameter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessParameterWindow"/> class. 
@@ -38,11 +38,11 @@ namespace TfsBuildManager.Views
 
             if (this.RadioButtonBoolean.IsChecked.HasValue && this.RadioButtonBoolean.IsChecked.Value)
             {
-                this.BooleanType = true;
+                this.BooleanParameter = true;
             }
             else
             {
-                this.BooleanType = false;
+                this.BooleanParameter = false;
             }
 
             this.ProcessParameter = new string[2];

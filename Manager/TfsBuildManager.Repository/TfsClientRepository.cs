@@ -489,14 +489,14 @@ namespace TfsBuildManager.Repository
             }
         }
 
-        public void ChangeProcessParameter(IEnumerable<Uri> buildDefinitions, string[] parameter, bool booleanType)
+        public void ChangeProcessParameter(IEnumerable<Uri> buildDefinitions, string[] parameter, bool booleanParameter)
         {
             foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
             {
                 var parameters = WorkflowHelpers.DeserializeProcessParameters(bd.ProcessParameters);
                 if (parameters.ContainsKey(parameter[0]))
                 {
-                    if (booleanType)
+                    if (booleanParameter)
                     {
                         parameters[parameter[0]] = Convert.ToBoolean(parameter[1]);
                     }
@@ -507,7 +507,7 @@ namespace TfsBuildManager.Repository
                 }
                 else
                 {
-                    if (booleanType)
+                    if (booleanParameter)
                     {
                         parameters.Add(parameter[0], Convert.ToBoolean(parameter[1]));
                     }
