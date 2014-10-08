@@ -1257,9 +1257,7 @@ namespace TfsBuildManager.Views
                             return;
                         }
 
-                        var project = projects.First();
-                        this.repository.CloneGitBuild(item.Uri, "Copy of " + item.Name);
-
+                        this.repository.CloneGitBuild(item.Uri, item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-"));
                         this.OnRefresh(new EventArgs());
                     }
                 }

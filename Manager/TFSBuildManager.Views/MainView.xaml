@@ -251,7 +251,7 @@
       </Grid>
     </Grid>
     <DockPanel Grid.Row="2" Grid.ColumnSpan="3"  LastChildFill="True" Visibility="{Binding Path=BuildsViewVisible}">
-      <CheckBox DockPanel.Dock="Top" Name="CheckBoxAutoRefresh" Content="Auto Refresh (2min)" IsChecked="True" Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnUnchecked"/>
+      <CheckBox DockPanel.Dock="Top" HorizontalAlignment="Right" Name="CheckBoxAutoRefresh" Content="Auto Refresh (2min)" IsChecked="True" Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnUnchecked"/>
       <TabControl DockPanel.Dock="Bottom" Name="BuildGrid" Margin="0,4,0,0" Height="Auto">
         <TabItem Name="Queued" Header="Queued" IsSelected="{Binding Path=SelectedBuildFilter, Mode=TwoWay, Converter={StaticResource enumConverter}, ConverterParameter=Queued}">
           <DockPanel Margin="-4,-4,-4,-4">
