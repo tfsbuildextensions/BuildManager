@@ -1181,7 +1181,7 @@ namespace TfsBuildManager.Views
 
                 foreach (var item in items)
                 {
-                    if (item.BuildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
+                    if (item.BuildDefinition.SourceProviders.Any(s => s.Name.ToUpperInvariant().Contains("GIT")))
                     {
                         return;
                     }
@@ -1243,7 +1243,8 @@ namespace TfsBuildManager.Views
 
                 foreach (var item in items)
                 {
-                    if (item.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+                    // Note that if a Git build pulls from a repo then its sourceprovider is TFGIT. If it does not, then its SourceProvider is GIT
+                    if (!item.BuildDefinition.SourceProviders.All(s => s.Name.ToUpperInvariant().Contains("GIT")))
                     {
                         return;
                     }

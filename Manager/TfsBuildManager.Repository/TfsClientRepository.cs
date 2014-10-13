@@ -821,7 +821,7 @@ namespace TfsBuildManager.Repository
 
         public VersionControlType GetVersionControlType(IBuildDefinition buildDefinition)
         {
-            if (buildDefinition.SourceProviders.Any(s => s.Name == "TFGIT"))
+            if (buildDefinition.SourceProviders.Any(s => s.Name.ToUpperInvariant().Contains("GIT")))
             {
                 return VersionControlType.Git;
             }
@@ -1104,7 +1104,7 @@ namespace TfsBuildManager.Repository
 
         private static IBuildDefinitionSourceProvider CloneSourceProviders(IBuildDefinition newBuildDefinition, IBuildDefinition bd)
         {
-            var provider = newBuildDefinition.CreateInitialSourceProvider("TFGIT");
+            var provider = newBuildDefinition.CreateInitialSourceProvider(bd.SourceProviders.First().Name);
             var originalProviders = bd.SourceProviders.First();
             foreach (var f in originalProviders.Fields)
             {

@@ -44,7 +44,7 @@ namespace TfsBuildManager.Views
             this.Id = Convert.ToInt32(build.Id);
             this.QueueStatus = build.QueueStatus.ToString();
             this.Enabled = build.QueueStatus != DefinitionQueueStatus.Disabled;
-            this.IsGitProject = build.SourceProviders.Any(s => s.Name == "TFGIT");
+            this.IsGitProject = build.SourceProviders.Any(s => s.Name.ToUpperInvariant().Contains("GIT"));
             this.IsTfvcProject = !this.IsGitProject;
             this.LastModifiedBy = build.Workspace.LastModifiedBy;
             this.LastModifiedDate = build.Workspace.LastModifiedDate;
