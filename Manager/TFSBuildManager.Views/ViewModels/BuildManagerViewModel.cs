@@ -1251,13 +1251,6 @@ namespace TfsBuildManager.Views
 
                     using (new WaitCursor())
                     {
-                        var projects = this.repository.GetProjectsToBuild(item.Uri).ToList();
-                        if (!projects.Any())
-                        {
-                            this.ShowInvalidActionMessage("Clone Build", "Could not locate any projects in the selected build(s)");
-                            return;
-                        }
-
                         this.repository.CloneGitBuild(item.Uri, item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-"));
                         this.OnRefresh(new EventArgs());
                     }
