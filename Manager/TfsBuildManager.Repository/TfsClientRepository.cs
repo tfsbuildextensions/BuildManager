@@ -500,7 +500,7 @@ namespace TfsBuildManager.Repository
                     {
                         parameters[parameter[0]] = Convert.ToBoolean(parameter[1]);
                     }
-                    else if (parameters[parameter[0]] is bool)
+                    else
                     {
                         parameters[parameter[0]] = parameter[1];
                     }
@@ -511,7 +511,7 @@ namespace TfsBuildManager.Repository
                     {
                         parameters.Add(parameter[0], Convert.ToBoolean(parameter[1]));
                     }
-                    else if (parameters[parameter[0]] is bool)
+                    else
                     {
                         parameters.Add(parameter[0], parameter[1]);
                     }
