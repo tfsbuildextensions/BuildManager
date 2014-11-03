@@ -77,6 +77,8 @@ namespace TfsBuildManager.Repository
 
         void UpdateTrigger(IEnumerable<Uri> buildDefinitions, int minutes, int submissions, DefinitionTriggerType triggerType);
 
+        void UpdateTrigger(IEnumerable<Uri> enumerable, DefinitionTriggerType triggerType, ScheduleDays scheduleDays, DateTime scheduleTime, TimeZoneInfo timeZoneInfo);
+
         void SetDefaultDropLocation(IEnumerable<Uri> buildDefinitions, string newDropLocation, Dictionary<string, string> macros, bool replaceInExistingBuilds);
 
         void QueueBuilds(IEnumerable<Uri> buildDefinitions);

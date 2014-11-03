@@ -7,6 +7,8 @@ namespace TfsBuildManager.Views
     using System.Windows;
     using Microsoft.TeamFoundation.Build.Client;
     using TfsBuildManager.Views.ViewModels;
+    using System;
+
 
     /// <summary>
     /// Interaction logic for DropLocationWindow
@@ -18,6 +20,16 @@ namespace TfsBuildManager.Views
             this.Trigger = trigger;
             this.InitializeComponent();
             this.DataContext = this.Trigger;
+            this.SetTimeZoneInfo();
+        }
+
+        private TimeZoneInfo _timeZoneInfo;
+
+        private void SetTimeZoneInfo()
+        {
+            _timeZoneInfo = TimeZoneInfo.Local;
+
+            lblTimeZone.Content = _timeZoneInfo.DisplayName;
         }
 
         public TriggerViewModel Trigger { get; private set; }
@@ -65,8 +77,49 @@ namespace TfsBuildManager.Views
                 }
             }
 
+            if (this.rdoTriggerSchedule.IsChecked.HasValue && this.rdoTriggerSchedule.IsChecked.Value)
+            {
+                if (this.checkboxForceBuild.IsChecked.HasValue && checkboxForceBuild.IsChecked.Value)
+                {
+                    this.Trigger.TriggerType = DefinitionTriggerType.ScheduleForced;
+                }
+                else
+                {
+                    this.Trigger.TriggerType = DefinitionTriggerType.Schedule;
+                }
+
+                this.Trigger.ScheduleDays = GetSelectedDays();
+                this.Trigger.ScheduleTime = DateTime.Parse(txtScheduleTime.Text);
+                this.Trigger.TimeZoneInfo = _timeZoneInfo;
+            }
+
             this.DialogResult = true;
             this.Close();
+        }
+
+        private ScheduleDays GetSelectedDays()
+        {
+            ScheduleDays scheduleDays = ScheduleDays.None;
+            if (IsChecked(checkboxMonday))
+                scheduleDays |= ScheduleDays.Monday;
+            if (IsChecked(checkboxTuesday))
+                scheduleDays |= ScheduleDays.Tuesday;
+            if (IsChecked(checkboxWednesday))
+                scheduleDays |= ScheduleDays.Wednesday;
+            if (IsChecked(checkboxThursday))
+                scheduleDays |= ScheduleDays.Thursday;
+            if (IsChecked(checkboxFriday))
+                scheduleDays |= ScheduleDays.Friday;
+            if (IsChecked(checkboxSaturday))
+                scheduleDays |= ScheduleDays.Saturday;
+            if (IsChecked(checkboxSunday))
+                scheduleDays |= ScheduleDays.Sunday;
+            return scheduleDays;
+        }
+
+        private bool IsChecked(System.Windows.Controls.CheckBox checkbox)
+        {
+            return checkbox.IsChecked.HasValue && checkbox.IsChecked.Value;
         }
 
         private void OnCancel(object sender, RoutedEventArgs e)
@@ -111,6 +164,28 @@ namespace TfsBuildManager.Views
         private void textboxSubmissions_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text);
+        }
+
+        private void rdoTriggerSchedule_Checked(object sender, RoutedEventArgs e)
+        {
+            checkboxMonday.IsEnabled    = true;
+            checkboxTuesday.IsEnabled   = true;
+            checkboxWednesday.IsEnabled = true;
+            checkboxThursday.IsEnabled  = true;
+            checkboxFriday.IsEnabled    = true;
+            checkboxSaturday.IsEnabled  = true;
+            checkboxSunday.IsEnabled    = true;
+        }
+
+        private void rdoTriggerSchedule_Unchecked(object sender, RoutedEventArgs e)
+        {
+            checkboxMonday.IsEnabled    = false;
+            checkboxTuesday.IsEnabled   = false;
+            checkboxWednesday.IsEnabled = false;
+            checkboxThursday.IsEnabled  = false;
+            checkboxFriday.IsEnabled    = false;
+            checkboxSaturday.IsEnabled  = false;
+            checkboxSunday.IsEnabled    = false;
         }
     }
 }

@@ -430,10 +430,26 @@ namespace TfsBuildManager.Repository
                 {
                     bd.BatchSize = submissions;
                 }
+                
+                bd.Save();
+            }
+        }
+
+        public void UpdateTrigger(IEnumerable<Uri> buildDefinitions, DefinitionTriggerType triggerType, ScheduleDays scheduleDays, DateTime scheduleTime, TimeZoneInfo timeZoneInfo)
+        {
+            foreach (var bd in buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
+            {
+                bd.TriggerType = triggerType;
+
+                var schedule = bd.AddSchedule();
+                schedule.DaysToBuild = scheduleDays;
+                schedule.StartTime = (int)scheduleTime.TimeOfDay.TotalSeconds;
+                schedule.TimeZone = timeZoneInfo;
 
                 bd.Save();
             }
         }
+
 
         public void SetDefaultDropLocation(IEnumerable<Uri> buildDefinitions, string newDropLocation, Dictionary<string, string> macros, bool replaceInExistingBuilds)
         {

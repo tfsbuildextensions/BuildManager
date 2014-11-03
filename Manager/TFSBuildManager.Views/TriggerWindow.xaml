@@ -5,8 +5,8 @@
         xmlns:Views="clr-namespace:TfsBuildManager.Views" 
         WindowStartupLocation="CenterScreen"
         Title="Change Build Trigger" 
-        Height="289" Width="562" MinHeight="18" MinWidth="100" ResizeMode="NoResize" Background="#FFF6F6F6" Icon="Graphics/AppIcon.ico">
-    <Grid Name="Grid1" Margin="0,10,0,1">
+        Height="425" Width="562" MinHeight="18" MinWidth="100" ResizeMode="NoResize" Background="#FFF6F6F6" Icon="Graphics/AppIcon.ico">
+    <Grid Name="Grid1" Margin="0,10,0,0" Height="389" VerticalAlignment="Top" IsEnabled="False">
         <Grid.Resources>
             <Style TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -31,6 +31,18 @@
         <Label Content="submissions." Height="28" HorizontalAlignment="Left" Margin="314,162,0,0" x:Name="labelSubmissions" VerticalAlignment="Top"  IsEnabled="False"/>
         <TextBox Height="22" HorizontalAlignment="Left" Margin="223,165,0,0" x:Name="textboxSubmissions" VerticalAlignment="Top" Width="74" Text="{Binding SetDropLocation}" IsEnabled="False" MaxLength="4" PreviewTextInput="textboxSubmissions_PreviewTextInput"/>
         <CheckBox Content="Merge and build up to" HorizontalAlignment="Left" Name="checkboxGated" Margin="54,168,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <RadioButton x:Name="rdoTriggerSchedule" Content="Schedule - build every week on the following days" HorizontalAlignment="Left" Margin="16,200,0,0" VerticalAlignment="Top" Width="521" Checked="rdoTriggerSchedule_Checked" Unchecked="rdoTriggerSchedule_Unchecked"/>
+        <CheckBox x:Name="checkboxMonday" Content="Monday" HorizontalAlignment="Left" Margin="45,220,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxTuesday" Content="Tuesday" HorizontalAlignment="Left" Margin="129,220,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxWednesday" Content="Wednesday" HorizontalAlignment="Left" Margin="207,220,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="checkboxThursday" Content="Thursday" HorizontalAlignment="Left" Margin="314,220,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="checkboxFriday" Content="Friday" HorizontalAlignment="Left" Margin="45,241,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="checkboxSaturday" Content="Saturday" HorizontalAlignment="Left" Margin="129,244,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="checkboxSunday" Content="Sunday" HorizontalAlignment="Left" Margin="207,244,0,0" VerticalAlignment="Top"/>
+        <Label Content="Queue the build on the build controller at:" HorizontalAlignment="Left" Margin="38,264,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtScheduleTime" HorizontalAlignment="Left" Height="23" Margin="45,290,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64"/>
+        <Label x:Name="lblTimeZone" Content="" HorizontalAlignment="Left" Margin="114,290,0,0" VerticalAlignment="Top" Width="268"/>
+        <CheckBox x:Name="checkboxForceBuild" Content="Build even if nothing has changed since the previous build" HorizontalAlignment="Left" Margin="45,321,0,0" VerticalAlignment="Top" Width="346"/>
     </Grid>
 
 </Window>
