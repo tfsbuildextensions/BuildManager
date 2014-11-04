@@ -441,6 +441,9 @@ namespace TfsBuildManager.Repository
             {
                 bd.TriggerType = triggerType;
 
+                if (bd.Schedules.Any())
+                    bd.Schedules.Clear();
+
                 var schedule = bd.AddSchedule();
                 schedule.DaysToBuild = scheduleDays;
                 schedule.StartTime = (int)scheduleTime.TimeOfDay.TotalSeconds;

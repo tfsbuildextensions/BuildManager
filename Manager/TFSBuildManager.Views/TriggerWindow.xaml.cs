@@ -8,6 +8,8 @@ namespace TfsBuildManager.Views
     using Microsoft.TeamFoundation.Build.Client;
     using TfsBuildManager.Views.ViewModels;
     using System;
+    using System.Collections.Generic;
+    using System.Text;
 
 
     /// <summary>
@@ -29,7 +31,51 @@ namespace TfsBuildManager.Views
         {
             _timeZoneInfo = TimeZoneInfo.Local;
 
-            lblTimeZone.Content = _timeZoneInfo.DisplayName;
+
+            lblTimeZone.Content = GetTimeZoneLabel();
+
+            ScheduleTimes().ForEach(x => cboScheduleTime.Items.Add(x));
+        }
+
+        private string GetTimeZoneLabel()
+        {
+            StringBuilder content = new StringBuilder();
+
+            if (_timeZoneInfo.IsDaylightSavingTime(DateTime.Now))
+                content.Append(_timeZoneInfo.DaylightName);
+            else
+                content.Append(_timeZoneInfo.StandardName);
+
+            content.Append(" (UTC ");
+
+            if (_timeZoneInfo.GetUtcOffset(DateTime.Now).Hours < 0)
+            {
+                content.Append("-");
+            }
+            else if (_timeZoneInfo.GetUtcOffset(DateTime.Now).Hours > 0)
+            {
+                content.Append("+");
+            }
+
+            content.Append(_timeZoneInfo.GetUtcOffset(DateTime.Now).ToString("hh':'mm")).Append(")");
+
+            return content.ToString();
+        }
+
+        private static List<string> ScheduleTimes()
+        {
+            var items = new List<string>();
+            
+            TimeSpan time = new TimeSpan(0, 0, 0);
+            TimeSpan interval = new TimeSpan(0,30,0);
+            do
+            {
+                items.Add(string.Format("{0}:{1}", time.Hours, time.Minutes.ToString().PadRight(2,'0')));
+                time += interval;
+            } 
+            while (time.TotalHours <= 23);
+
+            return items;
         }
 
         public TriggerViewModel Trigger { get; private set; }
@@ -89,7 +135,7 @@ namespace TfsBuildManager.Views
                 }
 
                 this.Trigger.ScheduleDays = GetSelectedDays();
-                this.Trigger.ScheduleTime = DateTime.Parse(txtScheduleTime.Text);
+                this.Trigger.ScheduleTime = DateTime.Parse(cboScheduleTime.SelectedValue.ToString());
                 this.Trigger.TimeZoneInfo = _timeZoneInfo;
             }
 
@@ -108,7 +154,7 @@ namespace TfsBuildManager.Views
                 scheduleDays |= ScheduleDays.Wednesday;
             if (IsChecked(checkboxThursday))
                 scheduleDays |= ScheduleDays.Thursday;
-            if (IsChecked(checkboxFriday))
+            if (IsChecked(checkboxFriday))      
                 scheduleDays |= ScheduleDays.Friday;
             if (IsChecked(checkboxSaturday))
                 scheduleDays |= ScheduleDays.Saturday;
@@ -117,7 +163,7 @@ namespace TfsBuildManager.Views
             return scheduleDays;
         }
 
-        private bool IsChecked(System.Windows.Controls.CheckBox checkbox)
+        private static bool IsChecked(System.Windows.Controls.CheckBox checkbox)
         {
             return checkbox.IsChecked.HasValue && checkbox.IsChecked.Value;
         }
@@ -168,24 +214,25 @@ namespace TfsBuildManager.Views
 
         private void rdoTriggerSchedule_Checked(object sender, RoutedEventArgs e)
         {
-            checkboxMonday.IsEnabled    = true;
-            checkboxTuesday.IsEnabled   = true;
-            checkboxWednesday.IsEnabled = true;
-            checkboxThursday.IsEnabled  = true;
-            checkboxFriday.IsEnabled    = true;
-            checkboxSaturday.IsEnabled  = true;
-            checkboxSunday.IsEnabled    = true;
+            TriggerScheduleEnabledState(true);
         }
 
         private void rdoTriggerSchedule_Unchecked(object sender, RoutedEventArgs e)
         {
-            checkboxMonday.IsEnabled    = false;
-            checkboxTuesday.IsEnabled   = false;
-            checkboxWednesday.IsEnabled = false;
-            checkboxThursday.IsEnabled  = false;
-            checkboxFriday.IsEnabled    = false;
-            checkboxSaturday.IsEnabled  = false;
-            checkboxSunday.IsEnabled    = false;
+            TriggerScheduleEnabledState(false);
+        }
+
+        private void TriggerScheduleEnabledState(bool enabled)
+        {
+            checkboxMonday.IsEnabled     = enabled;
+            checkboxTuesday.IsEnabled    = enabled;
+            checkboxWednesday.IsEnabled  = enabled;
+            checkboxThursday.IsEnabled   = enabled;
+            checkboxFriday.IsEnabled     = enabled;
+            checkboxSaturday.IsEnabled   = enabled;
+            checkboxSunday.IsEnabled     = enabled;
+            cboScheduleTime.IsEnabled    = enabled;
+            checkboxForceBuild.IsEnabled = enabled;
         }
     }
 }

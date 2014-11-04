@@ -5,8 +5,8 @@
         xmlns:Views="clr-namespace:TfsBuildManager.Views" 
         WindowStartupLocation="CenterScreen"
         Title="Change Build Trigger" 
-        Height="425" Width="562" MinHeight="18" MinWidth="100" ResizeMode="NoResize" Background="#FFF6F6F6" Icon="Graphics/AppIcon.ico">
-    <Grid Name="Grid1" Margin="0,10,0,0" Height="389" VerticalAlignment="Top" IsEnabled="False">
+        Height="426.492" Width="562" MinHeight="18" MinWidth="100" ResizeMode="NoResize" Background="#FFF6F6F6" Icon="Graphics/AppIcon.ico">
+    <Grid Name="Grid1" Margin="0,10,0,0" Height="381" VerticalAlignment="Top">
         <Grid.Resources>
             <Style TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -17,32 +17,32 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,5">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
             <Button IsDefault="True" Name="btnOK" Margin="5" Padding="20,3,20,3" Click="OnOK">OK</Button>
             <Button IsDefault="False" IsCancel="True" Name="btnCancel" Margin="5" Padding="15,3,15,3" Click="OnCancel">Cancel</Button>
         </StackPanel>
-        <RadioButton Content="Manual - Check-ins do not trigger a new build" Height="16" HorizontalAlignment="Left" Margin="16,10,0,0" Name="rdoTriggerManual" VerticalAlignment="Top" IsChecked="{Binding Manual}" />
-        <Label Content="minutes." Height="28" HorizontalAlignment="Left" Margin="314,101,0,0" VerticalAlignment="Top" Name="labelMinutes" IsEnabled="False"/>
-        <TextBox Height="22" HorizontalAlignment="Left" Margin="223,104,0,0" Name="textboxMinutes" VerticalAlignment="Top" Width="74" Text="{Binding SetDropLocation}" IsEnabled="False" MaxLength="4" PreviewTextInput="textboxMinutes_PreviewTextInput"/>
-        <RadioButton Content="Continuous Integration - Build each check-in" Height="16" HorizontalAlignment="Left" Margin="16,43,0,0" x:Name="rdoTriggerContinuousIntegration" VerticalAlignment="Top"/>
-        <RadioButton Content="Rolling builds - accumulate check-ins until prior build finishes" Height="16" HorizontalAlignment="Left" Margin="16,75,0,0" x:Name="rdoTriggerRolling" VerticalAlignment="Top" Checked="rdoTriggerRolling_Checked" Unchecked="rdoTriggerRolling_Unchecked"/>
-        <RadioButton Content="Gated Check-in - accept check-ins only if they submitted changes merge and build successfully" Height="16" HorizontalAlignment="Left" Margin="16,134,0,0" x:Name="rdoTriggerGated" VerticalAlignment="Top" Checked="rdoTriggerGated_Checked" Unchecked="rdoTriggerGated_Unchecked"/>
-        <CheckBox Content="Build no more then every" Name="checkboxRolling" HorizontalAlignment="Left" Margin="54,107,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-        <Label Content="submissions." Height="28" HorizontalAlignment="Left" Margin="314,162,0,0" x:Name="labelSubmissions" VerticalAlignment="Top"  IsEnabled="False"/>
-        <TextBox Height="22" HorizontalAlignment="Left" Margin="223,165,0,0" x:Name="textboxSubmissions" VerticalAlignment="Top" Width="74" Text="{Binding SetDropLocation}" IsEnabled="False" MaxLength="4" PreviewTextInput="textboxSubmissions_PreviewTextInput"/>
-        <CheckBox Content="Merge and build up to" HorizontalAlignment="Left" Name="checkboxGated" Margin="54,168,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-        <RadioButton x:Name="rdoTriggerSchedule" Content="Schedule - build every week on the following days" HorizontalAlignment="Left" Margin="16,200,0,0" VerticalAlignment="Top" Width="521" Checked="rdoTriggerSchedule_Checked" Unchecked="rdoTriggerSchedule_Unchecked"/>
-        <CheckBox x:Name="checkboxMonday" Content="Monday" HorizontalAlignment="Left" Margin="45,220,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-        <CheckBox x:Name="checkboxTuesday" Content="Tuesday" HorizontalAlignment="Left" Margin="129,220,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-        <CheckBox x:Name="checkboxWednesday" Content="Wednesday" HorizontalAlignment="Left" Margin="207,220,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="checkboxThursday" Content="Thursday" HorizontalAlignment="Left" Margin="314,220,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="checkboxFriday" Content="Friday" HorizontalAlignment="Left" Margin="45,241,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="checkboxSaturday" Content="Saturday" HorizontalAlignment="Left" Margin="129,244,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="checkboxSunday" Content="Sunday" HorizontalAlignment="Left" Margin="207,244,0,0" VerticalAlignment="Top"/>
-        <Label Content="Queue the build on the build controller at:" HorizontalAlignment="Left" Margin="38,264,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtScheduleTime" HorizontalAlignment="Left" Height="23" Margin="45,290,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64"/>
-        <Label x:Name="lblTimeZone" Content="" HorizontalAlignment="Left" Margin="114,290,0,0" VerticalAlignment="Top" Width="268"/>
-        <CheckBox x:Name="checkboxForceBuild" Content="Build even if nothing has changed since the previous build" HorizontalAlignment="Left" Margin="45,321,0,0" VerticalAlignment="Top" Width="346"/>
+        <RadioButton Content="Manual - Check-ins do not trigger a new build" Height="16" HorizontalAlignment="Left" Margin="16,10,0,0" Name="rdoTriggerManual" VerticalAlignment="Top" IsChecked="{Binding Manual}" GroupName="TriggerType" />
+        <Label Content="minutes." Height="28" HorizontalAlignment="Left" Margin="278,93,0,0" VerticalAlignment="Top" Name="labelMinutes" IsEnabled="False"/>
+        <TextBox Height="22" HorizontalAlignment="Left" Margin="204,95,0,0" Name="textboxMinutes" VerticalAlignment="Top" Width="74" Text="{Binding SetDropLocation}" IsEnabled="False" MaxLength="4" PreviewTextInput="textboxMinutes_PreviewTextInput"/>
+        <RadioButton Content="Continuous Integration - Build each check-in" Height="16" HorizontalAlignment="Left" Margin="16,43,0,0" x:Name="rdoTriggerContinuousIntegration" VerticalAlignment="Top" GroupName="TriggerType"/>
+        <RadioButton Content="Rolling builds - accumulate check-ins until prior build finishes" Height="16" HorizontalAlignment="Left" Margin="16,75,0,0" x:Name="rdoTriggerRolling" VerticalAlignment="Top" Checked="rdoTriggerRolling_Checked" Unchecked="rdoTriggerRolling_Unchecked" GroupName="TriggerType"/>
+        <RadioButton Content="Gated Check-in - accept check-ins only if they submitted changes merge and build successfully" Height="16" HorizontalAlignment="Left" Margin="16,134,0,0" x:Name="rdoTriggerGated" VerticalAlignment="Top" Checked="rdoTriggerGated_Checked" Unchecked="rdoTriggerGated_Unchecked" GroupName="TriggerType"/>
+        <CheckBox Content="Build no more then every" Name="checkboxRolling" HorizontalAlignment="Left" Margin="45,99,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <Label Content="submissions." Height="28" HorizontalAlignment="Left" Margin="263,152,0,0" x:Name="labelSubmissions" VerticalAlignment="Top"  IsEnabled="False"/>
+        <TextBox Height="22" HorizontalAlignment="Left" Margin="189,153,0,0" x:Name="textboxSubmissions" VerticalAlignment="Top" Width="74" Text="{Binding SetDropLocation}" IsEnabled="False" MaxLength="4" PreviewTextInput="textboxSubmissions_PreviewTextInput"/>
+        <CheckBox Content="Merge and build up to" HorizontalAlignment="Left" Name="checkboxGated" Margin="45,158,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <RadioButton x:Name="rdoTriggerSchedule" Content="Schedule - build every week on the following days" HorizontalAlignment="Left" Margin="16,192,0,0" VerticalAlignment="Top" Width="521" Checked="rdoTriggerSchedule_Checked" Unchecked="rdoTriggerSchedule_Unchecked" GroupName="TriggerType"/>
+        <CheckBox x:Name="checkboxMonday" Content="Monday" Margin="45,211,0,9" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxTuesday" Content="Tuesday" Margin="129,212,0,8" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxWednesday" Content="Wednesday" Margin="207,212,0,8" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxThursday" Content="Thursday" Margin="301,212,0,8" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxFriday" Content="Friday" HorizontalAlignment="Left" Margin="45,233,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxSaturday" Content="Saturday" HorizontalAlignment="Left" Margin="129,233,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <CheckBox x:Name="checkboxSunday" Content="Sunday" HorizontalAlignment="Left" Margin="207,233,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+        <Label Content="Queue the build on the build controller at:" HorizontalAlignment="Left" Margin="38,256,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblTimeZone" Content="" HorizontalAlignment="Left" Margin="114,282,0,0" VerticalAlignment="Top" Width="268"/>
+        <CheckBox x:Name="checkboxForceBuild" Content="Build even if nothing has changed since the previous build" HorizontalAlignment="Left" Margin="45,313,0,0" VerticalAlignment="Top" Width="346" IsEnabled="False"/>
+        <ComboBox x:Name="cboScheduleTime" HorizontalAlignment="Left" Margin="45,282,0,0" VerticalAlignment="Top" Width="64"/>
     </Grid>
 
 </Window>
