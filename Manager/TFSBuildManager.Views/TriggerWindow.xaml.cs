@@ -62,7 +62,7 @@ namespace TfsBuildManager.Views
             return content.ToString();
         }
 
-        private List<string> ScheduleTimes()
+        private static List<string> ScheduleTimes()
         {
             var items = new List<string>();
             
@@ -163,7 +163,7 @@ namespace TfsBuildManager.Views
             return scheduleDays;
         }
 
-        private bool IsChecked(System.Windows.Controls.CheckBox checkbox)
+        private static bool IsChecked(System.Windows.Controls.CheckBox checkbox)
         {
             return checkbox.IsChecked.HasValue && checkbox.IsChecked.Value;
         }
