@@ -133,7 +133,16 @@ namespace TfsBuildManager.Views
                                 Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
                                 if (arrayItem == null)
                                 {
-                                    process.Add(param.Key, param.Value);
+                                    Newtonsoft.Json.Linq.JObject objectItem = param.Value as Newtonsoft.Json.Linq.JObject;
+                                    if (objectItem == null)
+                                    {
+                                        process.Add(param.Key, param.Value);
+                                    }
+                                    else
+                                    {
+                                        Microsoft.TeamFoundation.Build.Common.BuildParameter paramItem = new Microsoft.TeamFoundation.Build.Common.BuildParameter(param.Value.ToString());
+                                        process.Add(param.Key, paramItem);
+                                    }
                                 }
                                 else
                                 {

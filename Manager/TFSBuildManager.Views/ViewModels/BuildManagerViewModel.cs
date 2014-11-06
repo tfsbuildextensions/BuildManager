@@ -1057,7 +1057,14 @@ namespace TfsBuildManager.Views
             }
 
             buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
-         
+            foreach (KeyValuePair<string, object> item in processParameters)
+            {
+                if (item.Value.GetType() == typeof(Microsoft.TeamFoundation.Build.Common.BuildParameter))
+                {
+                    buildToExport.ProcessParameters[item.Key] = JsonConvert.DeserializeObject(item.Value.ToString());
+                }
+            }
+
             File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
         }
 
