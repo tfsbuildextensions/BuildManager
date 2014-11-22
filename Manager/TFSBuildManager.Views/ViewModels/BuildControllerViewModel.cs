@@ -1,14 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildControllerViewModel.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.TeamFoundation.Build.Client;
-    using System.Linq;
-    using System;
 
     public class BuildControllerViewModel : ViewModelBase
     {

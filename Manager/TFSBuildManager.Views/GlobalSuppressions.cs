@@ -73,3 +73,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "TfsBuildManager.Views.ProcessParameterWindow.#BooleanType")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "TfsBuildManager.Views.ProcessParameterWindow.#ProcessParameter")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "TfsBuildManager.Views.ProcessParameterWindow.#BooleanParameter")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member", Target = "TfsBuildManager.Views.BuildManagerViewModel.#ExportDefinition(TfsBuildManager.Views.BuildDefinitionViewModel,System.String)")]

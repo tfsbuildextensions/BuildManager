@@ -437,12 +437,14 @@ namespace TfsBuildManager.Repository
 
         public void UpdateTrigger(IEnumerable<Uri> buildDefinitions, DefinitionTriggerType triggerType, ScheduleDays scheduleDays, DateTime scheduleTime, TimeZoneInfo timeZoneInfo)
         {
-            foreach (var bd in buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
+            foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
             {
                 bd.TriggerType = triggerType;
 
                 if (bd.Schedules.Any())
+                {
                     bd.Schedules.Clear();
+                }
 
                 var schedule = bd.AddSchedule();
                 schedule.DaysToBuild = scheduleDays;
@@ -452,7 +454,6 @@ namespace TfsBuildManager.Repository
                 bd.Save();
             }
         }
-
 
         public void SetDefaultDropLocation(IEnumerable<Uri> buildDefinitions, string newDropLocation, Dictionary<string, string> macros, bool replaceInExistingBuilds)
         {
