@@ -1556,7 +1556,14 @@ namespace TfsBuildManager.Views
                 {
                     using (new WaitCursor())
                     {
-                        this.repository.UpdateTrigger(items.Select(bd => bd.Uri), wnd.Trigger.Minutes, wnd.Trigger.Submissions, wnd.Trigger.TriggerType);
+                        if (wnd.Trigger.TriggerType == DefinitionTriggerType.Schedule || wnd.Trigger.TriggerType == DefinitionTriggerType.ScheduleForced)
+                        {
+                            this.repository.UpdateTrigger(items.Select(bd => bd.Uri), wnd.Trigger.TriggerType, wnd.Trigger.ScheduleDays, wnd.Trigger.ScheduleTime, wnd.Trigger.TimeZoneInfo);
+                        }
+                        else
+                        {
+                            this.repository.UpdateTrigger(items.Select(bd => bd.Uri), wnd.Trigger.Minutes, wnd.Trigger.Submissions, wnd.Trigger.TriggerType);
+                        }
                         this.OnRefresh(new EventArgs());
                     }
                 }

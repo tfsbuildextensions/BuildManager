@@ -7,6 +7,8 @@ namespace TfsBuildManager.Views.ViewModels
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.TeamFoundation.Build.Client;
+    using System.Linq;
+    using System;
 
     public class BuildControllerViewModel : ViewModelBase
     {
@@ -72,6 +74,12 @@ namespace TfsBuildManager.Views.ViewModels
         public int Submissions { get; set; }
 
         public DefinitionTriggerType TriggerType { get; set; }
+
+        public ScheduleDays ScheduleDays { get; set; }
+
+        public DateTime ScheduleTime { get; set; }
+
+        public TimeZoneInfo TimeZoneInfo { get; set; }
     }
 
     public class BuildControllerListViewModel : ViewModelBase
