@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ImportBuildDefinitions.xaml.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
 namespace TfsBuildManager.Views
 {
     using System;
@@ -169,6 +170,39 @@ namespace TfsBuildManager.Views
                         else if (exdef.GitAgentSettings != null)
                         {
                             process.Add("AgentSettings", exdef.GitAgentSettings);
+                        }
+
+                        if (exdef.BuildReasons != null)
+                        {
+                            foreach (var key in exdef.BuildReasons.Keys)
+                            {
+                                if (process.ContainsKey(key))
+                                {
+                                    process[key] = exdef.BuildReasons[key];
+                                }
+                            }
+                        }
+
+                        if (exdef.IntegerParameters != null)
+                        {
+                            foreach (var key in exdef.IntegerParameters.Keys)
+                            {
+                                if (process.ContainsKey(key))
+                                {
+                                    process[key] = exdef.IntegerParameters[key];
+                                }
+                            }
+                        }
+
+                        if (exdef.BuildVerbosities != null)
+                        {
+                            foreach (var key in exdef.BuildVerbosities.Keys)
+                            {
+                                if (process.ContainsKey(key))
+                                {
+                                    process[key] = exdef.BuildVerbosities[key];
+                                }
+                            }
                         }
 
                         newBuildDefinition.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(process);
