@@ -137,7 +137,18 @@ namespace TfsBuildManager.Views
                                     Newtonsoft.Json.Linq.JObject objectItem = param.Value as Newtonsoft.Json.Linq.JObject;
                                     if (objectItem == null)
                                     {
-                                        process.Add(param.Key, param.Value);
+                                        if (param.Key == "CleanWorkspace")
+                                        {
+                                            process.Add(param.Key, (CleanWorkspaceOption)Enum.Parse(typeof(CleanWorkspaceOption), param.Value.ToString()));
+                                        }
+                                        else if (param.Key == "RunCodeAnalysis")
+                                        {
+                                            process.Add(param.Key, (CodeAnalysisOption)Enum.Parse(typeof(CodeAnalysisOption), param.Value.ToString()));
+                                        }
+                                        else
+                                        {
+                                            process.Add(param.Key, param.Value);
+                                        }
                                     }
                                     else
                                     {

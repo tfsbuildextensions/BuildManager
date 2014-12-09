@@ -1063,18 +1063,15 @@ namespace TfsBuildManager.Views
                 {
                     buildToExport.ProcessParameters[item.Key] = JsonConvert.DeserializeObject(item.Value.ToString());
                 }
-
-                if (item.Value.GetType() == typeof(BuildReason))
+                else if (item.Value.GetType() == typeof(BuildReason))
                 {
                     buildToExport.BuildReasons.Add(item.Key, (BuildReason)item.Value);
                 }
-
-                if (item.Value is int)
+                else if (item.Value is int)
                 {
                     buildToExport.IntegerParameters.Add(item.Key, (int)item.Value);
                 }
-
-                if (item.Value.GetType() == typeof(BuildVerbosity))
+                else if (item.Value.GetType() == typeof(BuildVerbosity))
                 {
                     buildToExport.BuildVerbosities.Add(item.Key, (BuildVerbosity)item.Value);
                 }
