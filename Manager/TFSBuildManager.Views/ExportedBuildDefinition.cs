@@ -10,7 +10,7 @@ namespace TfsBuildManager.Views
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
 
-    internal class ExportedBuildDefinition
+    public class ExportedBuildDefinition
     {
         public ExportedBuildDefinition()
         {

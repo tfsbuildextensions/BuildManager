@@ -11,30 +11,13 @@ namespace TFSBuildManager.Console
     using System.Reflection;
     using System.Text.RegularExpressions;
     using Microsoft.TeamFoundation.Build.Client;
-    using Microsoft.TeamFoundation.Build.Common;
-    using Microsoft.TeamFoundation.Build.Workflow;
-    using Microsoft.TeamFoundation.Build.Workflow.Activities;
-
-    using Newtonsoft.Json;
+    using Microsoft.TeamFoundation.Client;
     using TfsBuildManager.Views;
 
     public class Program
     {
+        private static readonly Dictionary<string, string> Arguments = new Dictionary<string, string>();
         private static ReturnCode rc = ReturnCode.NoErrors;
-        private static ConsoleAction action = ConsoleAction.ExportBuildDefinitions;
-        
-        private enum ConsoleAction
-        {
-            /// <summary>
-            /// ExportBuildDefinitions
-            /// </summary>
-            ExportBuildDefinitions = 1,
-  
-            /// <summary>
-            /// ImportBuildDefinitions
-            /// </summary>
-            ImportBuildDefinitions = 2
-        }
 
         private enum ReturnCode
         {
@@ -49,9 +32,9 @@ namespace TFSBuildManager.Console
             ArgumentsNotSupplied = -1000,
 
             /// <summary>
-            /// TfsUrlNotProvided
+            /// InvalidArgumentsSupplied
             /// </summary>
-            TfsUrlNotProvided = -1050,
+            InvalidArgumentsSupplied = -1500,
 
             /// <summary>
             /// UnhandledException
@@ -62,6 +45,62 @@ namespace TFSBuildManager.Console
             /// UsageRequested
             /// </summary>
             UsageRequested = -9000
+        }
+
+        internal static string Action
+        {
+            get
+            {
+                string action;
+                if (Arguments.TryGetValue("Action", out action))
+                {
+                    return action;
+                }
+
+                return "Export";
+            }
+        }
+
+        internal static string TeamProject
+        {
+            get
+            {
+                string project;
+                if (Arguments.TryGetValue("TeamProject", out project))
+                {
+                    return project;
+                }
+
+                throw new ArgumentNullException("TeamProject");
+            }
+        }
+
+        internal static Uri ProjectCollection
+        {
+            get
+            {
+                string collection;
+                if (Arguments.TryGetValue("ProjectCollection", out collection))
+                {
+                    return new Uri(collection);
+                }
+
+                throw new ArgumentNullException("ProjectCollection");
+            }
+        }
+
+        internal static string ExportPath
+        {
+            get
+            {
+                string path;
+                if (Arguments.TryGetValue("ExportPath", out path))
+                {
+                    return path;
+                }
+
+                throw new ArgumentNullException("ExportPath");
+            }
         }
 
         private static int Main(string[] args)
@@ -79,19 +118,29 @@ namespace TFSBuildManager.Console
                     return retval;
                 }
 
-                switch (action)
+                TfsTeamProjectCollection collection = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(ProjectCollection);
+
+                IBuildServer buildServer = (IBuildServer)collection.GetService(typeof(IBuildServer));
+
+                switch (Action.ToUpper())
                 {
-                    case ConsoleAction.ExportBuildDefinitions:
+                    case "EXPORT":
                         // ---------------------------------------------------
                         // Export the specified builds
                         // ---------------------------------------------------
-                        retval = ExportBuilds();
+                        retval = ExportBuilds(buildServer);
                         if (retval != 0)
                         {
                             return retval;
                         }
 
                         break;
+                    case "IMPORT":
+                        Console.WriteLine("ImportBuildDefinitions is not yet implemented");
+                        break;
+                    default:
+                        rc = ReturnCode.InvalidArgumentsSupplied;
+                        return (int)rc;
                 }
             }
             catch (Exception ex)
@@ -110,19 +159,38 @@ namespace TFSBuildManager.Console
             return (int)rc;
         }
 
-        private static int ExportBuilds()
+        private static int ExportBuilds(IBuildServer buildServer)
         {
-            throw new NotImplementedException();
+            IBuildDefinition[] defs = buildServer.QueryBuildDefinitions(TeamProject);
+
+            if (!Directory.Exists(ExportPath))
+            {
+                Console.WriteLine("ExportPath not found, creating: {0}", ExportPath);
+                Directory.CreateDirectory(ExportPath);
+            }
+
+            Console.WriteLine("Exporting {0} definitions to: {1}", defs.Length, ExportPath);
+            Console.WriteLine(string.Empty);
+
+            foreach (var b in defs)
+            {
+                Console.WriteLine(b.Name);
+                BuildManagerViewModel.ExportDefinition(new BuildDefinitionViewModel(b), ExportPath);
+            }
+            
+            Console.WriteLine(string.Empty);
+            Console.WriteLine("{0} definitions exported to: {1}", defs.Length, ExportPath);
+
+            return 0;
         }
 
         private static int ProcessArguments(string[] args)
         {
             if (args.Contains("/?") || args.Contains("/help"))
             {
-                Console.WriteLine(@"Syntax:\t\ctfsbm.exe /f:<files> | /auto [switches]\n");
-                Console.WriteLine("Optional Switches:\t\t\n");
-                Console.WriteLine("Samples:\t\t\n");
-
+                Console.WriteLine(@"Syntax: ctfsbm.exe /ProjectCollection:<ProjectCollection> /TeamProject:<TeamProject> /ExportPath:<ExportPath>");
+                Console.WriteLine("Argument names are case sensitive.\n");
+                Console.WriteLine(@"Sample: ctfsbm.exe /ProjectCollection:http://yourcollection:8080/tfs /TeamProject:""Your Team Project"" /ExportPath:""c:\myexporteddefs""");
                 return (int)ReturnCode.UsageRequested;
             }
 
@@ -134,89 +202,29 @@ namespace TFSBuildManager.Console
                 return (int)rc;
             }
 
-            Regex searchTerm = new Regex(@"/p:.*", RegexOptions.IgnoreCase);
+            Regex searchTerm = new Regex(@"/ProjectCollection:.*");
             bool propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
             if (propertiesargumentfound)
             {
-                // properties = args.First(item => item.Contains("/p:")).Replace("/p:", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                Arguments.Add("ProjectCollection", args.First(item => item.Contains("/ProjectCollection:")).Replace("/ProjectCollection:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/TeamProject:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("TeamProject", args.First(item => item.Contains("/TeamProject:")).Replace("/TeamProject:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/ExportPath:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("ExportPath", args.First(item => item.Contains("/ExportPath:")).Replace("/ExportPath:", string.Empty));
             }
 
             Console.Write("...Success\n");
             return 0;
-        }
-
-        private static void ExportDefinition(IBuildDefinition b, string filePath)
-        {
-            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition { Name = b.Name, Description = b.Description };
-            if (b.BuildController != null)
-            {
-                buildToExport.BuildController = b.BuildController.Name;
-            }
-
-            buildToExport.ContinuousIntegrationType = b.ContinuousIntegrationType;
-            buildToExport.DefaultDropLocation = b.DefaultDropLocation;
-            buildToExport.Schedules = new List<ExportedISchedule>();
-
-            foreach (var schedule in b.Schedules)
-            {
-                buildToExport.Schedules.Add(new ExportedISchedule { StartTime = schedule.StartTime, DaysToBuild = schedule.DaysToBuild, TimeZone = schedule.TimeZone });
-            }
-
-            buildToExport.SourceProviders = new List<ExportedIBuildDefinitionSourceProvider>();
-            foreach (var provider in b.SourceProviders)
-            {
-                buildToExport.SourceProviders.Add(new ExportedIBuildDefinitionSourceProvider { Fields = provider.Fields, Name = provider.Name, SupportedTriggerTypes = provider.SupportedTriggerTypes });
-            }
-
-            buildToExport.QueueStatus = b.QueueStatus;
-            buildToExport.ContinuousIntegrationQuietPeriod = b.ContinuousIntegrationQuietPeriod;
-
-            if (b.SourceProviders.All(s => s.Name != "TFGIT"))
-            {
-                buildToExport.Mappings = new List<ExportedIWorkspaceMapping>();
-                foreach (var map in b.Workspace.Mappings)
-                {
-                    buildToExport.Mappings.Add(new ExportedIWorkspaceMapping { Depth = map.Depth, LocalItem = map.LocalItem, MappingType = map.MappingType, ServerItem = map.ServerItem });
-                }
-            }
-
-            buildToExport.RetentionPolicyList = new List<ExportedIRetentionPolicy>();
-            foreach (var rp in b.RetentionPolicyList)
-            {
-                buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus, NumberToKeep = rp.NumberToKeep, DeleteOptions = rp.DeleteOptions });
-            }
-
-            if (b.Process != null)
-            {
-                buildToExport.ProcessTemplate = b.Process.ServerPath;
-            }
-
-            var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.ProcessParameters);
-            if (processParameters.ContainsKey("AgentSettings"))
-            {
-                if (processParameters["AgentSettings"].GetType() == typeof(AgentSettings))
-                {
-                    AgentSettings ags = (AgentSettings)processParameters["AgentSettings"];
-                    AgentSettingsBuildParameter agentSet = new AgentSettingsBuildParameter();
-                    agentSet.MaxExecutionTime = ags.MaxExecutionTime;
-                    agentSet.MaxWaitTime = ags.MaxWaitTime;
-                    agentSet.Name = ags.Name;
-                    agentSet.Comparison = ags.TagComparison;
-                    agentSet.Tags = ags.Tags;
-                    buildToExport.TfvcAgentSettings = agentSet;
-                }
-                else if (processParameters["AgentSettings"].GetType() == typeof(BuildParameter))
-                {
-                    BuildParameter ags = (BuildParameter)processParameters["AgentSettings"];
-                    {
-                        buildToExport.GitAgentSettings = ags;
-                    }
-                }
-            }
-
-            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.ProcessParameters);
-
-            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
         }
 
         private static void LogMessage(string message = null)
