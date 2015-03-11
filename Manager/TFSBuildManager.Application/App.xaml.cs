@@ -1,6 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="App.xaml.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using System.Diagnostics;
+
 namespace TfsBuildManager.Application
 {
     using System;
@@ -48,7 +51,8 @@ namespace TfsBuildManager.Application
 
         public void ShowBuild(Uri buildUri)
         {
-            ShowNotSupportedMessage();
+            var buildUrl = string.Format("{0}?url={1}", buildUri, collection.Uri);
+            Process.Start(buildUrl);
         }
 
         public void EditBuildDefinition(Uri buildDefinition)
