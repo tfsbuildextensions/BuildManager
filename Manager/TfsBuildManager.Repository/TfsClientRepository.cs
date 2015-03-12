@@ -214,6 +214,16 @@ namespace TfsBuildManager.Repository
             }
         }
 
+        public void SetPriority(IEnumerable<Uri> buildDefinitionUris, QueuePriority queuePriority)
+        {
+            var queuedBuildSpec = buildServer.CreateBuildQueueSpec(buildDefinitionUris);
+            foreach (var build in buildServer.QueryQueuedBuilds(queuedBuildSpec).QueuedBuilds)
+            {
+                build.Priority = queuePriority;
+                build.Save();
+            }
+        }
+
         public bool OpenDropFolder(IEnumerable<string> folders)
         {
             bool dropFolderFound = false;

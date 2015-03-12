@@ -259,6 +259,18 @@
               <Views:BuildsGrid.ContextMenu>
                 <ContextMenu>
                   <MenuItem Command="{Binding ShowQueuedDetailsCommand}" Header="Open"/>
+                      <MenuItem Header="Set Priority">
+                      <MenuItem Command="{Binding SetHighPriorityCommand}"
+                                  Header="High" />
+                      <MenuItem Command="{Binding SetAboveNormalPriorityCommand}"
+                                  Header="Above Normal" />
+                      <MenuItem Command="{Binding SetNormalPriorityCommand}"
+                                Header="Normal" />
+                      <MenuItem Command="{Binding SetBelowNormalPriorityCommand}"
+                                Header="Below Normal" />
+                      <MenuItem Command="{Binding SetLowPriorityCommand}"
+                                Header="Low" />
+                  </MenuItem>
                   <MenuItem Command="{Binding StopBuildCommand}" Header="Stop / Cancel">
                     <MenuItem.Icon>
                       <Image Source="Graphics/Stopped.png" Width="16" Height="16" />
