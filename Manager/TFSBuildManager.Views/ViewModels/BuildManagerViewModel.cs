@@ -55,11 +55,11 @@ namespace TfsBuildManager.Views
             this.StopBuildCommand = new DelegateCommand(this.OnStopBuild);
             this.DisabledQueuedDefinitionCommand = new DelegateCommand(this.OnDisabledQueuedDefinition);
             this.PauseQueuedDefinitionCommand = new DelegateCommand(this.OnPauseQueuedDefinition);
-            SetHighPriorityCommand = new DelegateCommand(() => SetPriority(QueuePriority.High));
-            SetAboveNormalPriorityCommand = new DelegateCommand(() => SetPriority(QueuePriority.AboveNormal));
-            SetNormalPriorityCommand = new DelegateCommand(() => SetPriority(QueuePriority.Normal));
-            SetBelowNormalPriorityCommand = new DelegateCommand(() => SetPriority(QueuePriority.BelowNormal));
-            SetLowPriorityCommand = new DelegateCommand(() => SetPriority(QueuePriority.Low));
+            SetHighPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.High));
+            SetAboveNormalPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.AboveNormal));
+            SetNormalPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.Normal));
+            SetBelowNormalPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.BelowNormal));
+            SetLowPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.Low));
             this.ResumeBuildCommand = new DelegateCommand(this.OnResumeBuild);
             this.ChangeBuildTemplateCommand = new DelegateCommand(this.OnChangeBuildTemplate);
             this.SetDefaultBuildTemplateCommand = new DelegateCommand(this.OnSetDefaultBuildTemplate, this.OnCanSetDefaultBuildTemplate);
@@ -794,7 +794,7 @@ namespace TfsBuildManager.Views
             }
         }
 
-        void SetPriority(QueuePriority priority)
+        void SetQueuedBuildPriority(QueuePriority priority)
         {
             try
             {
@@ -807,7 +807,7 @@ namespace TfsBuildManager.Views
 
                 using (new WaitCursor())
                 {
-                    repository.SetPriority(items.Select(b => b.BuildDefinitionUri), priority);
+                    repository.SetQueuedBuildPriority(items.Select(b => b.BuildDefinitionUri), priority);
                     OnRefresh(new EventArgs());
                 }
             }
