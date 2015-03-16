@@ -55,6 +55,11 @@ namespace TfsBuildManager.Views
             this.StopBuildCommand = new DelegateCommand(this.OnStopBuild);
             this.DisabledQueuedDefinitionCommand = new DelegateCommand(this.OnDisabledQueuedDefinition);
             this.PauseQueuedDefinitionCommand = new DelegateCommand(this.OnPauseQueuedDefinition);
+            SetHighPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.High));
+            SetAboveNormalPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.AboveNormal));
+            SetNormalPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.Normal));
+            SetBelowNormalPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.BelowNormal));
+            SetLowPriorityCommand = new DelegateCommand(() => SetQueuedBuildPriority(QueuePriority.Low));
             this.ResumeBuildCommand = new DelegateCommand(this.OnResumeBuild);
             this.ChangeBuildTemplateCommand = new DelegateCommand(this.OnChangeBuildTemplate);
             this.SetDefaultBuildTemplateCommand = new DelegateCommand(this.OnSetDefaultBuildTemplate, this.OnCanSetDefaultBuildTemplate);
@@ -148,6 +153,16 @@ namespace TfsBuildManager.Views
         public ICommand DisabledQueuedDefinitionCommand { get; private set; }
 
         public ICommand PauseQueuedDefinitionCommand { get; private set; }
+
+        public ICommand SetHighPriorityCommand { get; private set; }
+
+        public ICommand SetAboveNormalPriorityCommand { get; private set; }
+
+        public ICommand SetNormalPriorityCommand { get; private set; }
+
+        public ICommand SetBelowNormalPriorityCommand { get; private set; }
+
+        public ICommand SetLowPriorityCommand { get; private set; }
         
         public ICommand RetainIndefinitelyCommand { get; private set; }
 
@@ -776,6 +791,29 @@ namespace TfsBuildManager.Views
             catch (Exception ex)
             {
                 this.view.DisplayError(ex);
+            }
+        }
+
+        void SetQueuedBuildPriority(QueuePriority priority)
+        {
+            try
+            {
+                var items = view.SelectedActiveBuilds.ToList();
+                
+                if (!items.Any())
+                {
+                    return;
+                }
+
+                using (new WaitCursor())
+                {
+                    repository.SetQueuedBuildPriority(items.Select(b => b.BuildDefinitionUri), priority);
+                    OnRefresh(new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                view.DisplayError(ex);
             }
         }
 

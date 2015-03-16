@@ -124,5 +124,6 @@ namespace TfsBuildManager.Repository
         VersionControlType GetVersionControlType(IBuildDefinition buildDefinition);
 
         void UpdateOutputLocation(IEnumerable<Uri> buildDefinitions, string location);
+        void SetQueuedBuildPriority(IEnumerable<Uri> buildDefinitionUris, QueuePriority queuePriority);
     }
 }
