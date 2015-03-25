@@ -129,7 +129,7 @@ namespace TfsBuildManager.Views
 
                         foreach (var param in exdef.ProcessParameters)
                         {
-                            if (param.Key != "AgentSettings" && param.Key != "BuildSettings")
+                            if (param.Key != "AgentSettings" && param.Key != "BuildSettings" && param.Key != "TestSpecs")
                             {
                                 Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
                                 if (arrayItem == null)
@@ -181,6 +181,26 @@ namespace TfsBuildManager.Views
                         else if (exdef.GitAgentSettings != null)
                         {
                             process.Add("AgentSettings", exdef.GitAgentSettings);
+                        }
+
+                        if (exdef.AgileTestSpecs != null)
+                        {
+                            TestSpecList tsl = new TestSpecList();
+                            foreach (var aitem in exdef.AgileTestSpecs)
+                            {
+                                AgileTestPlatformSpec agileSpec = new AgileTestPlatformSpec();
+                                agileSpec.AssemblyFileSpec = aitem.AssemblyFileSpec;
+                                agileSpec.ExecutionPlatform = aitem.ExecutionPlatform;
+                                agileSpec.FailBuildOnFailure = aitem.FailBuildOnFailure;
+                                agileSpec.RunName = aitem.RunName;
+                                agileSpec.TestCaseFilter = aitem.TestCaseFilter;
+                                agileSpec.RunSettingsForTestRun = new RunSettings();
+                                agileSpec.RunSettingsForTestRun.ServerRunSettingsFile = aitem.RunSettingsFileName;
+                                agileSpec.RunSettingsForTestRun.TypeRunSettings = aitem.TypeRunSettings;
+                                tsl.Add(agileSpec);
+                            }
+
+                            process.Add("TestSpecs", tsl);
                         }
 
                         if (exdef.BuildReasons != null)

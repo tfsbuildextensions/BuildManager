@@ -27,6 +27,8 @@ namespace TfsBuildManager.Views
 
         public string BuildController { get; set; }
 
+        public List<ExportedAgileTestPlatformSpec> AgileTestSpecs { get; set; }
+        
         public StringList ProjectsToBuild { get; set; }
 
         public PlatformConfigurationList ConfigurationsToBuild { get; set; }

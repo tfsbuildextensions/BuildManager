@@ -113,7 +113,7 @@ namespace TfsBuildManager.Views
         public ICommand DeleteCommand { get; private set; }
 
         public ICommand DisableCommand { get; private set; }
-        
+
         public ICommand PauseCommand { get; private set; }
 
         public ICommand EnableCommand { get; private set; }
@@ -145,7 +145,7 @@ namespace TfsBuildManager.Views
         public ICommand ViewBuildLogsCommand { get; private set; }
 
         public ICommand ShowQueuedDetailsCommand { get; private set; }
-        
+
         public ICommand ResumeBuildCommand { get; private set; }
 
         public ICommand StopBuildCommand { get; private set; }
@@ -163,7 +163,7 @@ namespace TfsBuildManager.Views
         public ICommand SetBelowNormalPriorityCommand { get; private set; }
 
         public ICommand SetLowPriorityCommand { get; private set; }
-        
+
         public ICommand RetainIndefinitelyCommand { get; private set; }
 
         public ICommand SetBuildQualityCommand { get; private set; }
@@ -187,7 +187,7 @@ namespace TfsBuildManager.Views
         public ICommand SetRetentionPoliciesCommand { get; private set; }
 
         public ICommand ChangeProcessParameterCommand { get; private set; }
-        
+
         public ICommand QueueBuildsCommand { get; private set; }
 
         public ICommand QueueHighBuildsCommand { get; private set; }
@@ -205,7 +205,7 @@ namespace TfsBuildManager.Views
         public ICommand RemapWorkspacesCommand { get; private set; }
 
         public ICommand RefreshCurrentView { get; private set; }
-        
+
         public ICommand ImportBuildDefinition { get; private set; }
 
         public ObservableCollection<BuildDefinitionViewModel> BuildDefinitions { get; private set; }
@@ -437,6 +437,31 @@ namespace TfsBuildManager.Views
                     if (buildSettings.HasPlatformConfigurations)
                     {
                         buildToExport.ConfigurationsToBuild = buildSettings.PlatformConfigurations;
+                    }
+                }
+            }
+
+            if (processParameters.ContainsKey("TestSpecs"))
+            {
+                var testSpecs = processParameters["TestSpecs"] as TestSpecList;
+                if (testSpecs != null)
+                {
+                    buildToExport.AgileTestSpecs = new List<ExportedAgileTestPlatformSpec>();
+                    foreach (var spec in testSpecs)
+                    {
+                        var agilespec = spec as AgileTestPlatformSpec;
+                        if (agilespec != null)
+                        {
+                            ExportedAgileTestPlatformSpec expAgileSpec = new ExportedAgileTestPlatformSpec();
+                            expAgileSpec.AssemblyFileSpec = agilespec.AssemblyFileSpec;
+                            expAgileSpec.ExecutionPlatform = agilespec.ExecutionPlatform;
+                            expAgileSpec.FailBuildOnFailure = agilespec.FailBuildOnFailure;
+                            expAgileSpec.RunName = agilespec.RunName;
+                            expAgileSpec.TestCaseFilter = agilespec.TestCaseFilter;
+                            expAgileSpec.RunSettingsFileName = agilespec.RunSettingsForTestRun.ServerRunSettingsFile;
+                            expAgileSpec.TypeRunSettings = agilespec.RunSettingsForTestRun.TypeRunSettings;
+                            buildToExport.AgileTestSpecs.Add(expAgileSpec);
+                        }                        
                     }
                 }
             }
@@ -799,7 +824,7 @@ namespace TfsBuildManager.Views
             try
             {
                 var items = this.view.SelectedActiveBuilds.ToList();
-                
+
                 if (!items.Any())
                 {
                     return;
@@ -1189,7 +1214,7 @@ namespace TfsBuildManager.Views
         {
             this.OnRefresh(new EventArgs());
         }
-        
+
         private void OnImportBuildDefinition()
         {
             if (this.view.SelectedTeamProject == "All")
@@ -1369,7 +1394,7 @@ namespace TfsBuildManager.Views
         private void OnRemapWorkspaces()
         {
             try
-            {   
+            {
                 if (this.selectedBuildView == BuildView.BuildDefinitions)
                 {
                     var buildDefinition = this.view.SelectedItems.First().BuildDefinition;
@@ -1631,7 +1656,7 @@ namespace TfsBuildManager.Views
                 this.view.DisplayError(ex);
             }
         }
-        
+
         private void OnChangeOutputLocationAsConfiguredCommand()
         {
             var items = this.view.SelectedItems;
