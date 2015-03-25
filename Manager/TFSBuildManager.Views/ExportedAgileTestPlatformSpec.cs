@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------
 namespace TfsBuildManager.Views
 {
-    using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
 
     public class ExportedAgileTestPlatformSpec

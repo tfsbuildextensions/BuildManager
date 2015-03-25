@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="Controls\HighlightTextBlock.cs" />
     <Compile Include="BuildImport.cs" />
+    <Compile Include="ExportedMSTestSpec.cs" />
     <Compile Include="ExportedBuildDefinition.cs" />
     <Compile Include="ExportedIBuildDefinitionSourceProvider.cs" />
     <Compile Include="ExportedAgileTestPlatformSpec.cs" />

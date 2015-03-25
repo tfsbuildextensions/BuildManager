@@ -461,7 +461,22 @@ namespace TfsBuildManager.Views
                             expAgileSpec.RunSettingsFileName = agilespec.RunSettingsForTestRun.ServerRunSettingsFile;
                             expAgileSpec.TypeRunSettings = agilespec.RunSettingsForTestRun.TypeRunSettings;
                             buildToExport.AgileTestSpecs.Add(expAgileSpec);
-                        }                        
+                        }
+                        else
+                        {
+                            var mstestspec = spec as MSTestSpec;
+                            if (mstestspec != null)
+                            {
+                                ExportedMSTestSpec expMsTestSpec = new ExportedMSTestSpec();
+                                expMsTestSpec.CategoryFilter = mstestspec.CategoryFilter;
+                                expMsTestSpec.FailBuildOnFailure = mstestspec.FailBuildOnFailure;
+                                expMsTestSpec.MSTestCommandLineArgs = mstestspec.MSTestCommandLineArgs;
+                                expMsTestSpec.MaximumPriority = mstestspec.MaximumPriority;
+                                expMsTestSpec.MinimumPriority = mstestspec.MinimumPriority;
+                                expMsTestSpec.RunName = mstestspec.RunName;
+                                buildToExport.MSTestSpecs.Add(expMsTestSpec);
+                            }
+                        }
                     }
                 }
             }
