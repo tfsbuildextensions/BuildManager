@@ -216,8 +216,8 @@ namespace TfsBuildManager.Repository
 
         public void SetQueuedBuildPriority(IEnumerable<Uri> buildDefinitionUris, QueuePriority queuePriority)
         {
-            var queuedBuildSpec = buildServer.CreateBuildQueueSpec(buildDefinitionUris);
-            foreach (var build in buildServer.QueryQueuedBuilds(queuedBuildSpec).QueuedBuilds)
+            var queuedBuildSpec = this.buildServer.CreateBuildQueueSpec(buildDefinitionUris);
+            foreach (var build in this.buildServer.QueryQueuedBuilds(queuedBuildSpec).QueuedBuilds)
             {
                 build.Priority = queuePriority;
                 build.Save();
