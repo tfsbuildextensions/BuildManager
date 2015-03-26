@@ -88,3 +88,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Scope = "member", Target = "TfsBuildManager.Views.ExportedBuildDefinition.#TestParameters")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Scope = "member", Target = "TfsBuildManager.Views.ExportedBuildDefinition.#RetentionPolicyList")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Scope = "member", Target = "TfsBuildManager.Views.ExportedBuildDefinition.#ProcessParameters")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member", Target = "TfsBuildManager.Views.ExportedBuildDefinition.#AgileTestSpecs")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "TfsBuildManager.Views.BuildManagerViewModel.#ExportDefinition(TfsBuildManager.Views.BuildDefinitionViewModel,System.String)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Scope = "member", Target = "TfsBuildManager.Views.ExportedBuildDefinition.#AgileTestSpecs")]
