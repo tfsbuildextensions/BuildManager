@@ -393,7 +393,7 @@ namespace TfsBuildManager.Repository
                 var newProcessTemplate = this.buildServer.QueryProcessTemplates(bd.TeamProject).FirstOrDefault(pt => pt.ServerPath == serverPath) ??
                     this.buildServer.CreateProcessTemplate(bd.TeamProject, serverPath);
 
-                if (string.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, StringComparison.OrdinalIgnoreCase) != 0)
+                if (bd.Process == null || string.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     bd.Process = newProcessTemplate;
                     bd.Save();
