@@ -3,13 +3,22 @@
 //-----------------------------------------------------------------------
 namespace TfsBuildManager.Views
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Build.Common;
+    using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
 
-    internal class ExportedBuildDefinition
+    public class ExportedBuildDefinition
     {
+        public ExportedBuildDefinition()
+        {
+            this.BuildReasons = new Dictionary<string, BuildReason>();
+            this.IntegerParameters = new Dictionary<string, int>();
+            this.BuildVerbosities = new Dictionary<string, BuildVerbosity>();
+        }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -18,6 +27,8 @@ namespace TfsBuildManager.Views
 
         public string BuildController { get; set; }
 
+        public List<ExportedAgileTestPlatformSpec> AgileTestSpecs { get; set; }
+        
         public StringList ProjectsToBuild { get; set; }
 
         public PlatformConfigurationList ConfigurationsToBuild { get; set; }
@@ -45,5 +56,11 @@ namespace TfsBuildManager.Views
         public List<ExportedIRetentionPolicy> RetentionPolicyList { get; set; }
 
         public IDictionary<string, object> ProcessParameters { get; set; }
+
+        public IDictionary<string, BuildReason> BuildReasons { get; private set; }
+
+        public IDictionary<string, int> IntegerParameters { get; private set; }
+
+        public IDictionary<string, BuildVerbosity> BuildVerbosities { get; private set; }
     }
 }

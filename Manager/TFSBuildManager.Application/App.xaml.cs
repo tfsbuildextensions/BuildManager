@@ -4,6 +4,7 @@
 namespace TfsBuildManager.Application
 {
     using System;
+    using System.Diagnostics;
     using System.Windows;
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Client;
@@ -48,7 +49,8 @@ namespace TfsBuildManager.Application
 
         public void ShowBuild(Uri buildUri)
         {
-            ShowNotSupportedMessage();
+            var buildUrl = string.Format("{0}?url={1}", buildUri, this.collection.Uri);
+            Process.Start(buildUrl);
         }
 
         public void EditBuildDefinition(Uri buildDefinition)

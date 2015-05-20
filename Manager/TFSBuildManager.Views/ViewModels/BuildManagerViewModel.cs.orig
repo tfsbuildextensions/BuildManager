@@ -1097,6 +1097,103 @@ namespace TfsBuildManager.Views
             return shortest;
         }
 
+<<<<<<< HEAD
+        private static void ExportDefinition(BuildDefinitionViewModel b, string filePath)
+        {
+            ExportedBuildDefinition buildToExport = new ExportedBuildDefinition { Name = b.BuildDefinition.Name, Description = b.BuildDefinition.Description };
+            if (b.BuildDefinition.BuildController != null)
+            {
+                buildToExport.BuildController = b.BuildDefinition.BuildController.Name;
+            }
+
+            buildToExport.ContinuousIntegrationType = b.BuildDefinition.ContinuousIntegrationType;
+            buildToExport.DefaultDropLocation = b.BuildDefinition.DefaultDropLocation;
+            buildToExport.Schedules = new List<ExportedISchedule>();
+
+            foreach (var schedule in b.BuildDefinition.Schedules)
+            {
+                buildToExport.Schedules.Add(new ExportedISchedule { StartTime = schedule.StartTime, DaysToBuild = schedule.DaysToBuild, TimeZone = schedule.TimeZone });
+            }
+
+            buildToExport.SourceProviders = new List<ExportedIBuildDefinitionSourceProvider>();
+            foreach (var provider in b.BuildDefinition.SourceProviders)
+            {
+                buildToExport.SourceProviders.Add(new ExportedIBuildDefinitionSourceProvider { Fields = provider.Fields, Name = provider.Name, SupportedTriggerTypes = provider.SupportedTriggerTypes });
+            }
+
+            buildToExport.QueueStatus = b.BuildDefinition.QueueStatus;
+            buildToExport.ContinuousIntegrationQuietPeriod = b.BuildDefinition.ContinuousIntegrationQuietPeriod;
+
+            if (b.BuildDefinition.SourceProviders.All(s => s.Name != "TFGIT"))
+            {
+                buildToExport.Mappings = new List<ExportedIWorkspaceMapping>();
+                foreach (var map in b.BuildDefinition.Workspace.Mappings)
+                {
+                    buildToExport.Mappings.Add(new ExportedIWorkspaceMapping { Depth = map.Depth, LocalItem = map.LocalItem, MappingType = map.MappingType, ServerItem = map.ServerItem });
+                }
+            }
+
+            buildToExport.RetentionPolicyList = new List<ExportedIRetentionPolicy>();
+            foreach (var rp in b.BuildDefinition.RetentionPolicyList)
+            {
+                buildToExport.RetentionPolicyList.Add(new ExportedIRetentionPolicy { BuildDefinition = rp.BuildDefinition, BuildReason = rp.BuildReason, BuildStatus = rp.BuildStatus, NumberToKeep = rp.NumberToKeep, DeleteOptions = rp.DeleteOptions });
+            }
+
+            if (b.BuildDefinition.Process != null)
+            {
+                buildToExport.ProcessTemplate = b.BuildDefinition.Process.ServerPath;
+            }
+
+            var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+            if (processParameters.ContainsKey("AgentSettings"))
+            {
+                if (processParameters["AgentSettings"].GetType() == typeof(AgentSettings))
+                {
+                    AgentSettings ags = (AgentSettings)processParameters["AgentSettings"];
+                    AgentSettingsBuildParameter agentSet = new AgentSettingsBuildParameter();
+                    agentSet.MaxExecutionTime = ags.MaxExecutionTime;
+                    agentSet.MaxWaitTime = ags.MaxWaitTime;
+                    agentSet.Name = ags.Name;
+                    agentSet.Comparison = ags.TagComparison;
+                    agentSet.Tags = ags.Tags;
+                    buildToExport.TfvcAgentSettings = agentSet;
+                }
+                else if (processParameters["AgentSettings"].GetType() == typeof(BuildParameter))
+                {
+                    BuildParameter ags = (BuildParameter)processParameters["AgentSettings"];
+                    {
+                        buildToExport.GitAgentSettings = ags;
+                    }
+                }
+            }
+
+            if (processParameters.ContainsKey("BuildSettings"))
+            {
+                var buildSettings = processParameters["BuildSettings"] as BuildSettings;
+                if (buildSettings != null && buildSettings.HasProjectsToBuild)
+                {
+                    buildToExport.ProjectsToBuild = buildSettings.ProjectsToBuild;
+                    if (buildSettings.HasPlatformConfigurations)
+                    {
+                        buildToExport.ConfigurationsToBuild = buildSettings.PlatformConfigurations;
+                    }
+                }
+            }
+
+            buildToExport.ProcessParameters = WorkflowHelpers.DeserializeProcessParameters(b.BuildDefinition.ProcessParameters);
+            foreach (KeyValuePair<string, object> item in processParameters)
+            {
+                if (item.Value.GetType() == typeof(Microsoft.TeamFoundation.Build.Common.BuildParameter))
+                {
+                    buildToExport.ProcessParameters[item.Key] = JsonConvert.DeserializeObject(item.Value.ToString());
+                }
+            }
+
+            File.WriteAllText(Path.Combine(filePath, b.Name + ".json"), JsonConvert.SerializeObject(buildToExport, Formatting.Indented));
+        }
+
+=======
+>>>>>>> upstream/master
         private void ShowNoBranchMessage(string project)
         {
             MessageBox.Show(this.owner, "Could not locate branch object for " + project, "Clone Build To Branch", MessageBoxButton.OK, MessageBoxImage.Stop);

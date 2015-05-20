@@ -214,6 +214,16 @@ namespace TfsBuildManager.Repository
             }
         }
 
+        public void SetQueuedBuildPriority(IEnumerable<Uri> buildDefinitionUris, QueuePriority queuePriority)
+        {
+            var queuedBuildSpec = this.buildServer.CreateBuildQueueSpec(buildDefinitionUris);
+            foreach (var build in this.buildServer.QueryQueuedBuilds(queuedBuildSpec).QueuedBuilds)
+            {
+                build.Priority = queuePriority;
+                build.Save();
+            }
+        }
+
         public bool OpenDropFolder(IEnumerable<string> folders)
         {
             bool dropFolderFound = false;
@@ -383,7 +393,7 @@ namespace TfsBuildManager.Repository
                 var newProcessTemplate = this.buildServer.QueryProcessTemplates(bd.TeamProject).FirstOrDefault(pt => pt.ServerPath == serverPath) ??
                     this.buildServer.CreateProcessTemplate(bd.TeamProject, serverPath);
 
-                if (string.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, StringComparison.OrdinalIgnoreCase) != 0)
+                if (bd.Process == null || string.Compare(bd.Process.ServerPath, newProcessTemplate.ServerPath, StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     bd.Process = newProcessTemplate;
                     bd.Save();
@@ -430,6 +440,26 @@ namespace TfsBuildManager.Repository
                 {
                     bd.BatchSize = submissions;
                 }
+                
+                bd.Save();
+            }
+        }
+
+        public void UpdateTrigger(IEnumerable<Uri> buildDefinitions, DefinitionTriggerType triggerType, ScheduleDays scheduleDays, DateTime scheduleTime, TimeZoneInfo timeZoneInfo)
+        {
+            foreach (var bd in this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray()))
+            {
+                bd.TriggerType = triggerType;
+
+                if (bd.Schedules.Any())
+                {
+                    bd.Schedules.Clear();
+                }
+
+                var schedule = bd.AddSchedule();
+                schedule.DaysToBuild = scheduleDays;
+                schedule.StartTime = (int)scheduleTime.TimeOfDay.TotalSeconds;
+                schedule.TimeZone = timeZoneInfo;
 
                 bd.Save();
             }

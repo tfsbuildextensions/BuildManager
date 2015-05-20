@@ -1,9 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildControllerViewModel.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
 namespace TfsBuildManager.Views.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.TeamFoundation.Build.Client;
@@ -72,6 +72,12 @@ namespace TfsBuildManager.Views.ViewModels
         public int Submissions { get; set; }
 
         public DefinitionTriggerType TriggerType { get; set; }
+
+        public ScheduleDays ScheduleDays { get; set; }
+
+        public DateTime ScheduleTime { get; set; }
+
+        public TimeZoneInfo TimeZoneInfo { get; set; }
     }
 
     public class BuildControllerListViewModel : ViewModelBase

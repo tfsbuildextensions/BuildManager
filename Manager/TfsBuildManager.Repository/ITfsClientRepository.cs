@@ -77,6 +77,8 @@ namespace TfsBuildManager.Repository
 
         void UpdateTrigger(IEnumerable<Uri> buildDefinitions, int minutes, int submissions, DefinitionTriggerType triggerType);
 
+        void UpdateTrigger(IEnumerable<Uri> buildDefinitions, DefinitionTriggerType triggerType, ScheduleDays scheduleDays, DateTime scheduleTime, TimeZoneInfo timeZoneInfo);
+
         void SetDefaultDropLocation(IEnumerable<Uri> buildDefinitions, string newDropLocation, Dictionary<string, string> macros, bool replaceInExistingBuilds);
 
         void QueueBuilds(IEnumerable<Uri> buildDefinitions);
@@ -122,5 +124,7 @@ namespace TfsBuildManager.Repository
         VersionControlType GetVersionControlType(IBuildDefinition buildDefinition);
 
         void UpdateOutputLocation(IEnumerable<Uri> buildDefinitions, string location);
+
+        void SetQueuedBuildPriority(IEnumerable<Uri> buildDefinitionUris, QueuePriority queuePriority);
     }
 }
