@@ -13,6 +13,7 @@ namespace TFSBuildManager.Console
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Client;
     using TfsBuildManager.Views;
+    using System.Net;
 
     public class Program
     {
@@ -103,6 +104,33 @@ namespace TFSBuildManager.Console
             }
         }
 
+        internal static string Username
+        {
+            get
+            {
+                string username;
+                if (Arguments.TryGetValue("Username", out username))
+                {
+                    return username;
+                }
+
+                throw new ArgumentNullException("Username");
+            }
+        }
+
+        internal static string Password
+        {
+            get
+            {
+                string password;
+                if (Arguments.TryGetValue("Password", out password))
+                {
+                    return password;
+                }
+
+                throw new ArgumentNullException("Password");
+            }
+        }
         private static int Main(string[] args)
         {
             Console.WriteLine("Community TFS Build Manager Console - {0}\n", GetFileVersion(Assembly.GetExecutingAssembly()));
@@ -118,7 +146,14 @@ namespace TFSBuildManager.Console
                     return retval;
                 }
 
-                TfsTeamProjectCollection collection = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(ProjectCollection);
+                NetworkCredential netCred = new NetworkCredential(Username, Password);
+                BasicAuthCredential basicCred = new BasicAuthCredential(netCred);
+                TfsClientCredentials tfsCred = new TfsClientCredentials(basicCred);
+                tfsCred.AllowInteractive = false;
+
+                TfsTeamProjectCollection collection = new TfsTeamProjectCollection(ProjectCollection, tfsCred);
+
+                collection.Authenticate();
 
                 IBuildServer buildServer = (IBuildServer)collection.GetService(typeof(IBuildServer));
 
@@ -221,6 +256,20 @@ namespace TFSBuildManager.Console
             if (propertiesargumentfound)
             {
                 Arguments.Add("ExportPath", args.First(item => item.Contains("/ExportPath:")).Replace("/ExportPath:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/Username:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("Username", args.First(item => item.Contains("/Username:")).Replace("/Username:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/Password:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("Password", args.First(item => item.Contains("/Password:")).Replace("/Password:", string.Empty));
             }
 
             Console.Write("...Success\n");
