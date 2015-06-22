@@ -89,7 +89,7 @@ namespace TfsBuildManager.Repository
 
         string CloneBuild(Uri buildDefinition, string newName, Branch source, Branch target);
 
-        string CloneGitBuild(Uri buildDefinition, string newName);
+        string CloneGitBuild(Uri buildDefinition, string newName, bool forceDisabled);
 
         IEnumerable<Branch> GetChildBranchObjectsForItem(string item);
 

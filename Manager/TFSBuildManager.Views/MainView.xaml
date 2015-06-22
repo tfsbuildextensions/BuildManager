@@ -220,6 +220,7 @@
                 <MenuItem Command="{Binding CloneBuildsCommand}" Header="To Branch (TFVC)"/>
                 <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="To Project (TFVC)"/>
                 <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="In Place (Git)"/>
+                <MenuItem Command="{Binding CloneGitBuildsDisabledCommand}" Header="In Place (Git) Disabled"/>
               </MenuItem>
               <MenuItem Command="{Binding ExportDefinitionCommand}" Header="Export">
                 <MenuItem.Icon>
@@ -259,16 +260,16 @@
               <Views:BuildsGrid.ContextMenu>
                 <ContextMenu>
                   <MenuItem Command="{Binding ShowQueuedDetailsCommand}" Header="Open"/>
-                      <MenuItem Header="Set Priority">
-                      <MenuItem Command="{Binding SetHighPriorityCommand}"
+                  <MenuItem Header="Set Priority">
+                    <MenuItem Command="{Binding SetHighPriorityCommand}"
                                   Header="High" />
-                      <MenuItem Command="{Binding SetAboveNormalPriorityCommand}"
+                    <MenuItem Command="{Binding SetAboveNormalPriorityCommand}"
                                   Header="Above Normal" />
-                      <MenuItem Command="{Binding SetNormalPriorityCommand}"
+                    <MenuItem Command="{Binding SetNormalPriorityCommand}"
                                 Header="Normal" />
-                      <MenuItem Command="{Binding SetBelowNormalPriorityCommand}"
+                    <MenuItem Command="{Binding SetBelowNormalPriorityCommand}"
                                 Header="Below Normal" />
-                      <MenuItem Command="{Binding SetLowPriorityCommand}"
+                    <MenuItem Command="{Binding SetLowPriorityCommand}"
                                 Header="Low" />
                   </MenuItem>
                   <MenuItem Command="{Binding StopBuildCommand}" Header="Stop / Cancel">

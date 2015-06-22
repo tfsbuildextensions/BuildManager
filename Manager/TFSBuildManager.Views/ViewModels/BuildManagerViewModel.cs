@@ -83,6 +83,7 @@ namespace TfsBuildManager.Views
             this.ExportDefinitionCommand = new DelegateCommand(this.OnExportBuildDefinition);
             this.CloneBuildsCommand = new DelegateCommand(this.OnCloneBuilds, this.OnCanCloneBuilds);
             this.CloneGitBuildsCommand = new DelegateCommand(this.OnCloneGitBuilds, this.OnCanCloneBuilds);
+            this.CloneGitBuildsDisabledCommand = new DelegateCommand(this.CloneGitBuildsDisabled, this.OnCanCloneBuilds);
             this.CloneBuildToProjectCommand = new DelegateCommand(this.OnCloneBuildToProject, this.OnCanCloneBuilds);
             this.RemapWorkspacesCommand = new DelegateCommand(this.OnRemapWorkspaces, this.OnCanRemapWorkspaces);
             this.QueueBuildsCommand = new DelegateCommand(this.OnQueueBuilds, this.OnCanQueueBuilds);
@@ -198,6 +199,8 @@ namespace TfsBuildManager.Views
 
         public ICommand CloneGitBuildsCommand { get; private set; }
 
+        public ICommand CloneGitBuildsDisabledCommand { get; private set; }
+        
         public ICommand CloneBuildToProjectCommand { get; private set; }
 
         public ICommand GenerateBuildResourcesCommand { get; private set; }
@@ -1294,7 +1297,7 @@ namespace TfsBuildManager.Views
 
                     using (new WaitCursor())
                     {
-                        this.repository.CloneGitBuild(item.Uri, item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-"));
+                        this.repository.CloneGitBuild(item.Uri, item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-"), false);
                         this.OnRefresh(new EventArgs());
                     }
                 }
@@ -1304,6 +1307,44 @@ namespace TfsBuildManager.Views
                 this.view.DisplayError(ex);
             }
         }
+
+        private void CloneGitBuildsDisabled()
+        {
+            try
+            {
+                var items = this.view.SelectedItems.ToList();
+                if (!items.Any())
+                {
+                    return;
+                }
+
+                foreach (var item in items)
+                {
+                    // check for corrupted builds caused by the TFS Power Tools Clone feature.
+                    if (item.BuildDefinition.SourceProviders.Any(s => s.Name.ToUpperInvariant().Contains("TFVC")))
+                    {
+                        MessageBox.Show(string.Format("{0} appears to be bound to TFVC rather than Git.\n\nIf you cloned this build using the TFS Power Tools Clone menu, it will have corrupted your definition. You should create a new definition and delete this one.", item.Name), "Error Exporting " + item.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Note that if a Git build pulls from a repo then its sourceprovider is TFGIT. If it does not, then its SourceProvider is GIT
+                    if (!item.BuildDefinition.SourceProviders.All(s => s.Name.ToUpperInvariant().Contains("GIT")))
+                    {
+                        return;
+                    }
+
+                    using (new WaitCursor())
+                    {
+                        this.repository.CloneGitBuild(item.Uri, item.Name + "_" + DateTime.Now.ToString("F").Replace(":", "-"), true);
+                        this.OnRefresh(new EventArgs());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }      
 
         private void OnCloneBuildToProject()
         {

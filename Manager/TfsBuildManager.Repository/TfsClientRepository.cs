@@ -650,15 +650,14 @@ namespace TfsBuildManager.Repository
             return newBuildDefinition.ToString();
         }
 
-        public string CloneGitBuild(Uri buildDefinition, string newName)
+        public string CloneGitBuild(Uri buildDefinition, string newName, bool forceDisable)
         {
             var bd = this.buildServer.GetBuildDefinition(buildDefinition);
             var newBuildDefinition = this.buildServer.CreateBuildDefinition(bd.TeamProject);
             newBuildDefinition.Name = newName;
             newBuildDefinition.Description = bd.Description;
             newBuildDefinition.ContinuousIntegrationType = bd.ContinuousIntegrationType;
-            newBuildDefinition.QueueStatus = bd.QueueStatus;
-
+            newBuildDefinition.QueueStatus = forceDisable ? DefinitionQueueStatus.Disabled : bd.QueueStatus;
             newBuildDefinition.BuildController = bd.BuildController;
             newBuildDefinition.ProcessParameters = bd.ProcessParameters;
             newBuildDefinition.DefaultDropLocation = bd.DefaultDropLocation;
