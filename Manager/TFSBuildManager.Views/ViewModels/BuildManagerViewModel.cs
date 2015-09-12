@@ -991,7 +991,7 @@ namespace TfsBuildManager.Views
             try
             {
                 this.BuildDefinitions.Clear();
-                foreach (var b in builds.Select(b => new BuildDefinitionViewModel(b)))
+                foreach (var b in builds.Select(b => new BuildDefinitionViewModel(b, this.repository.GetBuildServer())))
                 {
                     this.BuildDefinitions.Add(b);
                 }

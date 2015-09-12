@@ -1,6 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Program.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using Microsoft.TeamFoundation.Controls.WinForms;
+
 namespace TFSBuildManager.Console
 {
     using System;
@@ -175,7 +178,7 @@ namespace TFSBuildManager.Console
             foreach (var b in defs)
             {
                 Console.WriteLine(b.Name);
-                BuildManagerViewModel.ExportDefinition(new BuildDefinitionViewModel(b), ExportPath);
+                BuildManagerViewModel.ExportDefinition(new BuildDefinitionViewModel(b, null), ExportPath);
             }
             
             Console.WriteLine(string.Empty);

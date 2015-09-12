@@ -1,6 +1,10 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildDefinitionViewModel.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using System.Windows.Media.Animation;
+using Microsoft.TeamFoundation.Client;
+
 namespace TfsBuildManager.Views
 {
     using System;
@@ -17,7 +21,7 @@ namespace TfsBuildManager.Views
     {
         private const string NotAvailable = "n/a";
 
-        public BuildDefinitionViewModel(IBuildDefinition build)
+        public BuildDefinitionViewModel(IBuildDefinition build, IBuildServer buildServer)
         {
             this.Name = build.Name;
             this.BuildDefinition = build;
@@ -48,6 +52,42 @@ namespace TfsBuildManager.Views
             this.IsTfvcProject = !this.IsGitProject;
             this.LastModifiedBy = build.Workspace.LastModifiedBy;
             this.LastModifiedDate = build.Workspace.LastModifiedDate;
+
+            if (build.LastBuildUri == null)
+            {
+                this.DaysSinceRun = -1;
+            }
+            else
+            {
+
+                try
+                {
+                    IBuildDetailSpec spec = buildServer.CreateBuildDetailSpec(build);
+                    spec.InformationTypes = null;
+                    spec.MaxBuildsPerDefinition = 1;
+                    //spec.Status = BuildStatus.Succeeded | BuildStatus.Stopped | BuildStatus.PartiallySucceeded | BuildStatus.Failed;
+                    spec.QueryOrder = BuildQueryOrder.FinishTimeDescending;
+                    var result = buildServer.QueryBuilds(spec).Builds[0];
+                    TimeSpan t = DateTime.Now - result.FinishTime;
+                    this.DaysSinceRun = Convert.ToInt32(t.TotalDays);
+                }
+                catch (Exception)
+                {
+                    this.DaysSinceRun = -1;
+                }
+
+                ////try
+                ////{
+                ////    var result = buildServer.GetBuild(build.LastBuildUri);
+                ////    TimeSpan t = DateTime.Now - result.FinishTime;
+                ////    this.DaysSinceRun = Convert.ToInt32(t.TotalDays);
+                ////}
+                ////catch (Exception)
+                ////{
+                ////    this.DaysSinceRun = -1;
+                ////}
+                
+            }
 
             try
             {
@@ -96,6 +136,8 @@ namespace TfsBuildManager.Views
 
         public int Id { get; set; }
 
+        public int DaysSinceRun { get; set; }
+        
         public Uri Uri { get; set; }
 
         public string TeamProject { get; set; }

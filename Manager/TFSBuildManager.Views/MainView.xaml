@@ -69,7 +69,7 @@
         <Grid Grid.Row="0" Name="BuildDefinitionFilter" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,0,0,0" VerticalAlignment="Center">
           <StackPanel Orientation="Horizontal" Margin="10,0,5,0" VerticalAlignment="Center">
             <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"></CheckBox>
-            <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
+            <TextBlock Text="Include Disabled" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
             <Label VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}">Filter:</Label>
             <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}">
               <TextBox.ToolTip>
@@ -92,7 +92,13 @@
         <Controls:SortableListView Grid.Row="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}"
                                                    KeyUp="BuildDefinitionList_KeyUp" Style="{StaticResource ResourceKey=ListViewStyle}">
           <ListView.Resources>
-            <DataTemplate x:Key="NameTemplate">
+              
+              <DataTemplate x:Key="DaysSinceRunTemplate">
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                  <TextBlock Text="{Binding DaysSinceRun}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+              </StackPanel>
+          </DataTemplate>
+              <DataTemplate x:Key="NameTemplate">
               <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
               </StackPanel>
@@ -234,9 +240,12 @@
           </Controls:SortableListView.ContextMenu>
           <ListView.View>
             <GridView>
-              <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="True" CellTemplate="{StaticResource IdTemplate}" />
+              <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="False" CellTemplate="{StaticResource IdTemplate}" />
               <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="True" CellTemplate="{StaticResource NameTemplate}"/>
-              <Controls:SortableGridViewColumn Header="QueueStatus" SortPropertyName="QueueStatus" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueStatusTemplate}" />
+                <Controls:SortableGridViewColumn Header="DaysSinceRun" SortPropertyName="DaysSinceRun" IsDefaultSortColumn="False" CellTemplate="{StaticResource DaysSinceRunTemplate}"/>
+
+                
+                <Controls:SortableGridViewColumn Header="QueueStatus" SortPropertyName="QueueStatus" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueStatusTemplate}" />
               <Controls:SortableGridViewColumn Header="Trigger" SortPropertyName="ContinuousIntegrationType" IsDefaultSortColumn="False" CellTemplate="{StaticResource ContinuousIntegrationTypeTemplate}" />
               <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}" />
               <Controls:SortableGridViewColumn Header="Tags" SortPropertyName="AgentTags" IsDefaultSortColumn="False" CellTemplate="{StaticResource AgentTagsTemplate}" />
