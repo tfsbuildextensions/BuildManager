@@ -234,7 +234,7 @@
           </Controls:SortableListView.ContextMenu>
           <ListView.View>
             <GridView>
-              <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="True" CellTemplate="{StaticResource IdTemplate}" />
+              <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="False" CellTemplate="{StaticResource IdTemplate}" />
               <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="True" CellTemplate="{StaticResource NameTemplate}"/>
               <Controls:SortableGridViewColumn Header="QueueStatus" SortPropertyName="QueueStatus" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueStatusTemplate}" />
               <Controls:SortableGridViewColumn Header="Trigger" SortPropertyName="ContinuousIntegrationType" IsDefaultSortColumn="False" CellTemplate="{StaticResource ContinuousIntegrationTypeTemplate}" />

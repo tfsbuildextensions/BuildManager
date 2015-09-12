@@ -102,7 +102,7 @@
                     <Controls:SortableGridViewColumn Header="" SortPropertyName="Status" IsDefaultSortColumn="False" CellTemplate="{StaticResource StatusTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="False" CellTemplate="{StaticResource NameTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Build Definition" SortPropertyName="BuildDefinition" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildDefinitionTemplate}"/>
-                    <Controls:SortableGridViewColumn Header="Queued Time" SortPropertyName="SortableQueuedTime" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueuedTimeTemplate}"/>
+                    <Controls:SortableGridViewColumn Header="Queued Time" SortPropertyName="SortableQueuedTime" IsDefaultSortColumn="True" CellTemplate="{StaticResource QueuedTimeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Start Time" SortPropertyName="SortableStartTime" IsDefaultSortColumn="False" CellTemplate="{StaticResource StartTimeTemplate}"/>
                     <Controls:SortableGridViewColumn Header="Finish Time" SortPropertyName="SortableFinishTime" IsDefaultSortColumn="True" CellTemplate="{StaticResource FinishTimeTemplate}" DefaultSortDirection="Descending"/>
                     <Controls:SortableGridViewColumn Header="Duration" SortPropertyName="Duration" IsDefaultSortColumn="False" CellTemplate="{StaticResource DurationTemplate}"/>
