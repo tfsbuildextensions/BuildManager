@@ -44,6 +44,8 @@ namespace TfsBuildManager.Repository.Transformers
                     throw new InvalidOperationException(paramKey + " isn't supported for the specified value. Try { \"TfvcAgentSettings\": {your settings} } or { \"GitAgentSettings\": {your settings}");
 
                 case "TestSpecs":
+                    goto case "AgileTestSpecs";
+                case "AgileTestSpecs":
                     return JsonConvert.DeserializeObject<List<ExportedAgileTestPlatformSpec>>(paramValue).ToSpecList();
 
                 default:

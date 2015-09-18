@@ -42,7 +42,7 @@ namespace TFSBuildManager.UnitTests
                 RunSettingsForTestRun = new RunSettings {ServerRunSettingsFile = "run.settings", TypeRunSettings = RunSettingsType.CodeCoverageEnabled},
                 TestCaseFilter = "*FakeTests"
             };
-            var procParam = new[] { "TestSpecs", Serialize(new ExportedAgileTestPlatformSpec[]{ testSpec }) };
+            var procParam = new[] { "AgileTestSpecs", Serialize(new ExportedAgileTestPlatformSpec[] { testSpec }) };
             ExportedProcessParameterTransformer.ProcessParameterDeserializer(procParam).ShouldBeEquivalentTo(new TestSpecList(testSpec));
         }
 
