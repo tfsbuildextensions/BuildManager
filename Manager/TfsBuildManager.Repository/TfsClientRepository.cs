@@ -1,6 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="TfsClientRepository.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
+
+using TfsBuildManager.Repository.Transformers;
+
 namespace TfsBuildManager.Repository
 {
     using System;
@@ -532,7 +535,7 @@ namespace TfsBuildManager.Repository
                     }
                     else
                     {
-                        parameters[parameter[0]] = parameter[1];
+                        parameters[parameter[0]] = ExportedProcessParameterTransformer.ProcessParameterDeserializer(parameter);
                     }
                 }
                 else
@@ -543,7 +546,7 @@ namespace TfsBuildManager.Repository
                     }
                     else
                     {
-                        parameters.Add(parameter[0], parameter[1]);
+                        parameters.Add(parameter[0], ExportedProcessParameterTransformer.ProcessParameterDeserializer(parameter));
                     }
                 }
 

@@ -2,6 +2,9 @@
 // <copyright file="ImportBuildDefinitions.xaml.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
 
+using TfsBuildManager.Repository;
+using TfsBuildManager.Repository.Transformers;
+
 namespace TfsBuildManager.Views
 {
     using System;
@@ -129,78 +132,71 @@ namespace TfsBuildManager.Views
 
                         foreach (var param in exdef.ProcessParameters)
                         {
-                            if (param.Key != "AgentSettings" && param.Key != "BuildSettings" && param.Key != "TestSpecs")
+                            switch (param.Key)
                             {
-                                Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
-                                if (arrayItem == null)
-                                {
-                                    Newtonsoft.Json.Linq.JObject objectItem = param.Value as Newtonsoft.Json.Linq.JObject;
-                                    if (objectItem == null)
+                                case "BuildSettings":
+                                    if (exdef.ProjectsToBuild != null)
                                     {
-                                        if (param.Key == "CleanWorkspace")
+                                        process.Add(param.Key, new BuildSettings { ProjectsToBuild = exdef.ProjectsToBuild, PlatformConfigurations = exdef.ConfigurationsToBuild });
+                                    }
+                                    break;
+
+                                case "AgentSettings":
+                                    if (exdef.TfvcAgentSettings != null)
+                                    {
+                                        process.Add(param.Key, (AgentSettings)exdef.TfvcAgentSettings);   
+                                    }
+                                    else if (exdef.GitAgentSettings != null)
+                                    {
+                                        process.Add(param.Key, exdef.GitAgentSettings);
+                                    }
+                                    break;
+
+                                case "TestSpecs":
+                                    if (exdef.AgileTestSpecs != null)
+                                    {
+                                        process.Add(param.Key, exdef.AgileTestSpecs.ToSpecList());
+                                    }
+                                    break;
+
+                                default:
+                                    Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
+                                    if (arrayItem == null)
+                                    {
+                                        Newtonsoft.Json.Linq.JObject objectItem = param.Value as Newtonsoft.Json.Linq.JObject;
+                                        if (objectItem == null)
                                         {
-                                            process.Add(param.Key, (CleanWorkspaceOption)Enum.Parse(typeof(CleanWorkspaceOption), param.Value.ToString()));
-                                        }
-                                        else if (param.Key == "RunCodeAnalysis")
-                                        {
-                                            process.Add(param.Key, (CodeAnalysisOption)Enum.Parse(typeof(CodeAnalysisOption), param.Value.ToString()));
+                                            if (param.Key == "CleanWorkspace")
+                                            {
+                                                process.Add(param.Key, (CleanWorkspaceOption)Enum.Parse(typeof(CleanWorkspaceOption), param.Value.ToString()));
+                                            }
+                                            else if (param.Key == "RunCodeAnalysis")
+                                            {
+                                                process.Add(param.Key, (CodeAnalysisOption)Enum.Parse(typeof(CodeAnalysisOption), param.Value.ToString()));
+                                            }
+                                            else
+                                            {
+                                                process.Add(param.Key, param.Value);
+                                            }
                                         }
                                         else
                                         {
-                                            process.Add(param.Key, param.Value);
+                                            Microsoft.TeamFoundation.Build.Common.BuildParameter paramItem = new Microsoft.TeamFoundation.Build.Common.BuildParameter(param.Value.ToString());
+                                            process.Add(param.Key, paramItem);
                                         }
                                     }
                                     else
                                     {
-                                        Microsoft.TeamFoundation.Build.Common.BuildParameter paramItem = new Microsoft.TeamFoundation.Build.Common.BuildParameter(param.Value.ToString());
-                                        process.Add(param.Key, paramItem);
+                                        string[] arrayItemList = new string[arrayItem.Count];
+                                        for (int i = 0; i < arrayItem.Count; i++)
+                                        {
+                                            arrayItemList[i] = arrayItem[i].ToString();
+                                        }
+
+                                        process.Add(param.Key, arrayItemList);
                                     }
-                                }
-                                else
-                                {
-                                    string[] arrayItemList = new string[arrayItem.Count];
-                                    for (int i = 0; i < arrayItem.Count; i++)
-                                    {
-                                        arrayItemList[i] = arrayItem[i].ToString();
-                                    }
-
-                                    process.Add(param.Key, arrayItemList);
-                                }
+                                    break;
                             }
-                        }
-
-                        if (exdef.ProjectsToBuild != null)
-                        {
-                            process.Add("BuildSettings", new BuildSettings { ProjectsToBuild = exdef.ProjectsToBuild, PlatformConfigurations = exdef.ConfigurationsToBuild });
-                        }
-
-                        if (exdef.TfvcAgentSettings != null)
-                        {
-                            process.Add("AgentSettings", new AgentSettings { MaxExecutionTime = exdef.TfvcAgentSettings.MaxExecutionTime, MaxWaitTime = exdef.TfvcAgentSettings.MaxWaitTime, Name = exdef.TfvcAgentSettings.Name, TagComparison = exdef.TfvcAgentSettings.Comparison, Tags = exdef.TfvcAgentSettings.Tags });   
-                        }
-                        else if (exdef.GitAgentSettings != null)
-                        {
-                            process.Add("AgentSettings", exdef.GitAgentSettings);
-                        }
-
-                        if (exdef.AgileTestSpecs != null)
-                        {
-                            TestSpecList tsl = new TestSpecList();
-                            foreach (var aitem in exdef.AgileTestSpecs)
-                            {
-                                AgileTestPlatformSpec agileSpec = new AgileTestPlatformSpec();
-                                agileSpec.AssemblyFileSpec = aitem.AssemblyFileSpec;
-                                agileSpec.ExecutionPlatform = aitem.ExecutionPlatform;
-                                agileSpec.FailBuildOnFailure = aitem.FailBuildOnFailure;
-                                agileSpec.RunName = aitem.RunName;
-                                agileSpec.TestCaseFilter = aitem.TestCaseFilter;
-                                agileSpec.RunSettingsForTestRun = new RunSettings();
-                                agileSpec.RunSettingsForTestRun.ServerRunSettingsFile = aitem.RunSettingsFileName;
-                                agileSpec.RunSettingsForTestRun.TypeRunSettings = aitem.TypeRunSettings;
-                                tsl.Add(agileSpec);
-                            }
-
-                            process.Add("TestSpecs", tsl);
                         }
 
                         if (exdef.BuildReasons != null)

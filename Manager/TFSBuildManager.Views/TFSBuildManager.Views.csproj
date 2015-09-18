@@ -53,6 +53,7 @@
     <AssemblyOriginatorKeyFile>..\Common\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.TeamFoundation">
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.dll</HintPath>
     </Reference>
@@ -125,7 +126,6 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AgentSettingsBuildParameter.cs" />
     <Compile Include="BuildControllerWindow.xaml.cs">
       <DependentUpon>BuildControllerWindow.xaml</DependentUpon>
     </Compile>
@@ -140,12 +140,6 @@
     </Compile>
     <Compile Include="Controls\HighlightTextBlock.cs" />
     <Compile Include="BuildImport.cs" />
-    <Compile Include="ExportedBuildDefinition.cs" />
-    <Compile Include="ExportedIBuildDefinitionSourceProvider.cs" />
-    <Compile Include="ExportedAgileTestPlatformSpec.cs" />
-    <Compile Include="ExportedIWorkspaceMapping.cs" />
-    <Compile Include="ExportedISchedule.cs" />
-    <Compile Include="ExportedIRetentionPolicy.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ImportBuildDefinitions.xaml.cs">
       <DependentUpon>ImportBuildDefinitions.xaml</DependentUpon>

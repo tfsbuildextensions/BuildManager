@@ -1,18 +1,20 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BuildDefinitionViewModel.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-namespace TfsBuildManager.Views
-{
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using Microsoft.TeamFoundation.Build.Client;
-    using Microsoft.TeamFoundation.Build.Common;
-    using Microsoft.TeamFoundation.Build.Workflow;
-    using Microsoft.TeamFoundation.Build.Workflow.Activities;
-    using Newtonsoft.Json;
 
+using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using Microsoft.TeamFoundation.Build.Client;
+using Microsoft.TeamFoundation.Build.Common;
+using Microsoft.TeamFoundation.Build.Workflow;
+using Microsoft.TeamFoundation.Build.Workflow.Activities;
+using Newtonsoft.Json;
+using TfsBuildManager.Repository;
+
+namespace TfsBuildManager.Views.ViewModels
+{
     public class BuildDefinitionViewModel : ViewModelBase
     {
         private const string NotAvailable = "n/a";
