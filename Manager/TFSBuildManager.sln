@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFSBuildManager.Views", "TFSBuildManager.Views\TFSBuildManager.Views.csproj", "{35402F32-13CF-4DD1-B38C-A3FBE59FB1BC}"
 EndProject
@@ -29,6 +29,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{90837F
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFSBuildManager.Console", "TFSBuildManager.Console\TFSBuildManager.Console.csproj", "{C54DE629-248D-48EF-9224-07DB1E595A8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automated Tests", "Automated Tests", "{ECF8AFDA-A143-4B19-90E9-7C6A8B87CEF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFSBuildManager.UnitTests", "TFSBuildManager.UnitTests\TFSBuildManager.UnitTests.csproj", "{4704A134-C451-4F18-9740-7C633AC36A5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,8 +138,21 @@ Global
 		{C54DE629-248D-48EF-9224-07DB1E595A8E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C54DE629-248D-48EF-9224-07DB1E595A8E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C54DE629-248D-48EF-9224-07DB1E595A8E}.Release|x86.ActiveCfg = Release|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4704A134-C451-4F18-9740-7C633AC36A5A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4704A134-C451-4F18-9740-7C633AC36A5A} = {ECF8AFDA-A143-4B19-90E9-7C6A8B87CEF7}
 	EndGlobalSection
 EndGlobal
