@@ -24,7 +24,9 @@ namespace TfsBuildManager.Views
             this.Uri = build.Uri;
             this.TeamProject = build.TeamProject;
             this.ContinuousIntegrationType = GetFriendlyTriggerName(build.ContinuousIntegrationType);
-            if (build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Schedule || build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.ScheduleForced)
+            if ((build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.Schedule || 
+                build.ContinuousIntegrationType == Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType.ScheduleForced) &&
+                build.Schedules.Count > 0)
             {
                 this.ContinuousIntegrationType = string.Format("{0} - {1}", this.ContinuousIntegrationType, ConvertTime(build.Schedules[0].StartTime.ToString(CultureInfo.CurrentCulture)));
             }
