@@ -35,7 +35,7 @@
       </Button>
     </StackPanel>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-      <Label Name="lblVersion">Version</Label>
+      <Label Name="lblVersion" Style="{StaticResource ResourceKey=TextBlockStyle}">Version</Label>
     </StackPanel>
     <Grid Grid.Row="1">
       <Grid.RowDefinitions>
@@ -68,7 +68,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Name="BuildDefinitionFilter" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,0,0,0" VerticalAlignment="Center">
           <StackPanel Orientation="Horizontal" Margin="10,0,5,0" VerticalAlignment="Center">
-            <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"></CheckBox>
+            <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"/>
             <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
             <Label VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}">Filter:</Label>
             <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}">
@@ -86,7 +86,7 @@
             </TextBox>
           </StackPanel>
           <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
-            <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}" FontSize="16" FontWeight="Bold" Foreground="#FF3C4F67">O</Label>
+            <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}" FontSize="16" FontWeight="Bold">O</Label>
           </StackPanel>
         </Grid>
         <Controls:SortableListView Grid.Row="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}"
@@ -252,7 +252,7 @@
       </Grid>
     </Grid>
     <DockPanel Grid.Row="2" Grid.ColumnSpan="3"  LastChildFill="True" Visibility="{Binding Path=BuildsViewVisible}">
-      <CheckBox DockPanel.Dock="Top" HorizontalAlignment="Right" Name="CheckBoxAutoRefresh" Content="Auto Refresh (2min)" IsChecked="True" Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnUnchecked"/>
+      <CheckBox DockPanel.Dock="Top" HorizontalAlignment="Right" Name="CheckBoxAutoRefresh" Content="Auto Refresh (2min)" IsChecked="True" Style="{StaticResource ResourceKey=TextBlockStyle}" Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnUnchecked"/>
       <TabControl DockPanel.Dock="Bottom" Name="BuildGrid" Margin="0,4,0,0" Height="Auto">
         <TabItem Name="Queued" Header="Queued" IsSelected="{Binding Path=SelectedBuildFilter, Mode=TwoWay, Converter={StaticResource enumConverter}, ConverterParameter=Queued}">
           <DockPanel Margin="-4,-4,-4,-4">
