@@ -413,21 +413,11 @@ namespace TfsBuildManager.Views
             {
                 if (processParameters["AgentSettings"].GetType() == typeof(AgentSettings))
                 {
-                    AgentSettings ags = (AgentSettings)processParameters["AgentSettings"];
-                    AgentSettingsBuildParameter agentSet = new AgentSettingsBuildParameter();
-                    agentSet.MaxExecutionTime = ags.MaxExecutionTime;
-                    agentSet.MaxWaitTime = ags.MaxWaitTime;
-                    agentSet.Name = ags.Name;
-                    agentSet.Comparison = ags.TagComparison;
-                    agentSet.Tags = ags.Tags;
-                    buildToExport.TfvcAgentSettings = agentSet;
+                    buildToExport.TfvcAgentSettings = (AgentSettings)processParameters["AgentSettings"];
                 }
                 else if (processParameters["AgentSettings"].GetType() == typeof(BuildParameter))
                 {
-                    BuildParameter ags = (BuildParameter)processParameters["AgentSettings"];
-                    {
-                        buildToExport.GitAgentSettings = ags;
-                    }
+                    buildToExport.GitAgentSettings = (BuildParameter)processParameters["AgentSettings"];
                 }
             }
 
@@ -455,15 +445,7 @@ namespace TfsBuildManager.Views
                         var agilespec = spec as AgileTestPlatformSpec;
                         if (agilespec != null)
                         {
-                            ExportedAgileTestPlatformSpec expAgileSpec = new ExportedAgileTestPlatformSpec();
-                            expAgileSpec.AssemblyFileSpec = agilespec.AssemblyFileSpec;
-                            expAgileSpec.ExecutionPlatform = agilespec.ExecutionPlatform;
-                            expAgileSpec.FailBuildOnFailure = agilespec.FailBuildOnFailure;
-                            expAgileSpec.RunName = agilespec.RunName;
-                            expAgileSpec.TestCaseFilter = agilespec.TestCaseFilter;
-                            expAgileSpec.RunSettingsFileName = agilespec.RunSettingsForTestRun.ServerRunSettingsFile;
-                            expAgileSpec.TypeRunSettings = agilespec.RunSettingsForTestRun.TypeRunSettings;
-                            buildToExport.AgileTestSpecs.Add(expAgileSpec);
+                            buildToExport.AgileTestSpecs.Add(agilespec);
                         }                        
                     }
                 }

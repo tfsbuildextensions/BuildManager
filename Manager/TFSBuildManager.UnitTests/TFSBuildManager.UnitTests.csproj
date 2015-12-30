@@ -3,19 +3,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{723CB6BD-A9CF-4BF9-A48A-9B4E28739AC1}</ProjectGuid>
+    <ProjectGuid>{4704A134-C451-4F18-9740-7C633AC36A5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TfsBuildManager.Repository</RootNamespace>
-    <AssemblyName>TfsBuildManager.Repository</AssemblyName>
+    <RootNamespace>TFSBuildManager.UnitTests</RootNamespace>
+    <AssemblyName>TFSBuildManager.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -24,134 +24,145 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\BuildBinaries\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\BuildBinaries\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\Common\TFSBuildExtensions.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Common\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.TeamFoundation">
+    <Reference Include="FluentAssertions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.0.0\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.0.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.Build.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Build.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.Build.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Build.Workflow, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.Build.Workflow.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Controls, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.Controls.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.TestManagement.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.TestManagement.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.VersionControl.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.VersionControl.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.VersionControl.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.VersionControl.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.11.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.VisualStudio.Shell.11.0.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TeamFoundation, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.VisualStudio.TeamFoundation.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TeamFoundation.Build">
+    <Reference Include="Microsoft.VisualStudio.TeamFoundation.Build, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundation.ObjectMode.12.0.0.0\lib\Microsoft.VisualStudio.TeamFoundation.Build.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
-    <Compile Include="..\Common\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AgentSettingsBuildParameter.cs" />
-    <Compile Include="BuildResourceFilter.cs" />
-    <Compile Include="BuildRetentionPolicy.cs" />
-    <Compile Include="BuildNoteOptions.cs" />
-    <Compile Include="dgml.designer.cs" />
-    <Compile Include="DGMLGenerator.cs" />
-    <Compile Include="ExportedAgileTestPlatformSpec.cs" />
-    <Compile Include="ExportedBuildDefinition.cs" />
-    <Compile Include="ExportedIBuildDefinitionSourceProvider.cs" />
-    <Compile Include="ExportedIRetentionPolicy.cs" />
-    <Compile Include="ExportedISchedule.cs" />
-    <Compile Include="ExportedIWorkspaceMapping.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="ITfsClientRepository.cs" />
-    <Compile Include="ITfsContext.cs" />
-    <Compile Include="TfsClientRepository.cs" />
+    <Compile Include="ExportedProcessParameterTransformerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transformers\ExportedProcessParameterTransformer.cs" />
-    <Compile Include="VersionControlTypeEnum.cs" />
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="..\Common\CodeAnalysis.Dictionary.xml">
-      <Link>Properties\CodeAnalysis.Dictionary.xml</Link>
-    </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="dgml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TfsBuildManager.WordDocumentGenerator.Client\WordDocumentGenerator.Client.csproj">
-      <Project>{195E7CE4-4DB5-483A-80D6-8A5070A21F37}</Project>
-      <Name>WordDocumentGenerator.Client</Name>
+    <ProjectReference Include="..\TfsBuildManager.Repository\TfsBuildManager.Repository.csproj">
+      <Project>{723cb6bd-a9cf-4bf9-a48a-9b4e28739ac1}</Project>
+      <Name>TfsBuildManager.Repository</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
