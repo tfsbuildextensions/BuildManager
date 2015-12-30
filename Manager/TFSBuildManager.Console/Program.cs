@@ -1,9 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Program.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
-using TfsBuildManager.Views.ViewModels;
-
 namespace TFSBuildManager.Console
 {
     using System;
@@ -16,6 +13,7 @@ namespace TFSBuildManager.Console
     using Microsoft.TeamFoundation.Build.Client;
     using Microsoft.TeamFoundation.Client;
     using TfsBuildManager.Views;
+    using TfsBuildManager.Views.ViewModels;
 
     public class Program
     {

@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.TeamFoundation.Build.Common;
-using Microsoft.TeamFoundation.Build.Workflow.Activities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="ExportedProcessParameterTransformer.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
+//-----------------------------------------------------------------------
 namespace TfsBuildManager.Repository.Transformers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.TeamFoundation.Build.Common;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     public static class ExportedProcessParameterTransformer
     {
         public static TestSpecList ToSpecList(this List<ExportedAgileTestPlatformSpec> agileTestPlatformSpecs)
         {
             TestSpecList tsl = new TestSpecList();
-            tsl.AddRange(agileTestPlatformSpecs.Select(aitem => (TestSpec) aitem));
+            tsl.AddRange(agileTestPlatformSpecs.Select(aitem => (TestSpec)aitem));
             return tsl;
         }
 
@@ -37,10 +40,12 @@ namespace TfsBuildManager.Repository.Transformers
                         AgentSettingsBuildParameter tfvcAgentSettings = ((JObject)agentSettings.TfvcAgentSettings).ToObject<AgentSettingsBuildParameter>();
                         return (AgentSettings)tfvcAgentSettings;
                     }
+
                     if (agentSettings.GitAgentSettings != null)
                     {
                         return ((JObject)agentSettings.GitAgentSettings).ToObject<BuildParameter>();
                     }
+
                     throw new InvalidOperationException(paramKey + " isn't supported for the specified value. Try { \"TfvcAgentSettings\": {your settings} } or { \"GitAgentSettings\": {your settings}");
 
                 case "TestSpecs":

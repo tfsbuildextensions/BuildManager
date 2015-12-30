@@ -1,10 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ImportBuildDefinitions.xaml.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
-using TfsBuildManager.Repository;
-using TfsBuildManager.Repository.Transformers;
-
 namespace TfsBuildManager.Views
 {
     using System;
@@ -16,6 +12,8 @@ namespace TfsBuildManager.Views
     using Microsoft.TeamFoundation.Build.Workflow;
     using Microsoft.TeamFoundation.Build.Workflow.Activities;
     using Newtonsoft.Json;
+    using TfsBuildManager.Repository;
+    using TfsBuildManager.Repository.Transformers;
 
     /// <summary>
     /// Interaction logic for ImportBuildDefinitions
@@ -139,8 +137,8 @@ namespace TfsBuildManager.Views
                                     {
                                         process.Add(param.Key, new BuildSettings { ProjectsToBuild = exdef.ProjectsToBuild, PlatformConfigurations = exdef.ConfigurationsToBuild });
                                     }
-                                    break;
 
+                                    break;
                                 case "AgentSettings":
                                     if (exdef.TfvcAgentSettings != null)
                                     {
@@ -150,15 +148,15 @@ namespace TfsBuildManager.Views
                                     {
                                         process.Add(param.Key, exdef.GitAgentSettings);
                                     }
-                                    break;
 
+                                    break;
                                 case "TestSpecs":
                                     if (exdef.AgileTestSpecs != null)
                                     {
                                         process.Add(param.Key, exdef.AgileTestSpecs.ToSpecList());
                                     }
-                                    break;
 
+                                    break;
                                 default:
                                     Newtonsoft.Json.Linq.JArray arrayItem = param.Value as Newtonsoft.Json.Linq.JArray;
                                     if (arrayItem == null)
@@ -195,6 +193,7 @@ namespace TfsBuildManager.Views
 
                                         process.Add(param.Key, arrayItemList);
                                     }
+
                                     break;
                             }
                         }

@@ -1,9 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="TfsClientRepository.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
-using TfsBuildManager.Repository.Transformers;
-
 namespace TfsBuildManager.Repository
 {
     using System;
@@ -22,6 +19,7 @@ namespace TfsBuildManager.Repository
     using Microsoft.TeamFoundation.TestManagement.Client;
     using Microsoft.TeamFoundation.VersionControl.Client;
     using Microsoft.TeamFoundation.WorkItemTracking.Client;
+    using TfsBuildManager.Repository.Transformers;
     using WordDocumentGenerator.Client;
 
     /// <summary>

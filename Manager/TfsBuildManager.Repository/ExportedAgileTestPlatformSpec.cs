@@ -1,11 +1,10 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ExportedAgileTestPlatformSpec.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
-using Microsoft.TeamFoundation.Build.Workflow.Activities;
-
 namespace TfsBuildManager.Repository
 {
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
+
     public class ExportedAgileTestPlatformSpec
     {
         public bool FailBuildOnFailure { get; set; }

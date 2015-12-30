@@ -1,32 +1,24 @@
-﻿using System;
-using Microsoft.TeamFoundation.Build.Workflow.Activities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using TfsBuildManager.Repository;
-using TfsBuildManager.Repository.Transformers;
-using FluentAssertions;
-using Microsoft.TeamFoundation.Build.Common;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="ExportedProcessParameterTransformerTests.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
+//-----------------------------------------------------------------------
 namespace TFSBuildManager.UnitTests
 {
+    using System;
+    using FluentAssertions;
+    using Microsoft.TeamFoundation.Build.Common;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Newtonsoft.Json;
+    using TfsBuildManager.Repository;
+    using TfsBuildManager.Repository.Transformers;
+
     [TestClass]
     public class ExportedProcessParameterTransformerTests
     {
-        private string Serialize(object obj)
-        {
-            var jsonSerializerSettings = new JsonSerializerSettings
-            {
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-            };
-
-            return JsonConvert.SerializeObject(obj, Formatting.Indented, jsonSerializerSettings);
-        }
-
         [TestMethod]
         public void ProcessParameterDeserializer_PassesStringsStraightThrough()
         {
-            var procParam = new[] {"anything custom", "should go straight through"};
+            var procParam = new[] { "anything custom", "should go straight through" };
             Assert.AreEqual(procParam[1], ExportedProcessParameterTransformer.ProcessParameterDeserializer(procParam), "because non special params should pass straight through the deserializer");
         }
 
@@ -39,10 +31,11 @@ namespace TFSBuildManager.UnitTests
                 ExecutionPlatform = ExecutionPlatformType.X86,
                 FailBuildOnFailure = true,
                 RunName = "Unit Tests",
-                RunSettingsForTestRun = new RunSettings {ServerRunSettingsFile = "run.settings", TypeRunSettings = RunSettingsType.CodeCoverageEnabled},
+                RunSettingsForTestRun = new RunSettings { ServerRunSettingsFile = "run.settings", TypeRunSettings = RunSettingsType.CodeCoverageEnabled },
                 TestCaseFilter = "*FakeTests"
             };
-            var procParam = new[] { "AgileTestSpecs", Serialize(new ExportedAgileTestPlatformSpec[] { testSpec }) };
+
+            var procParam = new[] { "AgileTestSpecs", this.Serialize(new ExportedAgileTestPlatformSpec[] { testSpec }) };
             ExportedProcessParameterTransformer.ProcessParameterDeserializer(procParam).ShouldBeEquivalentTo(new TestSpecList(testSpec));
         }
 
@@ -54,7 +47,7 @@ namespace TFSBuildManager.UnitTests
                 PlatformConfigurations = PlatformConfigurationList.Default,
                 ProjectsToBuild = new StringList("projectA,projectB")
             };
-            var expBuildDef = Serialize(new { ProjectsToBuild = buildSettings.ProjectsToBuild, ConfigurationsToBuild = buildSettings.PlatformConfigurations});
+            var expBuildDef = this.Serialize(new { ProjectsToBuild = buildSettings.ProjectsToBuild, ConfigurationsToBuild = buildSettings.PlatformConfigurations });
             var procParam = new[] { "BuildSettings", expBuildDef };
             ExportedProcessParameterTransformer.ProcessParameterDeserializer(procParam).ShouldBeEquivalentTo(buildSettings);
         }
@@ -70,7 +63,7 @@ namespace TFSBuildManager.UnitTests
                 Name = "test",
                 Tags = new StringList("tagA,tagB")
             };
-            var expBuildDef = Serialize(new { TfvcAgentSettings = (AgentSettingsBuildParameter)agentSettings });
+            var expBuildDef = this.Serialize(new { TfvcAgentSettings = (AgentSettingsBuildParameter)agentSettings });
             var procParam = new[] { "AgentSettings", expBuildDef };
             ExportedProcessParameterTransformer.ProcessParameterDeserializer(procParam).ShouldBeEquivalentTo(agentSettings);
         }
@@ -82,9 +75,20 @@ namespace TFSBuildManager.UnitTests
             {
                 Json = @"{""unknown"": ""please help""}"
             };
-            var expBuildDef = Serialize(new { GitAgentSettings = agentSettings });
+            var expBuildDef = this.Serialize(new { GitAgentSettings = agentSettings });
             var procParam = new[] { "AgentSettings", expBuildDef };
             ExportedProcessParameterTransformer.ProcessParameterDeserializer(procParam).ShouldBeEquivalentTo(agentSettings);
+        }
+
+        private string Serialize(object obj)
+        {
+            var jsonSerializerSettings = new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+            };
+
+            return JsonConvert.SerializeObject(obj, Formatting.Indented, jsonSerializerSettings);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="AgentSettingsBuildParameter.cs">(c) https://github.com/tfsbuildextensions/BuildManager. This source is subject to the Microsoft Permissive License. See http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx. All other rights reserved.</copyright>
 //-----------------------------------------------------------------------
-
-using System;
-using Microsoft.TeamFoundation.Build.Workflow.Activities;
-
 namespace TfsBuildManager.Repository
 {
+    using System;
+    using Microsoft.TeamFoundation.Build.Workflow.Activities;
+
     public class AgentSettingsBuildParameter
     {
         public TagComparison Comparison { get; set; }
@@ -32,7 +31,7 @@ namespace TfsBuildManager.Repository
 
         public static implicit operator AgentSettings(AgentSettingsBuildParameter agentSet)
         {
-            return new AgentSettings {MaxExecutionTime = agentSet.MaxExecutionTime, MaxWaitTime = agentSet.MaxWaitTime, Name = agentSet.Name, TagComparison = agentSet.Comparison, Tags = agentSet.Tags};
+            return new AgentSettings { MaxExecutionTime = agentSet.MaxExecutionTime, MaxWaitTime = agentSet.MaxWaitTime, Name = agentSet.Name, TagComparison = agentSet.Comparison, Tags = agentSet.Tags };
         }
     }
 }
