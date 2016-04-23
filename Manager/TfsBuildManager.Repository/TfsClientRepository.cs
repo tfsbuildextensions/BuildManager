@@ -506,6 +506,16 @@ namespace TfsBuildManager.Repository
                 this.buildServer.QueueBuild(buildRequest);
             }
         }
+        public void QueueLowBuilds(IEnumerable<Uri> buildDefinitions)
+        {
+            var definitions = this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray());
+            foreach (var bd in definitions.Where(d => d.Process != null))
+            {
+                IBuildRequest buildRequest = bd.CreateBuildRequest();
+                buildRequest.Priority = QueuePriority.Low;
+                this.buildServer.QueueBuild(buildRequest);
+            }
+        }
 
         public void SetRetentionPolicies(IEnumerable<Uri> buildDefinitions, BuildRetentionPolicy policies)
         {

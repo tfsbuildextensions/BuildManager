@@ -157,6 +157,7 @@
             <ContextMenu>
               <MenuItem Header="Queue">
                 <MenuItem Command="{Binding QueueBuildsCommand}" Header="Normal"/>
+                <MenuItem Command="{Binding QueueLowBuildsCommand}" Header="Low Priority"/>
                 <MenuItem Command="{Binding QueueHighBuildsCommand}" Header="High Priority"/>
               </MenuItem>
               <Separator/>

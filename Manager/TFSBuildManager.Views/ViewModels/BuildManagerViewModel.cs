@@ -88,6 +88,7 @@ namespace TfsBuildManager.Views
             this.RemapWorkspacesCommand = new DelegateCommand(this.OnRemapWorkspaces, this.OnCanRemapWorkspaces);
             this.QueueBuildsCommand = new DelegateCommand(this.OnQueueBuilds, this.OnCanQueueBuilds);
             this.QueueHighBuildsCommand = new DelegateCommand(this.OnQueueHighBuilds, this.OnCanQueueBuilds);
+            this.QueueLowBuildsCommand = new DelegateCommand(this.OnQueueLowBuilds, this.OnCanQueueBuilds);         
             this.EditBuildDefinitionCommand = new DelegateCommand(this.OnEditBuildDefinition, this.OnCanEditBuildDefinition);
             this.GenerateBuildResourcesCommand = new DelegateCommand(this.OnGenerateBuildResources);
             this.Controllers = new ObservableCollection<string>(controllers.Select(c => c.Name));
@@ -193,6 +194,8 @@ namespace TfsBuildManager.Views
 
         public ICommand QueueHighBuildsCommand { get; private set; }
 
+        public ICommand QueueLowBuildsCommand { get; private set; }
+       
         public ICommand EditBuildDefinitionCommand { get; private set; }
 
         public ICommand CloneBuildsCommand { get; private set; }
@@ -1418,6 +1421,24 @@ namespace TfsBuildManager.Views
                 using (new WaitCursor())
                 {
                     this.repository.QueueHighBuilds(items.Select(b => b.Uri));
+                    this.SelectedBuildView = BuildView.Builds;
+                    this.SelectedBuildFilter = BuildFilter.Queued;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.view.DisplayError(ex);
+            }
+        }
+
+        private void OnQueueLowBuilds()
+        {
+            try
+            {
+                var items = this.view.SelectedItems;
+                using (new WaitCursor())
+                {
+                    this.repository.QueueLowBuilds(items.Select(b => b.Uri));
                     this.SelectedBuildView = BuildView.Builds;
                     this.SelectedBuildFilter = BuildFilter.Queued;
                 }
