@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyVersion("2.12.0.22")]
-[assembly: AssemblyFileVersion("2.12.0.22")]
-[assembly: AssemblyInformationalVersion("2.12.0.22")]
+[assembly: AssemblyVersion("2.12.0.23")]
+[assembly: AssemblyFileVersion("2.12.0.23")]
+[assembly: AssemblyInformationalVersion("2.12.0.23")]
 [assembly: AssemblyCompany("Community TFS Build Manager https://github.com/tfsbuildextensions/BuildManager")]
 [assembly: AssemblyCopyright("Copyright © Community TFS Build Manager https://github.com/tfsbuildextensions/BuildManager")]
 [assembly: AssemblyTrademark("Community TFS Build Manager https://github.com/tfsbuildextensions/BuildManager")]

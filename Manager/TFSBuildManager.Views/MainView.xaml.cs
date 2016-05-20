@@ -9,6 +9,7 @@ namespace TfsBuildManager.Views
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
@@ -210,7 +211,7 @@ namespace TfsBuildManager.Views
                                 }
 
                                 List<IBuildDefinition> builds2 = new List<IBuildDefinition>();
-                                foreach (var b in builds)
+                                foreach (IBuildDefinition b in builds)
                                 {
                                     var processParameters = WorkflowHelpers.DeserializeProcessParameters(b.ProcessParameters);
 
@@ -223,10 +224,7 @@ namespace TfsBuildManager.Views
                                             // some process parameters are arrays so we need to look at each key value pair in the arrays
                                             if (parameter.Value.GetType().GetElementType() == typeof(string))
                                             {
-                                                string[] arr = ((IEnumerable)parameter.Value).Cast<object>()
-                                                    .Select(x => x.ToString())
-                                                    .ToArray();
-
+                                                string[] arr = ((IEnumerable)parameter.Value).Cast<object>().Select(x => x.ToString()).ToArray();
                                                 if (arr.Any(s => s.IndexOf(this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) >= 0))
                                                 {
                                                     builds2.Add(b);
@@ -238,7 +236,18 @@ namespace TfsBuildManager.Views
                                                 if (parameter.Value.ToString().IndexOf(this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) >= 0)
                                                 {
                                                     builds2.Add(b);
-                                                    break;
+                                                    found = true;
+                                                }
+                                            }
+
+                                            if (!found && this.viewmodel.BuildDefinitionFilter.StartsWith(@"***", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                Regex r = new Regex(@"<this:Process\..*>*" + this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty) + ".*</", RegexOptions.IgnoreCase);
+                                                Match match = r.Match(b.Process.Parameters);
+                                                if (match.Success)
+                                                {
+                                                    builds2.Add(b);
+                                                    found = true;
                                                 }
                                             }
 
@@ -270,7 +279,7 @@ namespace TfsBuildManager.Views
                                                 if (string.Compare(parameter.Value.ToString(), this.viewmodel.BuildDefinitionFilter.Replace("*", string.Empty), StringComparison.OrdinalIgnoreCase) == 0)
                                                 {
                                                     builds2.Add(b);
-                                                    break;
+                                                    found = true;
                                                 }
                                             }
 

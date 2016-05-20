@@ -6,74 +6,74 @@
              xmlns:Controls="clr-namespace:TfsBuildManager.Controls;assembly=TFSBuildManager.Controls" xmlns:Views="clr-namespace:TfsBuildManager.Views" mc:Ignorable="d"
              HorizontalContentAlignment="Stretch"
              VerticalContentAlignment="Stretch" Loaded="OnLoaded">
-  <UserControl.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/TFSBuildManager.Views;component/Themes/ResourceDictionary.xaml"/>
+    <UserControl.Resources>
         <ResourceDictionary>
-          <Views:EnumMatchToBooleanConverter x:Key="enumConverter" />
-          <Views:BoolToVisibilityConverter x:Key="visibilityConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/TFSBuildManager.Views;component/Themes/ResourceDictionary.xaml"/>
+                <ResourceDictionary>
+                    <Views:EnumMatchToBooleanConverter x:Key="enumConverter" />
+                    <Views:BoolToVisibilityConverter x:Key="visibilityConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </UserControl.Resources>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="25"></RowDefinition>
-      <RowDefinition Height="Auto"></RowDefinition>
-      <RowDefinition  Height="*"></RowDefinition>
-    </Grid.RowDefinitions>
-    <StackPanel Orientation="Horizontal">
-      <Button Name="btnViewBuildResources" Command="{Binding GenerateBuildResourcesCommand}" Width="18" Height="18" Margin="10,0,0,0">
-        <Image Source="Graphics/dgml.png" ToolTip="Generate Build Resources Dependency Graph (DGML)"/>
-      </Button>
-      <Button Name="btnImport" Command="{Binding ImportBuildDefinition}" Width="18" Height="18" Margin="6,0,0,0">
-        <Image Source="Graphics/import.png" ToolTip="Import Build Definition"/>
-      </Button>
-      <Button Name="btnRefresh" Command="{Binding RefreshCurrentView}" Width="18" Height="18" Margin="6,0,0,0">
-        <Image Source="Graphics/refresh.png" ToolTip="Refresh Current View"/>
-      </Button>
-    </StackPanel>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-      <Label Name="lblVersion" Style="{StaticResource ResourceKey=TextBlockStyle}">Version</Label>
-    </StackPanel>
-    <Grid Grid.Row="1">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="17"></RowDefinition>
-        <RowDefinition Height="25"></RowDefinition>
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="12*" MinWidth="100"></ColumnDefinition>
-        <ColumnDefinition Width="88*"/>
-        <ColumnDefinition Width="146*" MinWidth="100"></ColumnDefinition>
-        <ColumnDefinition Width="145*" MinWidth="100"></ColumnDefinition>
-      </Grid.ColumnDefinitions>
-      <TextBlock Text="View" Margin="10,2,0,0" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=TextBlockStyle}" />
-      <ComboBox Name="SelectedBuildViewCombo" Grid.Row="1" ItemsSource="{Binding BuildViews}" SelectedValuePath="Value" DisplayMemberPath="Name"  Margin="10,2,10,0"
-                                  SelectedValue="{Binding Path=SelectedBuildView}" Grid.ColumnSpan="2">
-      </ComboBox>
-      <TextBlock Text="Build Controller" Grid.Column="2" Margin="10,2,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}"/>
-      <ComboBox Name="ControllerCombo" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding Controllers}"  Margin="10,2,0,0"/>
-
-      <TextBlock Text="Team Project" Grid.Column="3" Margin="10,2,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"/>
-      <ComboBox Name="TeamProjectCombo" Grid.Column="3" Grid.Row="1" ItemsSource="{Binding TeamProjects}"  Margin="10,2,10,0" />
-    </Grid>
-    <Grid Grid.Row="2" Name="BuildDefinitionGrid" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,10,0,0">
-      <Grid.Resources>
-      </Grid.Resources>
-      <Grid>
+    </UserControl.Resources>
+    <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"></RowDefinition>
-          <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition  Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Name="BuildDefinitionFilter" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,0,0,0" VerticalAlignment="Center">
-          <StackPanel Orientation="Horizontal" Margin="10,0,5,0" VerticalAlignment="Center">
-            <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"/>
-            <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
-            <Label VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}">Filter:</Label>
-            <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=3000}">
-              <TextBox.ToolTip>
-                <TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <Button Name="btnViewBuildResources" Command="{Binding GenerateBuildResourcesCommand}" Width="18" Height="18" Margin="10,0,0,0">
+                <Image Source="Graphics/dgml.png" ToolTip="Generate Build Resources Dependency Graph (DGML)"/>
+            </Button>
+            <Button Name="btnImport" Command="{Binding ImportBuildDefinition}" Width="18" Height="18" Margin="6,0,0,0">
+                <Image Source="Graphics/import.png" ToolTip="Import Build Definition"/>
+            </Button>
+            <Button Name="btnRefresh" Command="{Binding RefreshCurrentView}" Width="18" Height="18" Margin="6,0,0,0">
+                <Image Source="Graphics/refresh.png" ToolTip="Refresh Current View"/>
+            </Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Name="lblVersion" Style="{StaticResource ResourceKey=TextBlockStyle}">Version</Label>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="17"></RowDefinition>
+                <RowDefinition Height="25"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="12*" MinWidth="100"></ColumnDefinition>
+                <ColumnDefinition Width="88*"/>
+                <ColumnDefinition Width="146*" MinWidth="100"></ColumnDefinition>
+                <ColumnDefinition Width="145*" MinWidth="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="View" Margin="10,2,0,0" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=TextBlockStyle}" />
+            <ComboBox Name="SelectedBuildViewCombo" Grid.Row="1" ItemsSource="{Binding BuildViews}" SelectedValuePath="Value" DisplayMemberPath="Name"  Margin="10,2,10,0"
+                                        SelectedValue="{Binding Path=SelectedBuildView}" Grid.ColumnSpan="2">
+            </ComboBox>
+            <TextBlock Text="Build Controller" Grid.Column="2" Margin="10,2,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}"/>
+            <ComboBox Name="ControllerCombo" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding Controllers}"  Margin="10,2,0,0"/>
+
+            <TextBlock Text="Team Project" Grid.Column="3" Margin="10,2,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"/>
+            <ComboBox Name="TeamProjectCombo" Grid.Column="3" Grid.Row="1" ItemsSource="{Binding TeamProjects}"  Margin="10,2,10,0" />
+        </Grid>
+        <Grid Grid.Row="2" Name="BuildDefinitionGrid" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,10,0,0">
+            <Grid.Resources>
+            </Grid.Resources>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Name="BuildDefinitionFilter" Visibility="{Binding Path=BuildDefinitionViewVisible}" Margin="0,0,0,0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Margin="10,0,5,0" VerticalAlignment="Center">
+                        <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
+                        <Label VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}">Filter:</Label>
+                        <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=3000}">
+                            <TextBox.ToolTip>
+                                <TextBlock>
                                     Filter on Name or...
                                     <LineBreak />
                                     Use $/ to filter on Server Mappings
@@ -81,311 +81,314 @@
                                     Use * to match Process Parameter values
                                     <LineBreak />
                                     Use ** to 'contains' search Process Parameter values
-                </TextBlock>
-              </TextBox.ToolTip>
-            </TextBox>
-          </StackPanel>
-          <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
-            <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}" FontSize="16" FontWeight="Bold">O</Label>
-          </StackPanel>
+                                    <LineBreak />
+                                    Use *** to expand the ** search to include the definition default parameters
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                        <Label HorizontalAlignment="Right" Name="lblCount" Style="{StaticResource ResourceKey=TextBlockStyle}" FontSize="16" FontWeight="Bold">O</Label>
+                    </StackPanel>
+                </Grid>
+                <Controls:SortableListView Grid.Row="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}"
+                                                           KeyUp="BuildDefinitionList_KeyUp" Style="{StaticResource ResourceKey=ListViewStyle}">
+                    <ListView.Resources>
+                        <DataTemplate x:Key="NameTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="IdTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Id}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="TeamProjectTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding TeamProject}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="ContinuousIntegrationTypeTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding ContinuousIntegrationType}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="BuildControllerTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding BuildController}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="AgentTagsTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding AgentTags}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="QueueStatusTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding QueueStatus}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="ProcessTemplate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Process}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="DefaultDropLocation">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding DefaultDropLocation}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="OutputLocation">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding OutputLocation}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="LastModifiedBy">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding LastModifiedBy}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="LastModifiedDate">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding LastModifiedDate}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.Resources>
+                    <Controls:SortableListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Queue">
+                                <MenuItem Command="{Binding QueueBuildsCommand}" Header="Normal"/>
+                                <MenuItem Command="{Binding QueueLowBuildsCommand}" Header="Low Priority"/>
+                                <MenuItem Command="{Binding QueueHighBuildsCommand}" Header="High Priority"/>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Command="{Binding DisableCommand}" Header="Disable">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_disable.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding EnableCommand}" Header="Enable">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_enable.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding PauseCommand}" Header="Pause">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_pause.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Command="{Binding DeleteCommand}" Header="Delete">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding CleanDropsCommands}" Header="Clean Drop Folders">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/menu_clean.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="Change">
+                                <MenuItem Command="{Binding ChangeBuildControllerCommand}" Header="Build Controller">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/controller.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding ChangeBuildTemplateCommand}" Header="Build Process Template">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/menu_changetemplate.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding ChangeDefaultDropLocationCommand}" Header="Drop Location">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/Drop.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Output Location">
+                                    <MenuItem Command="{Binding ChangeOutputLocationAsConfiguredCommand}" Header="AsConfigured"/>
+                                    <MenuItem Command="{Binding ChangeOutputLocationPerProjectCommand}" Header="PerProject"/>
+                                    <MenuItem Command="{Binding ChangeOutputLocationSingleFolderCommand}" Header="SingleFolder"/>
+                                </MenuItem>
+                                <MenuItem Command="{Binding ChangeProcessParameterCommand}" Header="Process Parameter"/>
+                                <MenuItem Command="{Binding SetRetentionPoliciesCommand}" Header="Retention Policies">
+                                    <MenuItem.Icon>
+                                        <Image Source="Graphics/retention.png" Width="16" Height="16" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding ChangeTriggerCommand}" Header="Trigger"/>
+                            </MenuItem>
+                            <MenuItem Header="Clone">
+                                <MenuItem Command="{Binding CloneBuildsCommand}" Header="To Branch (TFVC)"/>
+                                <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="To Project (TFVC)"/>
+                                <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="In Place (Git)"/>
+                                <MenuItem Command="{Binding CloneGitBuildsDisabledCommand}" Header="In Place (Git) Disabled"/>
+                            </MenuItem>
+                            <MenuItem Command="{Binding ExportDefinitionCommand}" Header="Export">
+                                <MenuItem.Icon>
+                                    <Image Source="Graphics/export.png" Width="16" Height="16" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
+                            <Separator/>
+                            <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
+                        </ContextMenu>
+                    </Controls:SortableListView.ContextMenu>
+                    <ListView.View>
+                        <GridView>
+                            <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="False" CellTemplate="{StaticResource IdTemplate}" />
+                            <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="True" CellTemplate="{StaticResource NameTemplate}"/>
+                            <Controls:SortableGridViewColumn Header="QueueStatus" SortPropertyName="QueueStatus" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueStatusTemplate}" />
+                            <Controls:SortableGridViewColumn Header="Trigger" SortPropertyName="ContinuousIntegrationType" IsDefaultSortColumn="False" CellTemplate="{StaticResource ContinuousIntegrationTypeTemplate}" />
+                            <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}" />
+                            <Controls:SortableGridViewColumn Header="Tags" SortPropertyName="AgentTags" IsDefaultSortColumn="False" CellTemplate="{StaticResource AgentTagsTemplate}" />
+                            <Controls:SortableGridViewColumn Header="Process" SortPropertyName="Process" IsDefaultSortColumn="False" CellTemplate="{StaticResource ProcessTemplate}" />
+                            <Controls:SortableGridViewColumn Header="DefaultDropLocation" SortPropertyName="DefaultDropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DefaultDropLocation}" />
+                            <Controls:SortableGridViewColumn Header="OutputLocation" SortPropertyName="OutputLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource OutputLocation}" />
+                            <Controls:SortableGridViewColumn Header="TeamProject" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}" />
+                            <Controls:SortableGridViewColumn Header="LastModifiedBy" SortPropertyName="LastModifiedBy" IsDefaultSortColumn="False" CellTemplate="{StaticResource LastModifiedBy}" />
+                            <Controls:SortableGridViewColumn Header="LastModifiedDate" SortPropertyName="LastModifiedDate" IsDefaultSortColumn="False" CellTemplate="{StaticResource LastModifiedDate}" />
+                        </GridView>
+                    </ListView.View>
+                </Controls:SortableListView>
+            </Grid>
         </Grid>
-        <Controls:SortableListView Grid.Row="1" x:Name="BuildDefinitionList" ItemsSource="{Binding BuildDefinitions}"
-                                                   KeyUp="BuildDefinitionList_KeyUp" Style="{StaticResource ResourceKey=ListViewStyle}">
-          <ListView.Resources>
-            <DataTemplate x:Key="NameTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding Name}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="IdTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding Id}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="TeamProjectTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding TeamProject}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="ContinuousIntegrationTypeTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding ContinuousIntegrationType}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="BuildControllerTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding BuildController}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="AgentTagsTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding AgentTags}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="QueueStatusTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding QueueStatus}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="ProcessTemplate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding Process}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="DefaultDropLocation">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding DefaultDropLocation}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="OutputLocation">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding OutputLocation}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="LastModifiedBy">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding LastModifiedBy}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="LastModifiedDate">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding LastModifiedDate}" Margin="3,0,0,1" VerticalAlignment="Bottom"/>
-              </StackPanel>
-            </DataTemplate>
-          </ListView.Resources>
-          <Controls:SortableListView.ContextMenu>
-            <ContextMenu>
-              <MenuItem Header="Queue">
-                <MenuItem Command="{Binding QueueBuildsCommand}" Header="Normal"/>
-                <MenuItem Command="{Binding QueueHighBuildsCommand}" Header="High Priority"/>
-              </MenuItem>
-              <Separator/>
-              <MenuItem Command="{Binding DisableCommand}" Header="Disable">
-                <MenuItem.Icon>
-                  <Image Source="Graphics/menu_disable.png" Width="16" Height="16" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Command="{Binding EnableCommand}" Header="Enable">
-                <MenuItem.Icon>
-                  <Image Source="Graphics/menu_enable.png" Width="16" Height="16" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Command="{Binding PauseCommand}" Header="Pause">
-                <MenuItem.Icon>
-                  <Image Source="Graphics/menu_pause.png" Width="16" Height="16" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <Separator/>
-              <MenuItem Command="{Binding DeleteCommand}" Header="Delete">
-                <MenuItem.Icon>
-                  <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Command="{Binding CleanDropsCommands}" Header="Clean Drop Folders">
-                <MenuItem.Icon>
-                  <Image Source="Graphics/menu_clean.png" Width="16" Height="16" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <Separator/>
-              <MenuItem Header="Change">
-                <MenuItem Command="{Binding ChangeBuildControllerCommand}" Header="Build Controller">
-                  <MenuItem.Icon>
-                    <Image Source="Graphics/controller.png" Width="16" Height="16" />
-                  </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding ChangeBuildTemplateCommand}" Header="Build Process Template">
-                  <MenuItem.Icon>
-                    <Image Source="Graphics/menu_changetemplate.png" Width="16" Height="16" />
-                  </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding ChangeDefaultDropLocationCommand}" Header="Drop Location">
-                  <MenuItem.Icon>
-                    <Image Source="Graphics/Drop.png" Width="16" Height="16" />
-                  </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Output Location">
-                  <MenuItem Command="{Binding ChangeOutputLocationAsConfiguredCommand}" Header="AsConfigured"/>
-                  <MenuItem Command="{Binding ChangeOutputLocationPerProjectCommand}" Header="PerProject"/>
-                  <MenuItem Command="{Binding ChangeOutputLocationSingleFolderCommand}" Header="SingleFolder"/>
-                </MenuItem>
-                <MenuItem Command="{Binding ChangeProcessParameterCommand}" Header="Process Parameter"/>
-                <MenuItem Command="{Binding SetRetentionPoliciesCommand}" Header="Retention Policies">
-                  <MenuItem.Icon>
-                    <Image Source="Graphics/retention.png" Width="16" Height="16" />
-                  </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding ChangeTriggerCommand}" Header="Trigger"/>
-              </MenuItem>
-              <MenuItem Header="Clone">
-                <MenuItem Command="{Binding CloneBuildsCommand}" Header="To Branch (TFVC)"/>
-                <MenuItem Command="{Binding CloneBuildToProjectCommand}" Header="To Project (TFVC)"/>
-                <MenuItem Command="{Binding CloneGitBuildsCommand}" Header="In Place (Git)"/>
-                <MenuItem Command="{Binding CloneGitBuildsDisabledCommand}" Header="In Place (Git) Disabled"/>
-              </MenuItem>
-              <MenuItem Command="{Binding ExportDefinitionCommand}" Header="Export">
-                <MenuItem.Icon>
-                  <Image Source="Graphics/export.png" Width="16" Height="16" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Command="{Binding RemapWorkspacesCommand}" Header="Remap Workspaces"/>
-              <Separator/>
-              <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
-            </ContextMenu>
-          </Controls:SortableListView.ContextMenu>
-          <ListView.View>
-            <GridView>
-              <Controls:SortableGridViewColumn Header="Id" SortPropertyName="Id" IsDefaultSortColumn="False" CellTemplate="{StaticResource IdTemplate}" />
-              <Controls:SortableGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="True" CellTemplate="{StaticResource NameTemplate}"/>
-              <Controls:SortableGridViewColumn Header="QueueStatus" SortPropertyName="QueueStatus" IsDefaultSortColumn="False" CellTemplate="{StaticResource QueueStatusTemplate}" />
-              <Controls:SortableGridViewColumn Header="Trigger" SortPropertyName="ContinuousIntegrationType" IsDefaultSortColumn="False" CellTemplate="{StaticResource ContinuousIntegrationTypeTemplate}" />
-              <Controls:SortableGridViewColumn Header="Controller" SortPropertyName="BuildController" IsDefaultSortColumn="False" CellTemplate="{StaticResource BuildControllerTemplate}" />
-              <Controls:SortableGridViewColumn Header="Tags" SortPropertyName="AgentTags" IsDefaultSortColumn="False" CellTemplate="{StaticResource AgentTagsTemplate}" />
-              <Controls:SortableGridViewColumn Header="Process" SortPropertyName="Process" IsDefaultSortColumn="False" CellTemplate="{StaticResource ProcessTemplate}" />
-              <Controls:SortableGridViewColumn Header="DefaultDropLocation" SortPropertyName="DefaultDropLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource DefaultDropLocation}" />
-              <Controls:SortableGridViewColumn Header="OutputLocation" SortPropertyName="OutputLocation" IsDefaultSortColumn="False" CellTemplate="{StaticResource OutputLocation}" />
-              <Controls:SortableGridViewColumn Header="TeamProject" SortPropertyName="TeamProject" IsDefaultSortColumn="False" CellTemplate="{StaticResource TeamProjectTemplate}" />
-              <Controls:SortableGridViewColumn Header="LastModifiedBy" SortPropertyName="LastModifiedBy" IsDefaultSortColumn="False" CellTemplate="{StaticResource LastModifiedBy}" />
-              <Controls:SortableGridViewColumn Header="LastModifiedDate" SortPropertyName="LastModifiedDate" IsDefaultSortColumn="False" CellTemplate="{StaticResource LastModifiedDate}" />
-            </GridView>
-          </ListView.View>
-        </Controls:SortableListView>
-      </Grid>
+        <DockPanel Grid.Row="2" Grid.ColumnSpan="3"  LastChildFill="True" Visibility="{Binding Path=BuildsViewVisible}">
+            <CheckBox DockPanel.Dock="Top" HorizontalAlignment="Right" Name="CheckBoxAutoRefresh" Content="Auto Refresh (2min)" IsChecked="True" Style="{StaticResource ResourceKey=TextBlockStyle}" Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnUnchecked"/>
+            <TabControl DockPanel.Dock="Bottom" Name="BuildGrid" Margin="0,4,0,0" Height="Auto">
+                <TabItem Name="Queued" Header="Queued" IsSelected="{Binding Path=SelectedBuildFilter, Mode=TwoWay, Converter={StaticResource enumConverter}, ConverterParameter=Queued}">
+                    <DockPanel Margin="-4,-4,-4,-4">
+                        <Views:BuildsGrid x:Name="RunningBuilds" DockPanel.Dock="Bottom">
+                            <Views:BuildsGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding ShowQueuedDetailsCommand}" Header="Open"/>
+                                    <MenuItem Header="Set Priority">
+                                        <MenuItem Command="{Binding SetHighPriorityCommand}"
+                                                      Header="High" />
+                                        <MenuItem Command="{Binding SetAboveNormalPriorityCommand}"
+                                                      Header="Above Normal" />
+                                        <MenuItem Command="{Binding SetNormalPriorityCommand}"
+                                                    Header="Normal" />
+                                        <MenuItem Command="{Binding SetBelowNormalPriorityCommand}"
+                                                    Header="Below Normal" />
+                                        <MenuItem Command="{Binding SetLowPriorityCommand}"
+                                                    Header="Low" />
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding StopBuildCommand}" Header="Stop / Cancel">
+                                        <MenuItem.Icon>
+                                            <Image Source="Graphics/Stopped.png" Width="16" Height="16" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding ResumeBuildCommand}" Header="Resume"/>
+                                    <Separator/>
+                                    <MenuItem Header="Definition">
+                                        <MenuItem Command="{Binding DisabledQueuedDefinitionCommand}" Header="Disable">
+                                            <MenuItem.Icon>
+                                                <Image Source="Graphics/menu_disable.png" Width="16" Height="16" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Command="{Binding PauseQueuedDefinitionCommand}" Header="Pause">
+                                            <MenuItem.Icon>
+                                                <Image Source="Graphics/menu_pause.png" Width="16" Height="16" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </Views:BuildsGrid.ContextMenu>
+                        </Views:BuildsGrid>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Name="Completed" Header="Completed" IsSelected="{Binding Path=SelectedBuildFilter, Mode=TwoWay, Converter={StaticResource enumConverter}, ConverterParameter=Completed}">
+                    <DockPanel Margin="-4,-4,-4,-4">
+                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" DockPanel.Dock="Top" Margin="2,2,2,2" Style="{StaticResource ResourceKey=TextBlockStyle}">
+                            <Label Style="{StaticResource ResourceKey=TextBlockStyle}">Date Filter</Label>
+                            <ComboBox Name="CompletedBuildsDateFilter" ItemsSource="{Binding DateFilters}" SelectedValuePath="Value" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedDateFilter}" Width="120" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                        <Views:BuildsGrid x:Name="CompletedBuilds" DockPanel.Dock="Bottom">
+                            <Views:BuildsGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding ShowDetailsCommand}" Header="Open"/>
+                                    <MenuItem Command="{Binding ViewBuildLogsCommand}" Header="Open in Browser"/>
+                                    <MenuItem Command="{Binding RetryCommand}" Header="Retry"/>
+                                    <Separator/>
+                                    <MenuItem Command="{Binding OpenDropFolderCommand}" Header="Open Drop Folder">
+                                        <MenuItem.Icon>
+                                            <Image Source="Graphics/Drop.png" Width="16" Height="16" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding DeleteBuildCommand}" Header="Delete">
+                                        <MenuItem.Icon>
+                                            <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding SetBuildQualityCommand}" Header="Set Build Quality">
+                                        <MenuItem.Icon>
+                                            <Image Source="Graphics/Edit.png" Width="16" Height="16" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding RetainIndefinitelyCommand}" Header="Retain Indefinitely">
+                                        <MenuItem.Icon>
+                                            <Image Source="Graphics/lock_16.png" Width="16" Height="16" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
+                                    <Separator/>
+                                    <MenuItem Command="{Binding BuildNotesCommand}" Header="Generate Build Notes">
+                                        <MenuItem.Icon>
+                                            <Image Source="Graphics/BuildNotes.png" Width="16" Height="16" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </Views:BuildsGrid.ContextMenu>
+                        </Views:BuildsGrid>
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+        <Views:ProcessTemplatesGrid Grid.Row="2" Grid.ColumnSpan="3" x:Name="ProcessTemplateGrid" Visibility="{Binding Path=BuildProcessTemplateViewVisible}" Margin="0,10,0,0">
+            <Views:ProcessTemplatesGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding SetDefaultBuildTemplateCommand}" Header="Set As Default">
+                        <MenuItem.Icon>
+                            <Image Source="Graphics/SetDefault.png" Width="16" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding AddBuildProcessTemplateCommand}" Header="Add to Team Project(s)">
+                        <MenuItem.Icon>
+                            <Image Source="Graphics/Menu_Enable.png" Width="16" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RemoveBuildProcessTemplateCommand}" Header="Remove from Team Project(s)">
+                        <MenuItem.Icon>
+                            <Image Source="Graphics/Menu_Delete.png" Width="16" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </Views:ProcessTemplatesGrid.ContextMenu>
+        </Views:ProcessTemplatesGrid>
+        <Views:BuildResourcesGrid Grid.Row="2" Grid.ColumnSpan="3" x:Name="BuildResourcesGrid" Visibility="{Binding Path=BuildResourcesViewVisible}" Margin="0,10,0,0">
+            <Views:BuildResourcesGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding EditControllerCommand}" Header="Manage">
+                    </MenuItem>
+                    <MenuItem Command="{Binding EnableBuildResourceCommand}" Header="Enable">
+                        <MenuItem.Icon>
+                            <Image Source="Graphics/Menu_Enable.png" Width="16" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding DisableBuildResourceCommand}" Header="Disable">
+                        <MenuItem.Icon>
+                            <Image Source="Graphics/Menu_Disable.png" Width="16" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RemoveCommand}" Header="Remove">
+                        <MenuItem.Icon>
+                            <Image Source="Graphics/Menu_Delete.png" Width="16" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </Views:BuildResourcesGrid.ContextMenu>
+        </Views:BuildResourcesGrid>
     </Grid>
-    <DockPanel Grid.Row="2" Grid.ColumnSpan="3"  LastChildFill="True" Visibility="{Binding Path=BuildsViewVisible}">
-      <CheckBox DockPanel.Dock="Top" HorizontalAlignment="Right" Name="CheckBoxAutoRefresh" Content="Auto Refresh (2min)" IsChecked="True" Style="{StaticResource ResourceKey=TextBlockStyle}" Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnUnchecked"/>
-      <TabControl DockPanel.Dock="Bottom" Name="BuildGrid" Margin="0,4,0,0" Height="Auto">
-        <TabItem Name="Queued" Header="Queued" IsSelected="{Binding Path=SelectedBuildFilter, Mode=TwoWay, Converter={StaticResource enumConverter}, ConverterParameter=Queued}">
-          <DockPanel Margin="-4,-4,-4,-4">
-            <Views:BuildsGrid x:Name="RunningBuilds" DockPanel.Dock="Bottom">
-              <Views:BuildsGrid.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Command="{Binding ShowQueuedDetailsCommand}" Header="Open"/>
-                  <MenuItem Header="Set Priority">
-                    <MenuItem Command="{Binding SetHighPriorityCommand}"
-                                  Header="High" />
-                    <MenuItem Command="{Binding SetAboveNormalPriorityCommand}"
-                                  Header="Above Normal" />
-                    <MenuItem Command="{Binding SetNormalPriorityCommand}"
-                                Header="Normal" />
-                    <MenuItem Command="{Binding SetBelowNormalPriorityCommand}"
-                                Header="Below Normal" />
-                    <MenuItem Command="{Binding SetLowPriorityCommand}"
-                                Header="Low" />
-                  </MenuItem>
-                  <MenuItem Command="{Binding StopBuildCommand}" Header="Stop / Cancel">
-                    <MenuItem.Icon>
-                      <Image Source="Graphics/Stopped.png" Width="16" Height="16" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Command="{Binding ResumeBuildCommand}" Header="Resume"/>
-                  <Separator/>
-                  <MenuItem Header="Definition">
-                    <MenuItem Command="{Binding DisabledQueuedDefinitionCommand}" Header="Disable">
-                      <MenuItem.Icon>
-                        <Image Source="Graphics/menu_disable.png" Width="16" Height="16" />
-                      </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding PauseQueuedDefinitionCommand}" Header="Pause">
-                      <MenuItem.Icon>
-                        <Image Source="Graphics/menu_pause.png" Width="16" Height="16" />
-                      </MenuItem.Icon>
-                    </MenuItem>
-                  </MenuItem>
-                </ContextMenu>
-              </Views:BuildsGrid.ContextMenu>
-            </Views:BuildsGrid>
-          </DockPanel>
-        </TabItem>
-        <TabItem Name="Completed" Header="Completed" IsSelected="{Binding Path=SelectedBuildFilter, Mode=TwoWay, Converter={StaticResource enumConverter}, ConverterParameter=Completed}">
-          <DockPanel Margin="-4,-4,-4,-4">
-            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" DockPanel.Dock="Top" Margin="2,2,2,2" Style="{StaticResource ResourceKey=TextBlockStyle}">
-              <Label Style="{StaticResource ResourceKey=TextBlockStyle}">Date Filter</Label>
-              <ComboBox Name="CompletedBuildsDateFilter" ItemsSource="{Binding DateFilters}" SelectedValuePath="Value" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedDateFilter}" Width="120" HorizontalAlignment="Right"/>
-            </StackPanel>
-            <Views:BuildsGrid x:Name="CompletedBuilds" DockPanel.Dock="Bottom">
-              <Views:BuildsGrid.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Command="{Binding ShowDetailsCommand}" Header="Open"/>
-                  <MenuItem Command="{Binding ViewBuildLogsCommand}" Header="Open in Browser"/>
-                  <MenuItem Command="{Binding RetryCommand}" Header="Retry"/>
-                  <Separator/>
-                  <MenuItem Command="{Binding OpenDropFolderCommand}" Header="Open Drop Folder">
-                    <MenuItem.Icon>
-                      <Image Source="Graphics/Drop.png" Width="16" Height="16" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Command="{Binding DeleteBuildCommand}" Header="Delete">
-                    <MenuItem.Icon>
-                      <Image Source="Graphics/menu_delete.png" Width="16" Height="16" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Command="{Binding SetBuildQualityCommand}" Header="Set Build Quality">
-                    <MenuItem.Icon>
-                      <Image Source="Graphics/Edit.png" Width="16" Height="16" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Command="{Binding RetainIndefinitelyCommand}" Header="Retain Indefinitely">
-                    <MenuItem.Icon>
-                      <Image Source="Graphics/lock_16.png" Width="16" Height="16" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Command="{Binding EditBuildDefinitionCommand}" Header="Edit Build Definition..."/>
-                  <Separator/>
-                  <MenuItem Command="{Binding BuildNotesCommand}" Header="Generate Build Notes">
-                    <MenuItem.Icon>
-                      <Image Source="Graphics/BuildNotes.png" Width="16" Height="16" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                </ContextMenu>
-              </Views:BuildsGrid.ContextMenu>
-            </Views:BuildsGrid>
-          </DockPanel>
-        </TabItem>
-      </TabControl>
-    </DockPanel>
-    <Views:ProcessTemplatesGrid Grid.Row="2" Grid.ColumnSpan="3" x:Name="ProcessTemplateGrid" Visibility="{Binding Path=BuildProcessTemplateViewVisible}" Margin="0,10,0,0">
-      <Views:ProcessTemplatesGrid.ContextMenu>
-        <ContextMenu>
-          <MenuItem Command="{Binding SetDefaultBuildTemplateCommand}" Header="Set As Default">
-            <MenuItem.Icon>
-              <Image Source="Graphics/SetDefault.png" Width="16" Height="16" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Command="{Binding AddBuildProcessTemplateCommand}" Header="Add to Team Project(s)">
-            <MenuItem.Icon>
-              <Image Source="Graphics/Menu_Enable.png" Width="16" Height="16" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Command="{Binding RemoveBuildProcessTemplateCommand}" Header="Remove from Team Project(s)">
-            <MenuItem.Icon>
-              <Image Source="Graphics/Menu_Delete.png" Width="16" Height="16" />
-            </MenuItem.Icon>
-          </MenuItem>
-        </ContextMenu>
-      </Views:ProcessTemplatesGrid.ContextMenu>
-    </Views:ProcessTemplatesGrid>
-    <Views:BuildResourcesGrid Grid.Row="2" Grid.ColumnSpan="3" x:Name="BuildResourcesGrid" Visibility="{Binding Path=BuildResourcesViewVisible}" Margin="0,10,0,0">
-      <Views:BuildResourcesGrid.ContextMenu>
-        <ContextMenu>
-          <MenuItem Command="{Binding EditControllerCommand}" Header="Manage">
-          </MenuItem>
-          <MenuItem Command="{Binding EnableBuildResourceCommand}" Header="Enable">
-            <MenuItem.Icon>
-              <Image Source="Graphics/Menu_Enable.png" Width="16" Height="16" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Command="{Binding DisableBuildResourceCommand}" Header="Disable">
-            <MenuItem.Icon>
-              <Image Source="Graphics/Menu_Disable.png" Width="16" Height="16" />
-            </MenuItem.Icon>
-          </MenuItem>
-          <MenuItem Command="{Binding RemoveCommand}" Header="Remove">
-            <MenuItem.Icon>
-              <Image Source="Graphics/Menu_Delete.png" Width="16" Height="16" />
-            </MenuItem.Icon>
-          </MenuItem>
-        </ContextMenu>
-      </Views:BuildResourcesGrid.ContextMenu>
-    </Views:BuildResourcesGrid>
-  </Grid>
 </UserControl>
