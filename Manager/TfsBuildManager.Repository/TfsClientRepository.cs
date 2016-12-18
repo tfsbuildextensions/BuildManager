@@ -919,7 +919,7 @@ namespace TfsBuildManager.Repository
 
                 if (m.StartsWith(rootBranch, StringComparison.OrdinalIgnoreCase))
                 {
-                    m = m.Replace(rootBranch, targetBranch);
+                    m = targetBranch + m.Substring(rootBranch.Length);
                 }
 
                 newBuildDefinition.Workspace.AddMapping(m, mapping.LocalItem, mapping.MappingType);
