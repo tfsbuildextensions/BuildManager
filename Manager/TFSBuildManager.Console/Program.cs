@@ -104,6 +104,34 @@ namespace TFSBuildManager.Console
             }
         }
 
+        internal static string ArchivePath
+        {
+            get
+            {
+                string path;
+                if (Arguments.TryGetValue("ArchivePath", out path))
+                {
+                    return path;
+                }
+
+                throw new ArgumentNullException("ArchivePath");
+            }
+        }
+
+        internal static string BuildFolderPath
+        {
+            get
+            {
+                string path;
+                if (Arguments.TryGetValue("BuildFolderPath", out path))
+                {
+                    return path;
+                }
+
+                throw new ArgumentNullException("BuildFolderPath");
+            }
+        }
+
         private static int Main(string[] args)
         {
             Console.WriteLine("Community TFS Build Manager Console - {0}\n", GetFileVersion(Assembly.GetExecutingAssembly()));
@@ -147,6 +175,51 @@ namespace TFSBuildManager.Console
                         if (retval != 0)
                         {
                             return retval;
+                        }
+
+                        break;
+                    case "CLEANSERVER":
+                        // ---------------------------------------------------
+                        // Clean up old build folders assuming the builddefid
+                        // is used as the folder name
+                        // e.g. ctfsbm.exe /ProjectCollection:"YOURSERVER" /TeamProject:"YOURPROJECT" /ExportPath:"C:/a" /Action:CLEANSERVER /BuildFolderPath:"C:/builds" /ArchivePath:"C:/CleanBuildServer_Archive"
+                        // ---------------------------------------------------
+                        retval = ExportBuilds(buildServer, true);
+                        if (retval != 0)
+                        {
+                            return retval;
+                        }
+
+                        Directory.CreateDirectory(ArchivePath);
+                        string s = File.ReadAllText(Path.Combine(ExportPath, "BuildIds.txt"));
+                        s = s.Replace(" ", string.Empty);
+                        string[] ids = s.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        DirectoryInfo buildfolder = new DirectoryInfo(BuildFolderPath);
+                        DirectoryInfo[] agentfolders = buildfolder.GetDirectories("*.*", SearchOption.TopDirectoryOnly);
+                        Console.WriteLine($"Active Builds: {ids.Length}");
+                        Console.WriteLine("AGENTS -------------------------------------");
+                        foreach (DirectoryInfo agent in agentfolders)
+                        {
+                            Console.WriteLine($"Agent Found: {agent.Name}");
+                        }
+
+                        int n;
+                        Console.WriteLine("ARCHIVING -------------------------------------");
+                        foreach (DirectoryInfo agent in agentfolders)
+                        {
+                            foreach (DirectoryInfo defFolder in agent.GetDirectories("*.*", SearchOption.TopDirectoryOnly))
+                            {
+                                // Only archive if the definition no longer exists and if the folder is an integer
+                                // i.e. we won't archive other folder naming
+                                if (!ids.Contains(defFolder.Name) && int.TryParse(defFolder.Name, out n))
+                                {
+                                    Console.WriteLine($"Archiving: {defFolder.Name} from {agent.Name}");
+
+                                    string destinationPath = ArchivePath + @"\" + agent.Name + @"\" + defFolder.Name;
+                                    Directory.CreateDirectory(ArchivePath + @"\" + agent.Name);
+                                    defFolder.MoveTo(destinationPath);
+                                }
+                            }
                         }
 
                         break;
@@ -247,6 +320,20 @@ namespace TFSBuildManager.Console
             if (propertiesargumentfound)
             {
                 Arguments.Add("ExportPath", args.First(item => item.Contains("/ExportPath:")).Replace("/ExportPath:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/BuildFolderPath:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("BuildFolderPath", args.First(item => item.Contains("/BuildFolderPath:")).Replace("/BuildFolderPath:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/ArchivePath:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("ArchivePath", args.First(item => item.Contains("/ArchivePath:")).Replace("/ArchivePath:", string.Empty));
             }
 
             searchTerm = new Regex(@"/Action:.*");
