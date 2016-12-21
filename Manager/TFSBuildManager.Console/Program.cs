@@ -129,7 +129,7 @@ namespace TFSBuildManager.Console
                         // ---------------------------------------------------
                         // Export the specified builds
                         // ---------------------------------------------------
-                        retval = ExportBuilds(buildServer);
+                        retval = ExportBuilds(buildServer, false);
                         if (retval != 0)
                         {
                             return retval;
@@ -138,6 +138,17 @@ namespace TFSBuildManager.Console
                         break;
                     case "IMPORT":
                         Console.WriteLine("ImportBuildDefinitions is not yet implemented");
+                        break;
+                    case "IDEXPORT":
+                        // ---------------------------------------------------
+                        // Export the specified build ID's only
+                        // ---------------------------------------------------
+                        retval = ExportBuilds(buildServer, true);
+                        if (retval != 0)
+                        {
+                            return retval;
+                        }
+
                         break;
                     default:
                         rc = ReturnCode.InvalidArgumentsSupplied;
@@ -149,7 +160,7 @@ namespace TFSBuildManager.Console
                 string message = ex.Message;
                 if (ex.InnerException != null)
                 {
-                    message += string.Format("Inner Exception: {0}", ex.InnerException.Message);
+                    message += $"Inner Exception: {ex.InnerException.Message}";
                 }
 
                 rc = ReturnCode.UnhandledException;
@@ -160,27 +171,41 @@ namespace TFSBuildManager.Console
             return (int)rc;
         }
 
-        private static int ExportBuilds(IBuildServer buildServer)
+        private static int ExportBuilds(IBuildServer buildServer, bool idOnly)
         {
             IBuildDefinition[] defs = buildServer.QueryBuildDefinitions(TeamProject);
 
             if (!Directory.Exists(ExportPath))
             {
-                Console.WriteLine("ExportPath not found, creating: {0}", ExportPath);
+                Console.WriteLine(@"ExportPath not found, creating: {0}", ExportPath);
                 Directory.CreateDirectory(ExportPath);
             }
 
-            Console.WriteLine("Exporting {0} definitions to: {1}", defs.Length, ExportPath);
+            Console.WriteLine(@"Exporting {0} definitions to: {1}", defs.Length, ExportPath);
             Console.WriteLine(string.Empty);
 
-            foreach (var b in defs)
+            if (idOnly)
             {
-                Console.WriteLine(b.Name);
-                BuildManagerViewModel.ExportDefinition(new BuildDefinitionViewModel(b), ExportPath);
+                List<string> ids = new List<string>();
+                foreach (var b in defs)
+                {
+                    ids.Add(b.Id);
+                }
+
+                string s = string.Join(", ", ids.ToArray());
+                File.WriteAllText(Path.Combine(ExportPath, "BuildIds.txt"), s);
             }
-            
+            else
+            {
+                foreach (var b in defs)
+                {
+                    Console.WriteLine(b.Name);
+                    BuildManagerViewModel.ExportDefinition(new BuildDefinitionViewModel(b), ExportPath);
+                }
+            }
+
             Console.WriteLine(string.Empty);
-            Console.WriteLine("{0} definitions exported to: {1}", defs.Length, ExportPath);
+            Console.WriteLine(@"{0} definitions exported to: {1}", defs.Length, ExportPath);
 
             return 0;
         }
@@ -222,6 +247,13 @@ namespace TFSBuildManager.Console
             if (propertiesargumentfound)
             {
                 Arguments.Add("ExportPath", args.First(item => item.Contains("/ExportPath:")).Replace("/ExportPath:", string.Empty));
+            }
+
+            searchTerm = new Regex(@"/Action:.*");
+            propertiesargumentfound = args.Select(arg => searchTerm.Match(arg)).Any(m => m.Success);
+            if (propertiesargumentfound)
+            {
+                Arguments.Add("Action", args.First(item => item.Contains("/Action:")).Replace("/Action:", string.Empty));
             }
 
             Console.Write("...Success\n");

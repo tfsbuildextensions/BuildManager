@@ -71,7 +71,7 @@
             <CheckBox IsChecked="{Binding IncludeDisabledBuildDefinitions}" VerticalAlignment="Center"/>
             <TextBlock Text="Include Disabled Builds" VerticalAlignment="Center" Margin="5,0,0,0"  Style="{StaticResource ResourceKey=TextBlockStyle}"></TextBlock>
             <Label VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource ResourceKey=TextBlockStyle}">Filter:</Label>
-            <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}">
+            <TextBox VerticalAlignment="Center" Width="450" Text="{Binding BuildDefinitionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=3000}">
               <TextBox.ToolTip>
                 <TextBlock>
                                     Filter on Name or...

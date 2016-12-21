@@ -24,9 +24,9 @@ namespace TfsBuildManager.Views
 
         private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(this.TextBoxParameterName.Text) || string.IsNullOrWhiteSpace(this.TextBoxParameterValue.Text))
+            if (string.IsNullOrWhiteSpace(this.TextBoxParameterName.Text))
             {
-                MessageBox.Show("Parameter Name and Required Value must be provided", "Community TFS Build Manager", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Parameter Name must be provided", "Community TFS Build Manager", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

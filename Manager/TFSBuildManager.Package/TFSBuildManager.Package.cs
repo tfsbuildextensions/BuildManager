@@ -66,7 +66,7 @@ namespace TfsBuildManager
             {
                 // Add our command handlers for menu (commands must exist in the .vsct file)
                 OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-                if (null != mcs)
+                if (mcs != null)
                 {
                     // Create the command for the menu item.
                     CommandID menuCommandID = new CommandID(GuidList.GuidTfsBuildManagerPackageCmdSet, (int)PkgCmdIDList.CmdidTestCommand);
@@ -111,7 +111,7 @@ namespace TfsBuildManager
                 // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
                 // The last flag is set to true so that if the tool window does not exists it will be created.
                 ToolWindowPane window = this.FindToolWindow(typeof(BuildManagerToolWindow), 0, true);
-                if ((null == window) || (null == window.Frame))
+                if (window?.Frame == null)
                 {
                     throw new NotSupportedException(Resources.CanNotCreateWindow);
                 }

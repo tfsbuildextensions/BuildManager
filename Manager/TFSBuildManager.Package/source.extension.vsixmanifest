@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-    <Metadata>
-        <Identity Id="1B836FB9-4523-4B08-9C49-912A27CB4F5E" Version="2.14.0.22" Language="en-US" Publisher="github.com/tfsbuildextensions" />
-        <DisplayName>Community TFS XAML Build Manager VS2015</DisplayName>
-        <Description xml:space="preserve">Community TFS XAML Build Manager VS2015. Sourcecode is available in GitHub - https://github.com/tfsbuildextensions/BuildManager</Description>
-        <MoreInfo>https://visualstudiogallery.msdn.microsoft.com/5e2b27da-e14e-4e6e-8089-d75685dd9b9f</MoreInfo>
-        <License>License.rtf</License>
-        <Icon>AppIcon.ico</Icon>
-        <PreviewImage>Preview.png</PreviewImage>
-        <Tags>TFS 2015, Build</Tags>
-    </Metadata>
-    <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="14.0" />
-        <InstallationTarget Version="14.0" Id="Microsoft.VisualStudio.Community" />
-        <InstallationTarget Version="14.0" Id="Microsoft.VisualStudio.Enterprise" />
-    </Installation>
-    <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,]" />
-    </Dependencies>
-    <Assets>
-        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="TfsBuildManager.Explorer" Path="|TfsBuildManager.Explorer|" />
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-    </Assets>
+  <Metadata>
+    <Identity Id="1B836FB9-4523-4B08-9C49-912A27CB4F5E" Version="2.14.0.23" Language="en-US" Publisher="github.com/tfsbuildextensions" />
+    <DisplayName>Community TFS XAML Build Manager VS2015</DisplayName>
+    <Description xml:space="preserve">Community TFS XAML Build Manager VS2015. Sourcecode is available in GitHub - https://github.com/tfsbuildextensions/BuildManager</Description>
+    <MoreInfo>https://visualstudiogallery.msdn.microsoft.com/5e2b27da-e14e-4e6e-8089-d75685dd9b9f</MoreInfo>
+    <License>License.rtf</License>
+    <Icon>AppIcon.ico</Icon>
+    <PreviewImage>Preview.png</PreviewImage>
+    <Tags>TFS 2015, Build</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="14.0" />
+    <InstallationTarget Version="14.0" Id="Microsoft.VisualStudio.Community" />
+    <InstallationTarget Version="14.0" Id="Microsoft.VisualStudio.Enterprise" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,]" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="TfsBuildManager.Explorer" Path="|TfsBuildManager.Explorer|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
 </PackageManifest>

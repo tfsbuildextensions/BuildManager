@@ -506,6 +506,7 @@ namespace TfsBuildManager.Repository
                 this.buildServer.QueueBuild(buildRequest);
             }
         }
+
         public void QueueLowBuilds(IEnumerable<Uri> buildDefinitions)
         {
             var definitions = this.buildServer.QueryBuildDefinitionsByUri(buildDefinitions.ToArray());
