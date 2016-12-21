@@ -192,7 +192,7 @@ namespace TFSBuildManager.Console
                     ids.Add(b.Id);
                 }
 
-                string s = string.Join(", ", ids.ToArray());
+                string s = string.Join(",", ids.ToArray());
                 File.WriteAllText(Path.Combine(ExportPath, "BuildIds.txt"), s);
             }
             else
