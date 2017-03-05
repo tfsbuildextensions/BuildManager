@@ -4,7 +4,7 @@
 # Community TFS Build Manager
 
 ## Visual Studio Extensions
-VS 2010, 12, 13 and 15 extensions are in the [VS Gallery](https://visualstudiogallery.msdn.microsoft.com/73bf2d8e-aec6-406c-8e7f-1c678e46557f)
+VS 2010, 12, 13 and 15 extensions are in the [VS Gallery](https://marketplace.visualstudio.com/search?term=publisher%3A%22Community%20TFS%20Build%20Extensions%22&target=VS&sortBy=Relevance)
 
 ## Standalone
 2013 executable can be found in [Releases](https://github.com/tfsbuildextensions/BuildManager/releases)
