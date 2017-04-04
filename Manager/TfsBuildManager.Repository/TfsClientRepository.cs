@@ -919,7 +919,7 @@ namespace TfsBuildManager.Repository
 
                 if (m.StartsWith(rootBranch, StringComparison.OrdinalIgnoreCase))
                 {
-                    m = m.Replace(rootBranch, targetBranch);
+                    m = targetBranch + m.Substring(rootBranch.Length);
                 }
 
                 newBuildDefinition.Workspace.AddMapping(m, mapping.LocalItem, mapping.MappingType);
@@ -989,7 +989,7 @@ namespace TfsBuildManager.Repository
                 var configurationFolderPath = parameters[ConfigurationFolderPath].ToString();
                 if (configurationFolderPath.StartsWith(rootBranch, StringComparison.OrdinalIgnoreCase))
                 {
-                    parameters[ConfigurationFolderPath] = configurationFolderPath.Replace(rootBranch, targetBranch);
+                    parameters[ConfigurationFolderPath] = ReplaceWithCaseIgnored(configurationFolderPath, rootBranch, targetBranch);
                 }
             }
         }
@@ -1027,7 +1027,7 @@ namespace TfsBuildManager.Repository
                 {
                     if (projects[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
                     {
-                        projects[i] = projects[i].Replace(chkBranch, setBranch);
+                        projects[i] = ReplaceWithCaseIgnored(projects[i], chkBranch, setBranch);
                     }
                 }
             }
@@ -1057,7 +1057,7 @@ namespace TfsBuildManager.Repository
             {
                 if (buildSettings.ProjectsToBuild[i].StartsWith(chkBranch, StringComparison.OrdinalIgnoreCase))
                 {
-                    buildSettings.ProjectsToBuild[i] = buildSettings.ProjectsToBuild[i].Replace(chkBranch, setBranch);
+                    buildSettings.ProjectsToBuild[i] = ReplaceWithCaseIgnored(buildSettings.ProjectsToBuild[i], chkBranch, setBranch);
                 }
             }
         }
@@ -1069,9 +1069,9 @@ namespace TfsBuildManager.Repository
             {
                 if (parameters[keys[idx]] is string)
                 {
-                    if ((parameters[keys[idx]] as string).Contains(sourceName))
+                    if ((parameters[keys[idx]] as string).IndexOf(sourceName, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        parameters[keys[idx]] = (parameters[keys[idx]] as string).Replace(sourceName, targetName);
+                        parameters[keys[idx]] = ReplaceWithCaseIgnored((parameters[keys[idx]] as string), sourceName, targetName);
                     }
                 }
             }
@@ -1191,6 +1191,11 @@ namespace TfsBuildManager.Repository
             {
                 newBuildDefinition.Process = bd.Process;
             }
+        }
+
+        private static string ReplaceWithCaseIgnored(string input, string search, string replacement)
+        {
+            return Regex.Replace(input, Regex.Escape(search), replacement, RegexOptions.IgnoreCase);
         }
     }
 
